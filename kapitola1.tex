@@ -21,22 +21,25 @@ Nech $ L_{1}, L_{2}, L_{3} \in \R $. Potom $ L = L_{1}(?=L_{2})L_{3} \in \R $.
 \end{veta}
 \begin{proof}
 Nech $ L_{1},L_{2},L_{3} $ sú regulárne, nech $ A_{i} = (K_{i},\Sigma_{i},\delta_{i},q_{0i},F_{i}) $ sú DKA také, že $ L(A_{i})=L_{i}, i \in \lbrace 1,2,3\rbrace $. Zostrojím NKA $ A = (K,\Sigma,\delta,q_{0},F) $ pre $L$, kde
-\begin{center}
-$ K = K_{1} \cup K_{2} \times K_{3} \cup K_{3} ~~~ ( $predpokladáme $ K_{1} \cap K_{3}= \emptyset) $
-\end{center}
-$$ \Sigma=\Sigma_{1}\cup\Sigma_{2}\cup\Sigma_{3}, ~ q_{0}=q_{01}, ~ F = F_{3} \cup F_{2} \times F_{3} $$
-$$ \forall q \in K_{1}, \forall a \in \Sigma: \delta(q,a) \ni \delta_{1}(q,a) $$
-$$ \forall q \in F_{1}: \delta(q,\varepsilon ) \ni \left[ q_{02},q_{03} \right] $$
-$$ \forall p \in K_{2}, \forall q \in K_{3}, \forall a \in \Sigma_{2} \cap \Sigma_{3}: \delta( \left[ p,q \right] ,a) \ni \left[ \delta(p,a), \delta (q,a) \right] $$
-$$ \forall p \in F_2, \forall q \in K_3: \delta(\left[p,q\right],a) \ni \delta(q,a) $$
+$ K = K_{1} \cup K_{2} \times K_{3} \cup K_{3} ~ ( $predp. $ K_{1} \cap K_{3}= \emptyset), ~
+\Sigma=\Sigma_{1}\cup\Sigma_{2}\cup\Sigma_{3}, ~ q_{0}=q_{01}, ~ F = F_{3} \cup F_{2} \times F_{3}, ~ \delta $~funkciu definujeme nasledovne:
+%$$ K = K_{1} \cup K_{2} \times K_{3} \cup K_{3} ~~~ ( predp. K_{1} \cap K_{3}= \emptyset) $$
+%$$ \Sigma=\Sigma_{1}\cup\Sigma_{2}\cup\Sigma_{3}, ~ q_{0}=q_{01}, ~ F = F_{3} \cup F_{2} \times F_{3} $$
+\begin{eqnarray*}
+\forall q \in K_{1}, \forall a \in \Sigma &:& \delta(q,a) \ni \delta_{1}(q,a) \\
+\forall q \in F_{1} &:& \delta(q,\varepsilon ) \ni \left[ q_{02},q_{03} \right] \\
+\forall p \in K_{2}, \forall q \in K_{3}, \forall a \in \Sigma_{2} \cap \Sigma_{3} &:& \delta( \left[ p,q \right] ,a) \ni \left[ \delta(p,a), \delta (q,a) \right] \\
+\forall p \in F_2, \forall q \in K_3 &:& \delta(\left[p,q\right],a) \ni \delta(q,a) 
+\end{eqnarray*}
+
 $ L(A) = L. $
 
 $ \supseteq: $ Máme $ w \in L $ a chceme preň nájsť výpočet na $A$. Z definície $L$ vyplýva $w=xyz$, kde $x \in L_1, y \in L_2$ a $yz \in L_3$, teda existujú akceptačné výpočty pre $x,y,yz$ na DKA $A_1,A_2,A_3$. Z toho vyskladáme výpočet pre $w$ na $A$ nasledovne. Výpočet pre $x$ bude rovnaký ako na $A_1$. Z akceptačné stavu $A_1$ vieme na $\varepsilon$ prejsť do stavu $\left[q_{02},q_{03}\right]$, kde začne výpočet pre $y$. Ten vyskladáme z $A_2$ a $A_3$ tak, že si ich výpočty napíšeme pod seba a stavy nad sebou budú tvoriť karteziánsky súčin stavov v $A$ (keďže $A_2$ aj $A_3$ sú deterministické, tieto výpočty na $y$ budú rovnako dlhé). $y \in L_2$, teda $A_2$ skončí v akceptačnom stave. Podľa $\delta$ funkcie v $A$ vieme pokračovať len vo výpočte na $A_3$, teda doplníme zvyšnú postupnosť stavov pre výpočet $z$. Keďže $yz \in L_3$ a $F_3\subseteq F$ (resp. $F_2\times F_3\subseteq F$ pre $z=\varepsilon$), automat A akceptuje. 
 
 $ \subseteq: $ Nech $w \in L(A)$, potom existuje akceptačný výpočet na $A$. Z toho vieme $w$ rozdeliť na $x,y$ a $z$ tak, že $x$ je slovo spracovávené od začiatku po prvý príchod do stavu $\left[q_{02},q_{03}\right]$, $y$ odtiaľto po posledný stav reprezentovaný karteziánskym súčinom stavov a zvyšok bude $z$. Nevynechali sme žiadne znaky a nezmenili poradie, teda $w=xyz$. Do $\left[q_{02},q_{03}\right]$ sa $A$ môže prvýkrát dostať len vtedy, ak bol v akceptačnom stave $A_1$. Prechod do $\left[q_{02},q_{03}\right]$ je na $\varepsilon$, takže $x \in L_1$. Práve tento stav je počiatočný pre $A_2$ aj $A_3$. Ak $z=\varepsilon$, tak akceptačný stav $A$ je z $F_2\times F_3$ a $y \in L_2, y \in L_3$ a aj $yz \in L_3$. Z toho podľa definície vyplýva, že $xyz=w \in L$. Ak $z\neq \varepsilon$, potom je akceptačný stav $A$ z $F_3$. Podľa $\delta$ funkcie sa z karteziánskeho súčinu stavov do normálneho stavu dá prejsť len tak, že $A_2$ akceptuje, teda $y \in L_2$. $A_3$ akceptuje na konci, čo znamená $yz \in L_3$. Znova podľa definície operácie lookahead $xyz=w \in L$.
-
-
 \end{proof}
+
+\todo lookbehind - podobne ako lookahead
 
 \section{Podnadpis 2}\label{chap:podkapitola2}
 
