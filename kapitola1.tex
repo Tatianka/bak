@@ -87,7 +87,9 @@ Nech $ L_{1}, L_{2}, L_{3}, L_4 \in \L_{CF} $. $ L_1 = \lbrace a^nb^n ~|~ n\geq 
 $ \L_{CS} $ je uzavretá na operáciu lookahead.
 \end{veta}
 \begin{proof}
-Pre $ L_{1}, L_{2}, L_{3} \in \L_{CS} $ a slovo z $ L_{1}(?<=L_{2})L_{3} $ simulujeme najprv LBA pre $L_1$ a potom na 2 stopách súčasne LBA pre $L_2$ a $L_3$. Ak skončia súčasne, potom akceptujeme ak akceptujú oba. Ak LBA pre $L_2$ skončí skôr a akceptuje, tak aj my akceptujeme. V ostatných prípadoch sa zasekneme/zacyklíme - neakceptujeme.
+Pre $ L_{1}, L_{2}, L_{3} \in \L_{CS} $ a slovo z $ L = L_{1}(?=L_{2})L_{3} $ zostrojíme LBA $A$ z LBA $A_1, A_2, A_3$ pre dané kontextové jazyky. Najprv sa pozrime na štruktúru vstupu -- prvé je slovo z $L_1$ a za ním nasleduje slovo z $L_3$, pričom jeho prefix patrí do $L_2$. Preto, aby $A$ mohol simulovať dané lineárne ohraničené automaty, je potrebné označiť hranice jednotlivých slov.
+
+ Na začiatku výpočtu $A$ prejde pásku a nedeterministicky označí 2 miesta -- koniec slov pre $A_1$ a $A_2$. Následne sa vráti na začiatok a simuluje $A_1$. Ak akceptuje, $A$ pokračuje a presunie sa za označený koniec vstupu pre $A_1$. Inak sa zasekne. V tomto bode sa začína vstup pre $A_2$ aj $A_3$, teda slovo až do konca prepíše na 2 stopy. Najprv na hornej simuluje $A_2$. Pokiaľ $A_2$ neskončí v akceptačnom stave, $A$ sa zasekne. Inak sa vráti na označené miesto a simuluje $A_3$ na spodnej stope až do konca vstupu. Akceptačný stav $A_3$ znamená akceptáciu celého vstupného slova.
 \end{proof}
 
 \section{Podnadpis 2}\label{chap:podkapitola2}
