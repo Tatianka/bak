@@ -48,8 +48,6 @@ Nech $ L_{1}, L_{2}, L_{3} \in \R $. Potom $ L = L_{1}(?=L_{2})L_{3} \in \R $.
 Nech $ L_{1},L_{2},L_{3} $ sú regulárne, nech $ A_{i} = (K_{i},\Sigma_{i},\delta_{i},q_{0i},F_{i}) $ sú DKA také, že $ L(A_{i})=L_{i}, i \in \lbrace 1,2,3\rbrace $. Zostrojím NKA $ A = (K,\Sigma,\delta,q_{0},F) $ pre $L$, kde
 $ K = K_{1} \cup K_{2} \times K_{3} \cup K_{3} ~ ( $predp. $ K_{1} \cap K_{3}= \emptyset), ~
 \Sigma=\Sigma_{1}\cup\Sigma_{2}\cup\Sigma_{3}, ~ q_{0}=q_{01}, ~ F = F_{3} \cup F_{2} \times F_{3}, ~ \delta $~funkciu definujeme nasledovne:
-%$$ K = K_{1} \cup K_{2} \times K_{3} \cup K_{3} ~~~ ( predp. K_{1} \cap K_{3}= \emptyset) $$
-%$$ \Sigma=\Sigma_{1}\cup\Sigma_{2}\cup\Sigma_{3}, ~ q_{0}=q_{01}, ~ F = F_{3} \cup F_{2} \times F_{3} $$
 \begin{eqnarray*}
 \forall q \in K_{1}, \forall a \in \Sigma &:& \delta(q,a) \ni \delta_{1}(q,a) \\
 \forall q \in F_{1} &:& \delta(q,\varepsilon ) \ni \left[ q_{02},q_{03} \right] \\
@@ -77,6 +75,20 @@ Podobne ako pri lookahead. (Karteziánsky súčin stavov $L_1$ a $L_2$, ale $A_2
 
 
 \todo lookbehind - podobne ako lookahead
+
+\begin{veta}
+$ \L_{CF} $ nie je uzavretá na operácie lookahead a lookbehind.
+\end{veta}
+\begin{proof}
+Nech $ L_{1}, L_{2}, L_{3}, L_4 \in \L_{CF} $. $ L_1 = \lbrace a^nb^n ~|~ n\geq 1 \rbrace , L_2 = \lbrace a*b^nc^n ~|~ n\geq 1\rbrace , L_3 = \lbrace a^nb^nc* ~|~ n \geq 1\rbrace, L_4 = \lbrace ab^nc^n ~|~ n \geq 1 \rbrace$. Potom $ d(?=L_1)L_2 = \lbrace da^nb^nc^n ~|~ n\geq 1 \rbrace $ a $ L_3(?<=L_4)d = \lbrace a^nb^nc^nd ~|~ n\geq 1 \rbrace$, čo nie sú bezkontextové jazyky.
+\end{proof}
+
+\begin{veta}
+$ \L_{CS} $ je uzavretá na operáciu lookahead.
+\end{veta}
+\begin{proof}
+Pre $ L_{1}, L_{2}, L_{3} \in \L_{CS} $ a slovo z $ L_{1}(?<=L_{2})L_{3} $ simulujeme najprv LBA pre $L_1$ a potom na 2 stopách súčasne LBA pre $L_2$ a $L_3$. Ak skončia súčasne, potom akceptujeme ak akceptujú oba. Ak LBA pre $L_2$ skončí skôr a akceptuje, tak aj my akceptujeme. V ostatných prípadoch sa zasekneme/zacyklíme - neakceptujeme.
+\end{proof}
 
 \section{Podnadpis 2}\label{chap:podkapitola2}
 
