@@ -11,8 +11,8 @@ $ \R $ -- tradičné označenie triedy regulárnych jazykov
 
 DKA/NKA -- deterministický/nedeterministický konečný automat
 
-\section{Podnadpis 1}
-\label{chap:podkapitola1}
+\section{Lookahead, lookbehind}
+\label{chap:lookahead}
 
 \begin{df}[Greedy iterácia]
 $$ L_{1} \circledast L_{2} = \lbrace uv ~|~ u \in L_1^* \land v \in L_2 \land u~je~najdlhšie~také \rbrace$$
@@ -37,8 +37,20 @@ Majme $w \in L_1^*L_2$ a rozdeľme na podslová $u,v$ tak, že $u \in L_1^*, v \
 Trieda $\R$ je uzavretá na operácie $\circledast$ a $*?$.
 \end{dosledok}
 
-\begin{df}[Lookahead]
-$$ L_{1}(?=L_{2})L_{3} = \lbrace uvw ~|~ u \in L_{1} \land v \in L_{2} \land vw \in L_{3} \rbrace $$ Operáciu $(?=\dots)$ nazývame lookahead.
+\begin{df}[Pozitívny lookahead]
+$$ L_{1}(?=L_{2})L_{3} = \lbrace uvw ~|~ u \in L_{1} \land v \in L_{2} \land vw \in L_{3} \rbrace $$ Operáciu $(?=\dots)$ nazývame pozitívny lookahead alebo len lookahead.
+\end{df}
+
+\begin{df}[Negatívny lookahead]
+$$ L_{1}(?!L_{2})L_{3} = \lbrace uv ~|~ u \in L_{1} \land v \in L_{3} \land neexistuje~také~x,y,~že~v=xy~a~x \in L_2 \rbrace $$ Operáciu $(?!\dots)$ nazývame negatívny lookahead.
+\end{df}
+
+\begin{df}[Pozitívny lookbehind]
+$$ L_{1}(?<=L_{2})L_{3} = \lbrace uvw ~|~ uv \in L_{1} \land v \in L_{2} \land w \in L_{3} \rbrace $$ Operáciu $(?<=\dots)$ nazývame pozitívny lookbehind alebo len lookbehind.
+\end{df}
+
+\begin{df}[Negatívny lookbehind]
+$$ L_{1}(?<!L_{2})L_{3} = \lbrace uv ~|~ u \in L_{1} \land v \in L_{3} \land neexituje~také~x,y,~že~u=xy~a~y \in L_2 \rbrace $$ Operáciu $(?<!\dots)$ nazývame negatívny lookbehind.
 \end{df}
 
 \begin{veta}
@@ -62,10 +74,6 @@ $ \supseteq: $ Máme $ w \in L $ a chceme preň nájsť výpočet na $A$. Z defi
 $ \subseteq: $ Nech $w \in L(A)$, potom existuje akceptačný výpočet na $A$. Z toho vieme $w$ rozdeliť na $x,y$ a $z$ tak, že $x$ je slovo spracovávené od začiatku po prvý príchod do stavu $\left[q_{02},q_{03}\right]$, $y$ odtiaľto po posledný stav reprezentovaný karteziánskym súčinom stavov a zvyšok bude $z$. Nevynechali sme žiadne znaky a nezmenili poradie, teda $w=xyz$. Do $\left[q_{02},q_{03}\right]$ sa $A$ môže prvýkrát dostať len vtedy, ak bol v akceptačnom stave $A_1$. Prechod do $\left[q_{02},q_{03}\right]$ je na $\varepsilon$, takže $x \in L_1$. Práve tento stav je počiatočný pre $A_2$ aj $A_3$. Ak $z=\varepsilon$, tak akceptačný stav $A$ je z $F_2\times F_3$ a $y \in L_2, y \in L_3$ a aj $yz \in L_3$. Z toho podľa definície vyplýva, že $xyz=w \in L$. Ak $z\neq \varepsilon$, potom je akceptačný stav $A$ z $F_3$. Podľa $\delta$ funkcie sa z karteziánskeho súčinu stavov do normálneho stavu dá prejsť len tak, že $A_2$ akceptuje, teda $y \in L_2$. $A_3$ akceptuje na konci, čo znamená $yz \in L_3$. Znova podľa definície operácie lookahead $xyz=w \in L$.
 \end{proof}
 
-\begin{df}[Lookbehind]
-$$ L_{1}(?<=L_{2})L_{3} = \lbrace uvw ~|~ uv \in L_{1} \land v \in L_{2} \land w \in L_{3} \rbrace $$ Operáciu $(?<=\dots)$ nazývame lookbehind.
-\end{df}
-
 \begin{veta}
 Nech $ L_{1}, L_{2}, L_{3} \in \R $. Potom $ L = L_{1}(?<=L_{2})L_{3} \in \R $.
 \end{veta}
@@ -83,14 +91,78 @@ $ \L_{CF} $ nie je uzavretá na operácie lookahead a lookbehind.
 Nech $ L_{1}, L_{2}, L_{3}, L_4 \in \L_{CF} $. $ L_1 = \lbrace a^nb^n ~|~ n\geq 1 \rbrace , L_2 = \lbrace a*b^nc^n ~|~ n\geq 1\rbrace , L_3 = \lbrace a^nb^nc* ~|~ n \geq 1\rbrace, L_4 = \lbrace ab^nc^n ~|~ n \geq 1 \rbrace$. Potom $ d(?=L_1)L_2 = \lbrace da^nb^nc^n ~|~ n\geq 1 \rbrace $ a $ L_3(?<=L_4)d = \lbrace a^nb^nc^nd ~|~ n\geq 1 \rbrace$, čo nie sú bezkontextové jazyky.
 \end{proof}
 
-\begin{veta}
+\begin{veta} \label{CS-lookahead}
 $ \L_{CS} $ je uzavretá na operáciu lookahead.
-\end{veta}
+\end{veta} 
 \begin{proof}
 Pre $ L_{1}, L_{2}, L_{3} \in \L_{CS} $ a slovo z $ L = L_{1}(?=L_{2})L_{3} $ zostrojíme LBA $A$ z LBA $A_1, A_2, A_3$ pre dané kontextové jazyky. Najprv sa pozrime na štruktúru vstupu -- prvé je slovo z $L_1$ a za ním nasleduje slovo z $L_3$, pričom jeho prefix patrí do $L_2$. Preto, aby $A$ mohol simulovať dané lineárne ohraničené automaty, je potrebné označiť hranice jednotlivých slov.
 
  Na začiatku výpočtu $A$ prejde pásku a nedeterministicky označí 2 miesta -- koniec slov pre $A_1$ a $A_2$. Následne sa vráti na začiatok a simuluje $A_1$. Ak akceptuje, $A$ pokračuje a presunie sa za označený koniec vstupu pre $A_1$. Inak sa zasekne. V tomto bode sa začína vstup pre $A_2$ aj $A_3$, teda slovo až do konca prepíše na 2 stopy. Najprv na hornej simuluje $A_2$. Pokiaľ $A_2$ neskončí v akceptačnom stave, $A$ sa zasekne. Inak sa vráti na označené miesto a simuluje $A_3$ na spodnej stope až do konca vstupu. Akceptačný stav $A_3$ znamená akceptáciu celého vstupného slova.
 \end{proof}
 
-\section{Podnadpis 2}\label{chap:podkapitola2}
+\section{Spätné referencie}\label{chap:backref}
+
+Rozšírme regulárne výrazy o spätné referencie. V tejto časti ma bude zaujímať, čo sa stane, ak k tomuto modelu pridáme ešte lookahead a lookbehind. Najprv však uvediem základné informácie.
+
+Spätná referencia (angl. \textit{backreference}) je v regulárnych výrazoch označená ako $ \backslash m $. Očíslujme okrúhle zátvorky zľava doprava podľa poradia ľavej zátvorky a zoberme podslovo, ktoré akceptoval výraz vnútri $m$-tých zátvoriek. $ \backslash m $ bude predstavovať presne tento reťazec (pri inom slove teda môže byť iným reťazcom). Budem predpokladať, že spätná referencia s číslom $m$ sa bude nachádzať až za pravou zátvorkou s číslom $m$.
+
+Triedu jazykov tvorenú regulárnymi výrazmi (popisujúce triedu regulárnych jazykov) so spätnými referenciami budem nazývať E-regex, presná definícia sa nachádza v článku \cite{ExtendedRegexPower}. (Autori ju pôvodne nazvali extended regex resp. EREG, avšak pre lepšiu prehľadnosť v tejto práci som názov upravila.)
+
+Uvediem najprv niektoré fakty o tejto triede.
+Trieda E-regex je podmnožinou $\L_{CS}$, ale existujú jazyky z $\L_{CF}$ aj $\L_{CS}$, ktoré do nej nepatria. Je uzavretá na homomorfizmus a nie je uzavretá na komplement, inverzný homomorfizmus, konečnú substitúciu, shuffle s regulárnym jazykom \cite{ExtendedRegexPower} a prienik \cite{ExtendedRegexIntersec}.
+
+\begin{df}
+Triedu E-regex obohatenú o pozitívny lookahead a pozitívny lookbehind budeme nazývať LE-regex.
+\end{df}
+
+\begin{df}
+Nech $\alpha$ je regulárny výraz taký, že môže obsahovať aj spätné referencie, lookahead a lookbehind. Ignorujúc operácie lookahead a lookbehind, $\alpha$ je reprezentovaný stromom $T_\alpha$ podľa definície triedy E-regex. Zostrojme konečný (orientovaný, usporiadaný) výpočtový strom $S_\alpha$ z $T_\alpha$ takto:
+\begin{itemize}
+  \item  $\alpha$ obsahuje lookahead, teda $S_\alpha$ má vrchol $(w, (?=\beta_1 )\beta_2)$. Potom tento vrchol bude mať dvoch synov - vrchol $(w,\beta_2)$ a virtuálny vrchol $(w,\beta_1 .*)$
+  \item  $\alpha$ obsahuje lookbehind, teda $S_\alpha$ má vrchol $(w, \beta_1(?<=\beta_2))$. Potom tento vrchol bude mať dvoch synov - vrchol $(w,\beta_1)$ a virtuálny vrchol $(w,.*\beta_2)$
+  \item všetky ostatné vrcholy sú rovnaké ako v $T_\alpha$
+\end{itemize}
+Jazyk popísaný regexom $\alpha$ je definovaný nasledovne: 
+$$L(\alpha ) = \lbrace w \in \Sigma ^* ~|~ (w, \alpha)~je~koreňom~nejakého~výpočtového~stromu~S_\alpha \rbrace$$
+\end{df}
+
+\begin{veta}
+$ E-regex \subsetneq LE-regex $
+\end{veta}
+\begin{proof}
+$ \subseteq $ vyplýva z definície.
+
+Jazyk $L = \lbrace a^iba^{i+1}ba^k ~|~ k=i(i+1)k' ~ pre ~ nejaké ~ k'>0, i>0 \rbrace$ nepatrí do triedy E-regex \cite[Lemma 2]{ExtendedRegexIntersec}, ale patrí do LE-regex:
+$$ \alpha = (a*)b(\backslash 1a)b(?=(\backslash 1)* \$ )(\backslash 2)* \$ $$ $ L(\alpha ) = L. $
+\end{proof}
+
+\begin{veta}
+$ LE-regex \subseteq \L_{CS} $
+\end{veta}
+\begin{proof}
+Vyplýva z vety \ref{CS-lookahead} a toho, že $ E-regex \in \L_{CS} $.
+\end{proof}
+
+\begin{veta}
+LE-regex je uzavretá na prienik.
+\end{veta}
+\begin{proof}
+Nech $L_1,L_2 \in LE-regex$, potom $L_1 \cap L_2 = \left( ?= L_1 \$ \right) L_2 \$ $.
+\end{proof}
+
+
+Triedu LE-regex obohatenú o negatívny lookahead a negatívny lookbehind budeme nazývať L!E-regex.
+
+\begin{veta}
+L!E-regex je uzavretá na komplement.
+\end{veta}
+\begin{proof}
+Nech $L_1 \in LE-regex$, potom $L_1^c  = \left( ?! L_1 \$ \right) .* \$ $.
+\end{proof}
+
+\begin{veta}
+\end{veta}
+\begin{proof}
+\end{proof}
+
 
