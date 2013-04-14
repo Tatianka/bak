@@ -7,7 +7,17 @@ $ L_{1}L_{2} $ -- zreťazenie jazykov $ L_{1} $ a $ L_{2} $
 
 $ L^* $ -- iterácia ($L^*=\cup^{\infty}_{i=0}L^i$, kde $L^0=\lbrace \varepsilon \rbrace$, $L^1=L$ a $L^{i+1}=L^iL$)
 
-$ \R $ -- tradičné označenie triedy regulárnych jazykov
+$ \R $ -- trieda regulárnych jazykov
+
+$ \L_{CF}$ -- trieda bezkontextových jazykov
+
+$ \L_{CS}$ -- trieda bezkontextových jazykov
+
+regex -- regulárny výraz, ktorý môže vytvoriť najviac regulárny jazyk (základná definícia)
+
+e-regex -- regex so spätnými referenciami
+
+le-regex -- e-regex s operáciami lookahead a lookbehind
 
 DKA/NKA -- deterministický/nedeterministický konečný automat
 
@@ -168,6 +178,7 @@ Ak $\alpha$ je regulárny výraz, ktorý môže obsahovať aj spätné referenci
 
 Tu si definujme model na reprezentáciu regulárnych výrazov so spätnými referenciami a pozitívnymi operáciami lookahead a lookbehind.
 
+\todo just idea; uvidim este co s touto definiciou (je to naviazanie na def. z jedneho clanku)
 \begin{df}
 Nech $\alpha$ je l-rozšírený regex. Nech $\alpha '$ je $\alpha$ bez operácií lookahead a lookbehind. Potom $\alpha ' \in E-regex$ a teda je reprezentovaný stromom $T_{\alpha '}$ podľa definície triedy E-regex. Zostrojme konečný (orientovaný, usporiadaný) výpočtový strom $S_\alpha$ z $T_{\alpha '}$ postupným rozkladaním výrazu od vrchola $(w,\alpha)$:
 \begin{itemize}
@@ -179,11 +190,6 @@ Jazyk popísaný l-rozšíreným regexom $\alpha$ je definovaný nasledovne:
 $$L(\alpha ) = \lbrace w \in \Sigma ^* ~|~ (w, \alpha)~je~koreňom~nejakého~výpočtového~stromu~S_\alpha \rbrace$$
 \end{df}
 
-\begin{lema}[Pumpovacia lema]
-\end{lema}
-\begin{proof}
-\end{proof}
-
 \begin{veta}
 $ E-regex \subsetneq LE-regex $
 \end{veta}
@@ -191,7 +197,7 @@ $ E-regex \subsetneq LE-regex $
 $ \subseteq $ vyplýva z definície.
 
 Jazyk $L = \lbrace a^iba^{i+1}ba^k ~|~ k=i(i+1)k' ~ pre ~ nejaké ~ k'>0, i>0 \rbrace$ nepatrí do triedy E-regex \cite[Lemma 2]{ExtendedRegexIntersec}, ale patrí do LE-regex:
-$$ \alpha = (a*)b(\backslash 1a)b(?=(\backslash 1)* \$ )(\backslash 2)* \$ $$ $ L(\alpha ) = L. $
+$$ \alpha = (a*)b(\backslash 1a)b(?=(\backslash 1)* \mathdollar )(\backslash 2)* \mathdollar $$ $ L(\alpha ) = L. $
 \end{proof}
 
 \begin{veta}
@@ -205,7 +211,14 @@ Vyplýva z vety \ref{CS-lookahead} a toho, že $ E-regex \in \L_{CS} $.
 LE-regex je uzavretá na prienik.
 \end{veta}
 \begin{proof}
-Nech $L_1,L_2 \in LE-regex$, potom $L_1 \cap L_2 = \left( ?= L_1 \$ \right) L_2 \$ $.
+Nech $L_1,L_2 \in LE-regex$, potom $L_1 \cap L_2 = \left( ?= L_1 \mathdollar \right) L_2 \mathdollar $.
+\end{proof}
+
+\begin{veta}
+LE-regex nie je uzavretá na vymazávací homomorfizmus.
+\end{veta}
+\begin{proof}
+$ L = \lbrace a^i\#a^{i(i+1)k}\#a^{(i+2)(i+3)l} ~|~ k,l \in \N \rbrace, ~ \alpha = (a*)\#(?=(\backslash 1)*\#(\backslash 1 aa)*\mathdollar)(\backslash 1 a)*\#(\backslash 1 aaa)*\mathdollar $ \todo rozrobene...
 \end{proof}
 
 
@@ -215,7 +228,7 @@ Triedu LE-regex obohatenú o negatívny lookahead a negatívny lookbehind budeme
 L!E-regex je uzavretá na komplement.
 \end{veta}
 \begin{proof}
-Nech $L_1 \in LE-regex$, potom $L_1^c  = \left( ?! L_1 \$ \right) .* \$ $.
+Nech $L_1 \in LE-regex$, potom $L_1^c  = \left( ?! L_1 \mathdollar \right) .* \mathdollar $.
 \end{proof}
 
 \begin{veta}

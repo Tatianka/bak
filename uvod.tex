@@ -14,6 +14,36 @@ Bla bla úvodné info o regulárnych výrazoch:
 
 Zadefinujem regulárne jazyky s operáciami, ktoré pokrývajú triedu regulárnych jazykov. Niektoré konštrukcie sú oproti teoretickému modelu nové, ale dôkaz toho, že trieda jazykov zostáva rovnaká je triviálny. Definícia pochádza z článku \cite{ExtendedRegexPower}.
 
-\begin{enumerate}
-\item
-\end{enumerate}
+\underline{Základná forma regex-ov}
+\begin{list}{}{}
+\item[(1)] Pre každé $a \in \Sigma$, $a$ je regex a $L(a)=\lbrace a \rbrace$. Poznamenajme, že pre každé $x \in \lbrace (,), \{, \},[,],\mathdollar,|, \backslash, .,?,*,+ \rbrace, \backslash x \in \Sigma $ a je regex-om a $L(\backslash x) = \lbrace x \rbrace$. Naviac aj $\backslash n$ a $\backslash t$ patria do $\Sigma$ a oba sú regex-ami. $L(\backslash n)$ a $L(\backslash t)$ popisujú jazyky skladajúce sa z nového riadku a tabulátora.
+\item[(2)] Pre regex-y $e_1$ a $e_2$ 
+\begin{list}{}{}
+\item $(e_1)(e_2)$ (zreťazenie), 
+\item $(e_1)|(e_2)$ (alternácia), a 
+\item $(e_1)*$ (Kleeneho *) 
+\end{list}
+sú regex-y, kde $L((e_1)(e_2)) = L(e_1)L(e_2), L((e_1)|(e_2))=L(e_1) \cup L(e_2)$ a $L((e_1)*) = (L(e_1))^*$. Okrúhle zátvorky môžu byť vynechané. Ak sú vynechané, alternácia, zreťazenie a Kleeneho * majú vyššiu prioritu.
+\item[(3)] Regex je tvorený konečným počtom prvkov z (1) a (2).
+\end{list}
+
+\underline{Skrátnená forma}
+\begin{list}{}{}
+\item[(1)] Pre každý regex $e$: $(e)+$ je regex a $(e)+ \equiv e(e)*$.
+\item[(2)] Znak ' . ' znamená ľubovolný znak okrem $\backslash n$.
+\end{list}
+
+\underline{Triedy znakov}
+\begin{list}{}{}
+\item[(1)] Pre $a_{i_1},a_{i_2},\dots ,a_{i_t} \in \Sigma,~t \geq 1,~\left[ a_{i_1}a_{i_2}\dots a_{i_t} \right] \equiv a_{i_1}|a_{i_2}|\dots |a_{i_t} $.
+\item[(2)] Pre $a_i,a_j \in \Sigma$ také, že $a_i\leq a_j,~ [a_i-a_j]$ je regex a $[a_i-a_j]\equiv a_i|a_{i+1}|\dots |a_j$.
+\item[(3)] Pre $a_{i_1},a_{i_2},\dots ,a_{i_t} \in \Sigma,~t \geq 1,~\left[ \textasciicircum a_{i_1}a_{i_2}\dots a_{i_t} \right] \equiv b_{i_1}|b_{i_2}|\dots |b_{i_s} $, kde $\lbrace b_{i_1}|b_{i_2}|\dots |b_{i_s}\rbrace = \Sigma - \lbrace a_{i_1},a_{i_2},\dots ,a_{i_t} \rbrace$.
+\item[(4)] Pre $a_i,a_j \in \Sigma$ také, že $a_i\leq a_j,~ [a_i-a_j]$ je regex a $[\textasciicircum a_i-a_j]\equiv b_{i_1}|b_{i_2}|\dots |b_{i_s}$, kde $\lbrace b_{i_1}|b_{i_2}|\dots |b_{i_s}\rbrace = \Sigma - \lbrace a_i|a_{i+1}|\dots |a_j \rbrace$.
+\item[(5)] Zmes (1) a (2) alebo (3) a (4).
+\end{list}
+
+\underline{Ukotvenie}
+\begin{list}{}{}
+\item[(1)] Znak pre začiatok riadku $ \textasciicircum $.
+\item[(2)] Znak pre koniec riadku $ \mathdollar $.
+\end{list}
