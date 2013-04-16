@@ -12,18 +12,20 @@ Bla bla úvodné info o regulárnych výrazoch:
 
 \section{Základná forma regulárnych výrazov}\label{chap:zaklad}
 
-Zadefinujem regulárne jazyky s operáciami, ktoré pokrývajú triedu regulárnych jazykov. Niektoré konštrukcie sú oproti teoretickému modelu nové, ale dôkaz toho, že trieda jazykov zostáva rovnaká je triviálny. Definícia pochádza z článku \cite{ExtendedRegexPower}.
+Keďže implementované regulárne výrazy sa už natoľko líšia od počiatočného teoretického modelu, zaužíval sa pre ne názov \textbf{regexy}. Budem ho používať aj ja a prípadnými predponami budem rozlišovať, ktorú množinu operácií práve myslím. 
 
-\underline{Základná forma regex-ov}
+Pojem \textbf{regex} bude slúžiť na pomenovanie regulárnych výrazov, ktoré pokrývajú triedu regulárnych jazykov. Pre ozrejmenie uvediem základnú definíciu regexu z článku \cite{ExtendedRegexPower}. Niektoré konštrukcie sú oproti teoretickému modelu nové, ale dôkaz toho, že pokrýva stále rovnakú triedu jazykov, je triviálny.
+
+\underline{Základná forma regexov}
 \begin{list}{}{}
-\item[(1)] Pre každé $a \in \Sigma$, $a$ je regex a $L(a)=\lbrace a \rbrace$. Poznamenajme, že pre každé $x \in \lbrace (,), \{, \},[,],\mathdollar,|, \backslash, .,?,*,+ \rbrace, \backslash x \in \Sigma $ a je regex-om a $L(\backslash x) = \lbrace x \rbrace$. Naviac aj $\backslash n$ a $\backslash t$ patria do $\Sigma$ a oba sú regex-ami. $L(\backslash n)$ a $L(\backslash t)$ popisujú jazyky skladajúce sa z nového riadku a tabulátora.
-\item[(2)] Pre regex-y $e_1$ a $e_2$ 
+\item[(1)] Pre každé $a \in \Sigma$, $a$ je regex a $L(a)=\lbrace a \rbrace$. Poznamenajme, že pre každé $x \in \lbrace (,), \{, \},[,],\mathdollar,|, \backslash, .,?,*,+ \rbrace, \backslash x \in \Sigma $ a je regexom a $L(\backslash x) = \lbrace x \rbrace$. Naviac aj $\backslash n$ a $\backslash t$ patria do $\Sigma$ a oba sú regexami. $L(\backslash n)$ a $L(\backslash t)$ popisujú jazyky skladajúce sa z nového riadku a tabulátora.
+\item[(2)] Pre regexy $e_1$ a $e_2$ 
 \begin{list}{}{}
 \item $(e_1)(e_2)$ (zreťazenie), 
 \item $(e_1)|(e_2)$ (alternácia), a 
 \item $(e_1)*$ (Kleeneho *) 
 \end{list}
-sú regex-y, kde $L((e_1)(e_2)) = L(e_1)L(e_2), L((e_1)|(e_2))=L(e_1) \cup L(e_2)$ a $L((e_1)*) = (L(e_1))^*$. Okrúhle zátvorky môžu byť vynechané. Ak sú vynechané, alternácia, zreťazenie a Kleeneho * majú vyššiu prioritu.
+sú regexy, kde $L((e_1)(e_2)) = L(e_1)L(e_2), L((e_1)|(e_2))=L(e_1) \cup L(e_2)$ a $L((e_1)*) = (L(e_1))^*$. Okrúhle zátvorky môžu byť vynechané. Ak sú vynechané, alternácia, zreťazenie a Kleeneho * majú vyššiu prioritu.
 \item[(3)] Regex je tvorený konečným počtom prvkov z (1) a (2).
 \end{list}
 

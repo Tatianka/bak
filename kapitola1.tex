@@ -2,24 +2,20 @@
 \label{chap:kapitola1}
 
 V tejto kapitole formálne definujem operácie z uvedenej dokumentácie jazyka Python \cite{Python3Documentation} a ukážem ich silu. Budem používať nasledovné zápisy:
-
-$ L_{1}L_{2} $ -- zreťazenie jazykov $ L_{1} $ a $ L_{2} $
-
-$ L^* $ -- iterácia ($L^*=\cup^{\infty}_{i=0}L^i$, kde $L^0=\lbrace \varepsilon \rbrace$, $L^1=L$ a $L^{i+1}=L^iL$)
-
-$ \R $ -- trieda regulárnych jazykov
-
-$ \L_{CF}$ -- trieda bezkontextových jazykov
-
-$ \L_{CS}$ -- trieda bezkontextových jazykov
-
-regex -- regulárny výraz, ktorý môže vytvoriť najviac regulárny jazyk (základná definícia)
-
-e-regex -- regex so spätnými referenciami
-
-le-regex -- e-regex s operáciami lookahead a lookbehind
-
-DKA/NKA -- deterministický/nedeterministický konečný automat
+\begin{list}{}{}
+\item $ L_{1}L_{2} $ -- zreťazenie jazykov $ L_{1} $ a $ L_{2} $
+\item $ L^* $ -- iterácia ($L^*=\cup^{\infty}_{i=0}L^i$, kde $L^0=\lbrace \varepsilon \rbrace$, $L^1=L$ a $L^{i+1}=L^iL$)
+\item $ \R $ -- trieda regulárnych jazykov
+\item $ \L_{CF}$ -- trieda bezkontextových jazykov
+\item $ \L_{CS}$ -- trieda bezkontextových jazykov
+\item DKA/NKA -- deterministický/nedeterministický konečný automat
+\item LBA -- lineárne ohraničený Turingov stroj
+\item regex -- regulárny výraz, ktorý môže vytvoriť najviac regulárny jazyk (základná definícia)
+\item e-regex -- regex so spätnými referenciami
+\item le-regex -- e-regex s operáciami lookahead a lookbehind
+\item Eregex -- trieda jazykov tvorená e-regexami
+\item LEregex -- trieda jazykov tvorená le-regexami
+\end{list}
 
 \section{Lookahead, lookbehind}
 \label{chap:lookahead}
@@ -67,7 +63,7 @@ $$ L_{1}(?<!L_{2})L_{3} = \lbrace uv ~|~ u \in L_{1} \land v \in L_{3} \land nee
 Nech $ L_{1}, L_{2}, L_{3} \in \R $. Potom $ L = L_{1}(?=L_{2})L_{3} \in \R $.
 \end{veta}
 \begin{proof}
-Nech $ L_{1},L_{2},L_{3} $ sú regulárne, nech $ A_{i} = (K_{i},\Sigma_{i},\delta_{i},q_{0i},F_{i}) $ sú DKA také, že $ L(A_{i})=L_{i}, i \in \lbrace 1,2,3\rbrace $. Zostrojím NKA $ A = (K,\Sigma,\delta,q_{0},F) $ pre $L$, kde
+Keďže $ L_{1},L_{2},L_{3} $ sú regulárne, existujú $ A_{i} = (K_{i},\Sigma_{i},\delta_{i},q_{0i},F_{i}) $ DKA také, že $ L(A_{i})=L_{i}, i \in \lbrace 1,2,3\rbrace $. Zostrojím NKA $ A = (K,\Sigma,\delta,q_{0},F) $ pre $L$, kde
 $ K = K_{1} \cup K_{2} \times K_{3} \cup K_{3} ~ ( $predp. $ K_{1} \cap K_{3}= \emptyset), ~
 \Sigma=\Sigma_{1}\cup\Sigma_{2}\cup\Sigma_{3}, ~ q_{0}=q_{01}, ~ F = F_{3} \cup F_{2} \times F_{3}, ~ \delta $~funkciu definujeme nasledovne:
 \begin{eqnarray*}
@@ -111,7 +107,7 @@ Pre $ L_{1}, L_{2}, L_{3} \in \L_{CS} $ a slovo z $ L = L_{1}(?=L_{2})L_{3} $ zo
 Uzavretosť na lookbehind sa dokáže analogicky.
 \end{proof}
 
-Teraz ukážem, ako lookahead a lookbehind zapadajú do regulárnych výrazov.
+Teraz ukážem, ako lookahead a lookbehind nezosilnia model regexov.
 
 \begin{veta}
 Nech $L_1,L_2,L_3,L_4 \in \R$, $\alpha = \left( L_1 \left( ?=L_2\right) L_3 \right) * L_4$. Potom $L(\alpha) \in \R$.
@@ -134,15 +130,15 @@ Automat $A$ akceptuje až keď akceptuje $A_4$. Je zrejmé, že ak v simulácii 
 
 $L(A) = L(\alpha).$
 
-$\subseteq:$ Nech $w \in L(A)$, potom preň existuje akceptačný výpočet na $A$. Podľa stavov vieme určiť počet iterácií, časti z $L_1,L_3,L_4$ a takisto vznikajúce a akceptujúce výpočty na $A_2$ -- každý takýto výpočet totiž začína s výpočtom na $A_3$ a keďže $A_2$ je deterministický, existuje práve jeden výpočet, ktorý musí byť akceptačný. Teda vieme povedať, že $w = x_1y_1x_2y_2 \dots x_ny_nz$, kde $n$ je počet iterácií, $\forall i = 1, 2, \dots, n : ~ x_i \in L_1, y_i \in L_3 $ a $z \in L_4$. Zároveň vieme, že v mieste, kde začína $y_i$ takisto začína podreťazec slova $w$, ktorý patrí do $L_2$. Z toho vidíme ako vyzerá zhoda regulárneho výrazu $\alpha$.
+$\subseteq:$ Nech $w \in L(A)$, potom preň existuje akceptačný výpočet na $A$. Podľa stavov vieme určiť počet iterácií, časti z $L_1,L_3,L_4$ a takisto vznikajúce a akceptujúce výpočty na $A_2$ -- každý takýto výpočet totiž začína s výpočtom na $A_3$ a keďže $A_2$ je deterministický, existuje práve jeden výpočet, ktorý musí byť akceptačný. Teda vieme povedať, že $w = x_1y_1x_2y_2 \dots x_ny_nz$, kde $n$ je počet iterácií, $\forall i = 1, 2, \dots, n : ~ x_i \in L_1, y_i \in L_3 $ a $z \in L_4$. Zároveň vieme, že v mieste, kde začína $y_i$ takisto začína podreťazec slova $w$, ktorý patrí do $L_2$. Z toho vidíme ako vyzerá zhoda regexu $\alpha$.
 
 $\supseteq:$ Majme $v \in L(\alpha)$, teda vieme nájsť zhody podslov $v$ pre všetky $L_i$ (rovnaká dekompozícia slova ako v predošlej inklúzii). Keďže poradie jazykov je rovnaké ako $\varepsilon$--ové napojenie stavov v $A$ (akceptačný--počiatočný, akceptačný--akceptačný pri $L_4$), vieme správne poprepájať akceptačné výpočty jednotlivých $A_i$ do celkového výpočtu automatu $A$.
 \end{proof}
 
-Tu ukážem, že dávať do lookaheadu prefixový jazyk nemá zmysel. Vytvorme čisto jazyk všetkých rôznych prefixov, aké obsahuje. Do lookaheadu stačí vložiť regulárny výraz pre tento jazyk a celkový akceptovaný jazyk zostane rovnaký(zhodovať sa s...? \todo). Samozrejme, to isté platí aj pre lookbehind a sufixové jazyky.
+Tu ukážem, že dávať do lookaheadu prefixový jazyk nemá zmysel. Vytvorme čisto jazyk všetkých rôznych prefixov, aké obsahuje. Do lookaheadu stačí vložiť regex pre tento jazyk a celkový akceptovaný jazyk zostane rovnaký(zhodovať sa s...? \todo). Samozrejme, to isté platí aj pre lookbehind a sufixové jazyky.
 
 \begin{veta}
-Nech $L$ je ľubovoľný jazyk a $L_p = L \cup \lbrace uv ~|~ u \in L \rbrace$. Nech $\alpha$ je regulárny výraz taký, že obsahuje $(?=L_p)$. Potom ak prepíšeme tento lookahead na $(?=L)$ (nazvime to $\alpha '$), bude platiť $L(\alpha ') = L(\alpha )$.
+Nech $L$ je ľubovoľný jazyk a $L_p = L \cup \lbrace uv ~|~ u \in L \rbrace$. Nech $\alpha$ je ľubovoľný regulárny výraz taký, že obsahuje $(?=L_p)$. Potom ak prepíšeme tento lookahead na $(?=L)$ (nazvime to $\alpha '$), bude platiť $L(\alpha ') = L(\alpha )$.
 \end{veta}
 \begin{proof}
 $\subseteq :$ triviálne.
@@ -159,76 +155,76 @@ Uvedomme si, že lookaround nie je fixovaný na dĺžku vstupu - musí sa zhodov
 
 \section{Spätné referencie}\label{chap:backref}
 
-Rozšírme regulárne výrazy o spätné referencie. V tejto časti ma bude zaujímať, čo sa stane, ak k tomuto modelu pridáme ešte lookahead a lookbehind. Najprv však uvediem základné informácie o triede so spätnými refereciami.
+Rozšírme regexy o spätné referencie, túto množinu operácií nazvem e-regex. V tejto časti ma bude zaujímať, čo sa stane, ak k tomuto modelu pridáme ešte lookahead a lookbehind. Najprv však uvediem základné informácie o triede e-regexov.
 
-Spätná referencia (angl. \textit{backreference}) je v regulárnych výrazoch označená ako $ \backslash m $. Očíslujme okrúhle zátvorky zľava doprava podľa poradia ľavej zátvorky a zoberme podslovo, ktoré akceptoval výraz vnútri $m$-tých zátvoriek. $ \backslash m $ bude predstavovať presne tento reťazec (pri inom slove teda môže byť iným reťazcom). Budem predpokladať, že spätná referencia s číslom $m$ sa bude nachádzať až za pravou zátvorkou s číslom $m$.
+Spätná referencia (angl. \textit{backreference}) je v e-regexoch označená ako $ \backslash m $. Očíslujme okrúhle zátvorky zľava doprava podľa poradia ľavej zátvorky a zoberme podslovo, ktoré akceptoval výraz vnútri $m$-tých zátvoriek. $ \backslash m $ bude predstavovať presne tento reťazec (pri inom slove teda môže byť iným reťazcom). Budem predpokladať, že spätná referencia s číslom $m$ sa bude nachádzať až za pravou zátvorkou s číslom $m$.
 
-Triedu jazykov tvorenú regulárnymi výrazmi (popisujúce triedu regulárnych jazykov) so spätnými referenciami budem nazývať E-regex, presná definícia sa nachádza v článku \cite{ExtendedRegexPower}. (Autori ju pôvodne nazvali extended regex resp. EREG, avšak pre lepšiu prehľadnosť v tejto práci som názov upravila.)
+Triedu jazykov e-regexov budem nazývať Eregex, presná definícia sa nachádza v článku \cite{ExtendedRegexPower}. (Autori ju pôvodne nazvali extended regex resp. EREG, avšak pre lepšiu prehľadnosť v tejto práci som názov upravila.)
 
 Uvediem najprv niektoré fakty o tejto triede.
-Trieda E-regex je podmnožinou $\L_{CS}$, ale existujú jazyky z $\L_{CF}$ aj $\L_{CS}$, ktoré do nej nepatria. Je uzavretá na homomorfizmus a nie je uzavretá na komplement, inverzný homomorfizmus, konečnú substitúciu, shuffle s regulárnym jazykom \cite{ExtendedRegexPower} a prienik \cite{ExtendedRegexIntersec}.
+Trieda Eregex je podmnožinou $\L_{CS}$, ale existujú jazyky z $\L_{CF}$ aj $\L_{CS}$, ktoré do nej nepatria. Je uzavretá na homomorfizmus a nie je uzavretá na komplement, inverzný homomorfizmus, konečnú substitúciu, shuffle s regulárnym jazykom \cite{ExtendedRegexPower} a prienik \cite{ExtendedRegexIntersec}.
 
 \begin{df}
-Triedu E-regex obohatenú o pozitívny lookahead a pozitívny lookbehind budeme nazývať LE-regex.
+Množinu e-regex obohatenú o pozitívny lookahead a pozitívny lookbehind budem nazývať le-regex.
 \end{df}
 
 \begin{df}
-Ak $\alpha$ je regulárny výraz, ktorý môže obsahovať aj spätné referencie a operácie lookahead a lookbehind. Potom hovoríme, že $\alpha$ je l-rozšírený regex a $L( \alpha)$ patrí do triedy LE-regex.
+Triede jazykov tvorenej le-regexami budem hovoriť LEregex.
 \end{df}
 
-Tu si definujme model na reprezentáciu regulárnych výrazov so spätnými referenciami a pozitívnymi operáciami lookahead a lookbehind.
+Tu si definujme model na reprezentáciu le-regexov.
 
 \todo just idea; uvidim este co s touto definiciou (je to naviazanie na def. z jedneho clanku)
 \begin{df}
-Nech $\alpha$ je l-rozšírený regex. Nech $\alpha '$ je rovnaký ako $\alpha$, akurát bez operácií lookahead a lookbehind. Potom $\alpha ' \in E-regex$ a teda je reprezentovaný stromom $T_{\alpha '}$ podľa definície triedy E-regex. Zostrojme konečný (orientovaný, usporiadaný) výpočtový strom $S_\alpha$ z $T_{\alpha '}$ tak, že pridáme lookahead/lookbehind do vrcholu, kam zapadne pri postupnom rozkladaní regexu od koreňa a urobíme s ním nasledovné:
+Nech $\alpha$ je le-regex. Nech $\alpha '$ je rovnaký ako $\alpha$, akurát bez operácií lookahead a lookbehind. Potom $\alpha ' \in Eregex$ a teda je reprezentovaný stromom $T_{\alpha '}$ podľa definície triedy Eregex. Zostrojme konečný (orientovaný, usporiadaný) výpočtový strom $S_\alpha$ z $T_{\alpha '}$ tak, že pridáme lookahead/lookbehind do vrcholu, kam zapadne pri postupnom rozkladaní regexu od koreňa a urobíme s ním nasledovné:
 \begin{itemize}
   \item  $\alpha$ obsahuje lookahead, teda $S_\alpha$ má niekde vrchol $(u, (?=\beta_1 )\beta_2)$. Potom tento vrchol bude mať dvoch synov - vrchol $(u,\beta_2)$, ktorý pokračuje ako v $T_{\alpha '}$, a virtuálny vrchol $(u,\beta_1 (.*))$, ktorý sa ďalej rozloží podľa definície.
   \item  $\alpha$ obsahuje lookbehind, teda $S_\alpha$ má niekde vrchol $(u, \beta_1(?<=\beta_2))$. Potom tento vrchol bude mať dvoch synov - vrchol $(u,\beta_1)$, ktorý pokračuje ako v $T_{\alpha '}$, a virtuálny vrchol $(u,(.*)\beta_2)$, ktorý sa ďalej rozloží podľa definície.
   \item všetky ostatné vrcholy sú rovnaké ako v $T_{\alpha '}$
 \end{itemize}
-Jazyk popísaný l-rozšíreným regexom $\alpha$ je definovaný nasledovne: 
+Jazyk popísaný le-regexom $\alpha$ je definovaný nasledovne: 
 $$L(\alpha ) = \lbrace w \in \Sigma ^* ~|~ (w, \alpha)~je~koreňom~nejakého~výpočtového~stromu~S_\alpha \rbrace$$
 \end{df}
 
 \begin{veta}
-$ E-regex \subsetneq LE-regex $
+$ Eregex \subsetneq LEregex $
 \end{veta}
 \begin{proof}
 $ \subseteq $ vyplýva z definície.
 
-Jazyk $L = \lbrace a^iba^{i+1}ba^k ~|~ k=i(i+1)k' ~ pre ~ nejaké ~ k'>0, i>0 \rbrace$ nepatrí do triedy E-regex \cite[Lemma 2]{ExtendedRegexIntersec}, ale patrí do LE-regex:
-$$ \alpha = (a*)b(\backslash 1a)b(?=(\backslash 1)* \mathdollar )(\backslash 2)* \mathdollar $$ $ L(\alpha ) = L. $
+Jazyk $L = \lbrace a^iba^{i+1}ba^k ~|~ k=i(i+1)k' ~ pre ~ nejaké ~ k'>0, i>0 \rbrace$ nepatrí do triedy Eregex \cite[Lemma 2]{ExtendedRegexIntersec}, ale patrí do LEregex:
+$$ \alpha = (a*)b(\backslash 1a)b(?=(\backslash 1)* \mathdollar )(\backslash 2)* \mathdollar $$
 \end{proof}
 
 \begin{veta}
-$ LE-regex \subseteq \L_{CS} $
+$ LEregex \subseteq \L_{CS} $
 \end{veta}
 \begin{proof}
-Vyplýva z vety \ref{CS-lookahead} a toho, že $ E-regex \in \L_{CS} $.
+Vyplýva z vety \ref{CS-lookahead} a toho, že $ Eregex \in \L_{CS} $.
 \end{proof}
 
 \begin{veta}
-LE-regex je uzavretá na prienik.
+LEregex je uzavretá na prienik.
 \end{veta}
 \begin{proof}
-Nech $L_1,L_2 \in LE-regex$, potom $L_1 \cap L_2 = \left( ?= L_1 \mathdollar \right) L_2 \mathdollar $.
+Nech $L_1,L_2 \in LEregex$, potom $L_1 \cap L_2 = \left( ?= L_1 \mathdollar \right) L_2 \mathdollar $.
 \end{proof}
 
 \begin{veta}
-LE-regex je uzavretá na homomorfizmus.
+LEregex je uzavretá na homomorfizmus.
 \end{veta}
 \begin{proof}
-Nech $\alpha$ je le-regex a $h$ ľubovoľný homomorfizmus. Zoberme $w \in L(\alpha)$, existuje preň výpočtový strom $S_\alpha$ s koreňom $(w,\alpha)$. Aplikujme teraz na celý strom homomorfizmus $h$ - t.j. vrchol $(u,\beta)$ bude $(h(u),h(\beta))$, pričom homomorfizmus na le-regexe vyzerá tak, že mení iba abecedu jazyka a znaky operácií zostávajú rovnaké. Ak $h(a) = a_1a_2\dots a_n$ pre nejaké $a$ a $n \geq 2$, potom v niektorých listoch zostal reťazec písmeniek a treba ho rozvetviť. Ak $h$ je vymazávací, potom treba zmazať vrcholy $(\varepsilon,\varepsilon)$. Jediné povolené $\varepsilon$--ové vrcholy majú totiž tvar $(\varepsilon,\beta)$, kde $\beta = \beta_1 *$ alebo $\beta = \beta_1 ?$. Teraz máme korektný výpočtový strom pre $h(w)$, čo platí pre ľubovoľné $w$, z čoho vyplýva $h(L(\alpha)) \subseteq L(h(\alpha)) \subseteq LE-regex$. Druhá inklúzia platí, pretože $h(\alpha)$ je tiež korektný le-regex.
+Nech $\alpha$ je le-regex a $h$ ľubovoľný homomorfizmus. Zoberme $w \in L(\alpha)$, existuje preň výpočtový strom $S_\alpha$ s koreňom $(w,\alpha)$. Aplikujme teraz na celý strom homomorfizmus $h$ - t.j. vrchol $(u,\beta)$ bude $(h(u),h(\beta))$, pričom homomorfizmus na le-regexe vyzerá tak, že mení iba abecedu jazyka a znaky operácií zostávajú rovnaké. Ak $h(a) = a_1a_2\dots a_n$ pre nejaké $a$ a $n \geq 2$, potom v niektorých listoch zostal reťazec písmeniek a treba ho rozvetviť. Ak $h$ je vymazávací, potom treba zmazať vrcholy $(\varepsilon,\varepsilon)$. Jediné povolené $\varepsilon$--ové vrcholy majú totiž tvar $(\varepsilon,\beta)$, kde $\beta = \beta_1 *$ alebo $\beta = \beta_1 ?$. Teraz máme korektný výpočtový strom pre $h(w)$, čo platí pre ľubovoľné $w$, z čoho vyplýva $h(L(\alpha)) \subseteq L(h(\alpha)) \subseteq LEregex$. Druhá inklúzia platí, pretože $h(\alpha)$ je tiež korektný le-regex.
 \end{proof}
 
 
-Triedu LE-regex obohatenú o negatívny lookahead a negatívny lookbehind budeme nazývať L!E-regex.
+Triedu LEregex obohatenú o negatívny lookahead a negatívny lookbehind budeme nazývať L!Eregex.
 
 \begin{veta}
-L!E-regex je uzavretá na komplement.
+L!Eregex je uzavretá na komplement.
 \end{veta}
 \begin{proof}
-Nech $L_1 \in LE-regex$, potom $L_1^c  = \left( ?! L_1 \mathdollar \right) .* \mathdollar $.
+Nech $L_1 \in LEregex$, potom $L_1^c  = \left( ?! L_1 \mathdollar \right) .* \mathdollar $.
 \end{proof}
 
 \begin{veta}
