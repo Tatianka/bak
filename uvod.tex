@@ -23,9 +23,9 @@ Pojem \textbf{regex} bude slúžiť na pomenovanie regulárnych výrazov, ktoré
 \begin{list}{}{}
 \item $(e_1)(e_2)$ (zreťazenie), 
 \item $(e_1)|(e_2)$ (alternácia), a 
-\item $(e_1)*$ (Kleeneho *) 
+\item $(e_1)*$ (Kleeneho uzáver) 
 \end{list}
-sú regexy, kde $L((e_1)(e_2)) = L(e_1)L(e_2), L((e_1)|(e_2))=L(e_1) \cup L(e_2)$ a $L((e_1)*) = (L(e_1))^*$. Okrúhle zátvorky môžu byť vynechané. Ak sú vynechané, alternácia, zreťazenie a Kleeneho * majú vyššiu prioritu.
+sú regexy, kde $L((e_1)(e_2)) = L(e_1)L(e_2), L((e_1)|(e_2))=L(e_1) \cup L(e_2)$ a $L((e_1)*) = (L(e_1))^*$. Okrúhle zátvorky môžu byť vynechané. Ak sú vynechané, alternácia, zreťazenie a Kleeneho uzáver majú vyššiu prioritu.
 \item[(3)] Regex je tvorený konečným počtom prvkov z (1) a (2).
 \end{list}
 

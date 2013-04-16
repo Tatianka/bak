@@ -59,7 +59,7 @@ $$ L_{1}(?<=L_{2})L_{3} = \lbrace uvw ~|~ uv \in L_{1} \land v \in L_{2} \land w
 $$ L_{1}(?<!L_{2})L_{3} = \lbrace uv ~|~ u \in L_{1} \land v \in L_{3} \land neexituje~také~x,y,~že~u=xy~a~y \in L_2 \rbrace $$ Operáciu $(?<!\dots)$ nazývame negatívny lookbehind.
 \end{df}
 
-\begin{veta}
+\begin{veta} \label{lookahead+R}
 Nech $ L_{1}, L_{2}, L_{3} \in \R $. Potom $ L = L_{1}(?=L_{2})L_{3} \in \R $.
 \end{veta}
 \begin{proof}
@@ -109,9 +109,9 @@ Uzavretosť na lookbehind sa dokáže analogicky.
 
 Teraz ukážem, ako lookahead a lookbehind nezosilnia model regexov.
 
-\begin{veta}
+\begin{lema}\label{lookahead s *}
 Nech $L_1,L_2,L_3,L_4 \in \R$, $\alpha = \left( L_1 \left( ?=L_2\right) L_3 \right) * L_4$. Potom $L(\alpha) \in \R$.
-\end{veta} 
+\end{lema} 
 \begin{proof}
 Keďže $L_1,L_2,L_3,L_4 \in \R$, tak pre ne existujú DKA $A_1,A_2,A_3,A_4$, kde $A_i = \left( K_i, \Sigma_i, \delta_i, q_{0i}, F_i \right)$ pre $\forall i$. Z nich zostrojíme NKA $A$ pre $L$. Výpočet bez lookaheadov by vyzeral tak, že by sme simulovali $A_1$, potom po jeho akceptácii $A_3$ a odtiaľ by sa išlo v rámci iterácie naspäť na $A_1$. Zároveň z $A_1$ by sa dalo na $\varepsilon$ prejsť na $A_4$, čo by znamenalo koniec iterácie (ošetruje aj nulovú iteráciu). Pozrime sa na to, ako a kam vsunúť lookahead. Problém je, že pri každej ďalšej iterácii pribúda nový, teda ďalší $A_2$. Vieme ich však simulovať všetky naraz, keď vezmeme do úvahy, že vždy pracujeme nad konečnou abecedou a $K_2$ je konečná. Z toho vyplýva, že aj $\P(K_2)$ je konečná.
 
@@ -135,6 +135,16 @@ $\subseteq:$ Nech $w \in L(A)$, potom preň existuje akceptačný výpočet na $
 $\supseteq:$ Majme $v \in L(\alpha)$, teda vieme nájsť zhody podslov $v$ pre všetky $L_i$ (rovnaká dekompozícia slova ako v predošlej inklúzii). Keďže poradie jazykov je rovnaké ako $\varepsilon$--ové napojenie stavov v $A$ (akceptačný--počiatočný, akceptačný--akceptačný pri $L_4$), vieme správne poprepájať akceptačné výpočty jednotlivých $A_i$ do celkového výpočtu automatu $A$.
 \end{proof}
 
+\begin{veta}
+Regexy sú uzavreté na lookahead.
+\end{veta}
+\begin{proof}
+Regexy pokrývajú triedu regulárnych jazykov a tá je na lookahead uzavretá \ref{lookahead+R}. Keďže pracujeme s množinou operácií, treba overiť, či nejaká ich kombinácia nie je náhodou silnejšia. Ak regex umiestnime do lookaheadu, či pred alebo za neho, vždy to bude regulárny jazyk a celý regex bude tiež definovať regulárny jazyk. Teda nás zaujíma vloženie lookaheadu dovnútra vykonávanej operácie. V tomto prípade prichádza do úvahy $*,+$ a $?$.
+
+$?$ veľa nespraví -- lookahead tam buď bude 1x alebo nebude vôbec. $+$ je prípad $*$ jedným lookaheadom istým. No a podľa lemy \ref{lookahead s *} vieme, že ani táto kombinácia nestačí na zložitejší jazyk.
+\end{proof}
+
+Nejaké vlastnosti lookaheadu.
 Tu ukážem, že dávať do lookaheadu prefixový jazyk nemá zmysel. Vytvorme čisto jazyk všetkých rôznych prefixov, aké obsahuje. Do lookaheadu stačí vložiť regex pre tento jazyk a celkový akceptovaný jazyk zostane rovnaký(zhodovať sa s...? \todo). Samozrejme, to isté platí aj pre lookbehind a sufixové jazyky.
 
 \begin{veta}
