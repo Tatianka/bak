@@ -220,11 +220,12 @@ LEregex je uzavretá na prienik.
 Nech $L_1,L_2 \in LEregex$, potom $L_1 \cap L_2 = \left( ?= L_1 \mathdollar \right) L_2 \mathdollar $.
 \end{proof}
 
+\todo zla veta, zla zla zla!!!
 \begin{veta}
-LEregex je uzavretá na homomorfizmus.
+LEregex NIE je uzavretá na homomorfizmus.
 \end{veta}
 \begin{proof}
-Nech $\alpha$ je le-regex a $h$ ľubovoľný homomorfizmus. Zoberme $w \in L(\alpha)$, existuje preň výpočtový strom $S_\alpha$ s koreňom $(w,\alpha)$. Aplikujme teraz na celý strom homomorfizmus $h$ - t.j. vrchol $(u,\beta)$ bude $(h(u),h(\beta))$, pričom homomorfizmus na le-regexe vyzerá tak, že mení iba abecedu jazyka a znaky operácií zostávajú rovnaké. Ak $h(a) = a_1a_2\dots a_n$ pre nejaké $a$ a $n \geq 2$, potom v niektorých listoch zostal reťazec písmeniek a treba ho rozvetviť. Ak $h$ je vymazávací, potom treba zmazať vrcholy $(\varepsilon,\varepsilon)$. Jediné povolené $\varepsilon$--ové vrcholy majú totiž tvar $(\varepsilon,\beta)$, kde $\beta = \beta_1 *$ alebo $\beta = \beta_1 ?$. Teraz máme korektný výpočtový strom pre $h(w)$, čo platí pre ľubovoľné $w$, z čoho vyplýva $h(L(\alpha)) \subseteq L(h(\alpha)) \subseteq LEregex$. Druhá inklúzia platí, pretože $h(\alpha)$ je tiež korektný le-regex.
+\todo dokaz pribudne casom...
 \end{proof}
 
 
