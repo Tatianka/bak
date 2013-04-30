@@ -135,13 +135,13 @@ $\subseteq:$ Nech $w \in L(A)$, potom preň existuje akceptačný výpočet na $
 $\supseteq:$ Majme $v \in L(\alpha)$, teda vieme nájsť zhody podslov $v$ pre všetky $L_i$ (rovnaká dekompozícia slova ako v predošlej inklúzii). Keďže poradie jazykov je rovnaké ako $\varepsilon$--ové napojenie stavov v $A$ (akceptačný--počiatočný, akceptačný--akceptačný pri $L_4$), vieme správne poprepájať akceptačné výpočty jednotlivých $A_i$ do celkového výpočtu automatu $A$.
 \end{proof}
 
-\begin{veta}
+\begin{veta} \label{reg_uz_la}
 Regexy sú uzavreté na lookahead.
 \end{veta}
 \begin{proof}
 Regexy pokrývajú triedu regulárnych jazykov a tá je na lookahead uzavretá \ref{lookahead+R}. Keďže pracujeme s množinou operácií, treba overiť, či nejaká ich kombinácia nie je náhodou silnejšia. Ak regex umiestnime do lookaheadu, či pred alebo za neho, vždy to bude regulárny jazyk a celý regex bude tiež definovať regulárny jazyk. Teda nás zaujíma vloženie lookaheadu dovnútra vykonávanej operácie. V tomto prípade prichádza do úvahy $*,+$ a $?$.
 
-$?$ veľa nespraví -- lookahead tam buď bude 1x alebo nebude vôbec. $+$ je prípad $*$ jedným lookaheadom istým. No a podľa lemy \ref{lookahead s *} vieme, že ani táto kombinácia nestačí na zložitejší jazyk.
+$?$ veľa nespraví -- lookahead tam buď bude 1x alebo nebude vôbec. $+$ je prípad $*$ s jedným lookaheadom istým. No a podľa lemy \ref{lookahead s *} vieme, že ani táto kombinácia nestačí na zložitejší jazyk.
 \end{proof}
 
 Nejaké vlastnosti lookaheadu.
@@ -160,7 +160,7 @@ $\supseteq :$ Majme $w \in L(\alpha)$ a nech $x$ je také podslovo w, ktoré sa 
 Nech $\alpha$ je regulárny výraz, ktorý obsahuje nejaký taký lookahead $(?=L)$ (lookbehind $(?<=L)$), že $\varepsilon \in L$. Nech je $\alpha '$ regulárny výraz bez tohto lookaheadu (lookbehindu). Potom $L(\alpha ') = L(\alpha)$.
 \end{veta}
 \begin{proof}
-Uvedomme si, že lookaround nie je fixovaný na dĺžku vstupu - musí sa zhodovať s nejakým podslovom začínajúcim (končiacim) na konkrétnom mieste. Tým pádom akonáhle si môže regulárny výraz vnútri tPotomejto operácie vybrať $\varepsilon$, bude hlásiť zhodu vždy.
+Uvedomme si, že lookaround nie je fixovaný na dĺžku vstupu - musí sa zhodovať s nejakým podslovom začínajúcim sa (končiacim sa) na konkrétnom mieste. Tým pádom akonáhle si môže regulárny výraz vnútri tejto operácie vybrať $\varepsilon$, bude hlásiť zhodu vždy.
 \end{proof}
 
 \section{Spätné referencie}\label{chap:backref}
@@ -210,7 +210,9 @@ $$ \alpha = (a*)b(\backslash 1a)b(?=(\backslash 1)* \mathdollar )(\backslash 2)*
 $ LEregex \subseteq \L_{CS} $
 \end{veta}
 \begin{proof}
-Vyplýva z vety \ref{CS-lookahead} a toho, že $ Eregex \in \L_{CS} $.
+Vieme, že $ Eregex \in \L_{CS} $ \cite[Theorem 1]{ExtendedRegexPower}, teda ľubovoľný e-regex vieme simulovať pomocou LBA. Ukážem, že ak pridáme operáciu lookahead/lookbehind, vieme to simulovať tiež. Nech $\alpha$ je le-regex. Potom $A$ je LBA pre $\alpha$, ktorý ignoruje lookaround (t.j. vyrábame LBA pre e-regex). Teraz vytvorím LBA $B$ pre e-regex vnútri lookaroundu. Z nich vytvoríme LBA $C$ pre úplný le-regex $\alpha$ tak, že bude simulovať $A$ a keď príde na rad lookaround zaznačí si, v akom stave je $A$ a na ktorom políčku skončil a simuluje do toho miesta $B$. Pokiaľ $B$ akceptoval, vráti sa naspäť k výpočtu na $A$. $C$ akceptuje práve vtedy, keď $A$.
+
+Všimnime si, že samotný lookaround môže obsahovať le-regex, t.j. vnorený lookaround. Tých však môže byť iba konečne veľa, keďže každý le-regex musí mať konečný zápis. A teda si vieme pre ne naznačeným postupom postupne vybudovať LBA, ktorý ich dokáže simulovať.
 \end{proof}
 
 \begin{veta}
