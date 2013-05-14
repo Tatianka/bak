@@ -1,25 +1,56 @@
 \chapter{Názov kapitoly 1}
 \label{chap:kapitola1}
+...
 
-V tejto kapitole formálne definujem operácie z uvedenej dokumentácie jazyka Python \cite{Python3Documentation} a ukážem ich silu. Budem používať nasledovné zápisy:
+Keďže implementované regulárne výrazy sa už natoľko líšia od počiatočného teoretického modelu, zaužíval sa pre ne názov \textbf{regexy}. Budem ho používať aj ja a prípadnými predponami budem rozlišovať, ktorú množinu operácií práve myslím. 
+
+Pojem \textbf{regex} bude slúžiť na pomenovanie regulárnych výrazov, ktoré pokrývajú triedu regulárnych jazykov. Z tohto dôvodu nebudem vytvárať zvlášť pomenovanie pre túto triedu, bolo by to zbytočné. Pre ozrejmenie uvediem základnú definíciu regexu z článku \cite{ExtendedRegexPower}. Niektoré konštrukcie sú oproti teoretickému modelu nové, ale dôkaz toho, že pokrýva stále rovnakú triedu jazykov, je triviálny.
+
+\underline{Základná forma regexov}
 \begin{list}{}{}
-\item $ L_{1}L_{2} $ -- zreťazenie jazykov $ L_{1} $ a $ L_{2} $
-\item $ L^* $ -- iterácia ($L^*=\cup^{\infty}_{i=0}L^i$, kde $L^0=\lbrace \varepsilon \rbrace$, $L^1=L$ a $L^{i+1}=L^iL$)
-\item $ \R $ -- trieda regulárnych jazykov
-\item $ \L_{CF}$ -- trieda bezkontextových jazykov
-\item $ \L_{CS}$ -- trieda bezkontextových jazykov
-\item DKA/NKA -- deterministický/nedeterministický konečný automat
-\item LBA -- lineárne ohraničený Turingov stroj
-\item regex -- regulárny výraz, ktorý môže vytvoriť najviac regulárny jazyk (základná definícia)
-\item e-regex -- regex so spätnými referenciami
-\item le-regex -- e-regex s operáciami lookahead a lookbehind
-\item Eregex -- trieda jazykov tvorená e-regexami
-\item LEregex -- trieda jazykov tvorená le-regexami
-\item lookaround -- spoločný názov pre lookahead a lookbehind
+\item[(1)] Pre každé $a \in \Sigma$, $a$ je regex a $L(a)=\lbrace a \rbrace$. Poznamenajme, že pre každé $x \in \lbrace (,), \{, \},[,],\mathdollar,|, \backslash, .,?,*,+ \rbrace, \backslash x \in \Sigma $ a je regexom a $L(\backslash x) = \lbrace x \rbrace$. Naviac aj $\backslash n$ a $\backslash t$ patria do $\Sigma$ a oba sú regexami. $L(\backslash n)$ a $L(\backslash t)$ popisujú jazyky skladajúce sa z nového riadku a tabulátora.
+\item[(2)] Pre regexy $e_1$ a $e_2$ 
+\begin{list}{}{}
+\item $(e_1)(e_2)$ (zreťazenie), 
+\item $(e_1)|(e_2)$ (alternácia), a 
+\item $(e_1)*$ (Kleeneho uzáver) 
+\end{list}
+sú regexy, kde $L((e_1)(e_2)) = L(e_1)L(e_2), L((e_1)|(e_2))=L(e_1) \cup L(e_2)$ a $L((e_1)*) = (L(e_1))^*$. Okrúhle zátvorky môžu byť vynechané. Ak sú vynechané, alternácia, zreťazenie a Kleeneho uzáver majú vyššiu prioritu.
+\item[(3)] Regex je tvorený konečným počtom prvkov z (1) a (2).
 \end{list}
 
-\section{Lookahead, lookbehind}
-\label{chap:lookahead}
+\underline{Skrátnená forma}
+\begin{list}{}{}
+\item[(1)] Pre každý regex $e$: $(e)+$ je regex a $(e)+ \equiv e(e)*$.
+\item[(2)] Znak ' . ' znamená ľubovolný znak okrem $\backslash n$.
+\end{list}
+
+\underline{Triedy znakov}
+\begin{list}{}{}
+\item[(1)] Pre $a_{i_1},a_{i_2},\dots ,a_{i_t} \in \Sigma,~t \geq 1,~\left[ a_{i_1}a_{i_2}\dots a_{i_t} \right] \equiv a_{i_1}|a_{i_2}|\dots |a_{i_t} $.
+\item[(2)] Pre $a_i,a_j \in \Sigma$ také, že $a_i\leq a_j,~ [a_i-a_j]$ je regex a $[a_i-a_j]\equiv a_i|a_{i+1}|\dots |a_j$.
+\item[(3)] Pre $a_{i_1},a_{i_2},\dots ,a_{i_t} \in \Sigma,~t \geq 1,~\left[ \textasciicircum a_{i_1}a_{i_2}\dots a_{i_t} \right] \equiv b_{i_1}|b_{i_2}|\dots |b_{i_s} $, kde $\lbrace b_{i_1}|b_{i_2}|\dots |b_{i_s}\rbrace = \Sigma - \lbrace a_{i_1},a_{i_2},\dots ,a_{i_t} \rbrace$.
+\item[(4)] Pre $a_i,a_j \in \Sigma$ také, že $a_i\leq a_j,~ [a_i-a_j]$ je regex a $[\textasciicircum a_i-a_j]\equiv b_{i_1}|b_{i_2}|\dots |b_{i_s}$, kde $\lbrace b_{i_1}|b_{i_2}|\dots |b_{i_s}\rbrace = \Sigma - \lbrace a_i|a_{i+1}|\dots |a_j \rbrace$.
+\item[(5)] Zmes (1) a (2) alebo (3) a (4).
+\end{list}
+
+\underline{Ukotvenie}
+\begin{list}{}{}
+\item[(1)] Znak pre začiatok riadku $ \textasciicircum $.
+\item[(2)] Znak pre koniec riadku $ \mathdollar $.
+\end{list}
+
+Rada by som spomenula aj iné konštrukcie, ktoré v definícii chýbajú. V konečnom dôsledku síce modelu silu nepridajú, ale budem s nimi rátať v ďalšom výskume.
+
+\begin{list}{}{}
+\item $*?,+?,??$ definované ako $*,+,?$, ale snažia sa matchovať čo najmenej znakov ($*,+,?$ sú greedy)
+\item $\lbrace m \rbrace$ -- matchuje práve $m$ kópií predošlého regexu; $m \in \N$ je konštanta
+\item $ \lbrace m,n \rbrace$ -- matchuje aspoň $m$ a najviac $n$ kópií predošlého regexu, matchuje čo najviac; $m, n \in \N$ sú konštanty
+\item $ \lbrace m,n \rbrace ?$ -- ako $ \lbrace m,n \rbrace$, ale matchuje čo najmenej
+\item $(?\#\dots )$ komentár, pri matchovaní sa obsah ignoruje
+\end{list}
+
+Ukážme si, že to naozaj platí. Pre ľahší dôkaz uvediem aj formálne definície.
 
 \begin{df}[Greedy iterácia]
 $$ L_{1} \circledast L_{2} = \lbrace uv ~|~ u \in L_1^* \land v \in L_2 \land u~je~najdlhšie~také \rbrace$$
@@ -44,26 +75,36 @@ Majme $w \in L_1^*L_2$ a rozdeľme na podslová $u,v$ tak, že $u \in L_1^*, v \
 Trieda $\R$ je uzavretá na operácie $\circledast$ a $*?$.
 \end{dosledok}
 
+Z toho vyplýva aj uzavretosť na $+?,??$. O ostatných operáciách sa rozpisovať netreba, je zrejmé, že triedu jazykov nad regexami nerozšíria o žiaden nový jazyk. Poďme sa teda venovať tým zložitejsím a zaujímavejším operáciám.
+
+\section{Spätné referencie}\label{chap:backref1}
+
+Spätná referencia (angl. \textit{backreference}) je označovaná ako $ \backslash m $, kde $m \in \N$ je konštanta. Predstavujú reťazec, ktorý matchoval regex vnútri $m$--tých okrúhlych zátvoriek. Okrúhle zátvorky číslujeme zľava doprava podľa poradia ľavej zátvorky. Samozrejme, $\backslash m$ môže ukazovať ná zátvory, ktoré obsahujú regex s inými spätnými referenciami. Vždy však budeme predpokladať, že spätná referencia s číslom $m$ sa bude nachádzať až za pravou zátvorkou s číslom $m$.
+
+Regexy rozšírené o spätne referencie budeme nazývať \textbf{e-regex}. Triedu jazykov nad e-regexami budem nazývať \textbf{Eregex}, presná definícia sa nachádza v článku \cite{ExtendedRegexPower}. (Autori ju pôvodne nazvali extended regex resp. EREG, avšak pre lepšiu prehľadnosť v tejto práci som názov upravila.)
+
+Autori sa zaoberali vlastnosťami tejto triedy a dospeli k nasledujúcim výsledkom.
+Trieda Eregex je podmnožinou $\L_{CS}$, ale existujú jazyky z $\L_{CF}$ aj $\L_{CS}$, ktoré do nej nepatria. Je uzavretá na homomorfizmus a nie je uzavretá na komplement, inverzný homomorfizmus, konečnú substitúciu, shuffle s regulárnym jazykom \cite{ExtendedRegexPower} a prienik \cite{ExtendedRegexIntersec}.
+
+\section{Lookaround}
+\label{chap:lookahead}
+
+Lookaround je spoločné pomenovanie pre lookahead a lookbehind, nové operácie nad regexami. Oba majú pozitívnu a negatívnu verziu. Je jednoduchšie skúmať novú funkcionalitu postupne a preto sme sa rozhodli najprv sa venovať pozitívnemu lookaroundu a neskôr pridať aj ten negatívny. Tu si ich zadefinujeme a pozrieme sa na ich základné vlastnosti v rámci Chomského hierarchie a potom aj triedy Eregex.
+
 \begin{df}[Pozitívny lookahead]
 $$ L_{1}(?=L_{2})L_{3} = \lbrace uvw ~|~ u \in L_{1} \land v \in L_{2} \land vw \in L_{3} \rbrace $$ Operáciu $(?=\dots)$ nazývame pozitívny lookahead alebo len lookahead.
-\end{df}
-
-\begin{df}[Negatívny lookahead]
-$$ L_{1}(?!L_{2})L_{3} = \lbrace uv ~|~ u \in L_{1} \land v \in L_{3} \land neexistuje~také~x,y,~že~v=xy~a~x \in L_2 \rbrace $$ Operáciu $(?!\dots)$ nazývame negatívny lookahead.
 \end{df}
 
 \begin{df}[Pozitívny lookbehind]
 $$ L_{1}(?<=L_{2})L_{3} = \lbrace uvw ~|~ uv \in L_{1} \land v \in L_{2} \land w \in L_{3} \rbrace $$ Operáciu $(?<=\dots)$ nazývame pozitívny lookbehind alebo len lookbehind.
 \end{df}
 
-\begin{df}[Negatívny lookbehind]
-$$ L_{1}(?<!L_{2})L_{3} = \lbrace uv ~|~ u \in L_{1} \land v \in L_{3} \land neexituje~také~x,y,~že~u=xy~a~y \in L_2 \rbrace $$ Operáciu $(?<!\dots)$ nazývame negatívny lookbehind.
-\end{df}
-
 \begin{veta} \label{lookahead+R}
-Nech $ L_{1}, L_{2}, L_{3} \in \R $. Potom $ L = L_{1}(?=L_{2})L_{3} \in \R $.
+Trieda $\R$ je uzavretá na lookahead.
 \end{veta}
 \begin{proof}
+Nech $ L_{1}, L_{2}, L_{3} \in \R $, chceme ukázať, že  $ L = L_{1}(?=L_{2})L_{3} \in \R $.
+
 Keďže $ L_{1},L_{2},L_{3} $ sú regulárne, existujú $ A_{i} = (K_{i},\Sigma_{i},\delta_{i},q_{0i},F_{i}) $ DKA také, že $ L(A_{i})=L_{i}, i \in \lbrace 1,2,3\rbrace $. Zostrojím NKA $ A = (K,\Sigma,\delta,q_{0},F) $ pre $L$, kde
 $ K = K_{1} \cup K_{2} \times K_{3} \cup K_{3} ~ ( $predp. $ K_{1} \cap K_{3}= \emptyset), ~
 \Sigma=\Sigma_{1}\cup\Sigma_{2}\cup\Sigma_{3}, ~ q_{0}=q_{01}, ~ F = F_{3} \cup F_{2} \times F_{3}, ~ \delta $~funkciu definujeme nasledovne:
@@ -82,10 +123,10 @@ $ \subseteq: $ Nech $w \in L(A)$, potom existuje akceptačný výpočet na $A$. 
 \end{proof}
 
 \begin{veta}
-Nech $ L_{1}, L_{2}, L_{3} \in \R $. Potom $ L = L_{1}(?<=L_{2})L_{3} \in \R $.
+Trieda $\R$ je uzavretá na lookbehind.
 \end{veta}
 \begin{proof}
-Podobne ako pri lookahead. (Karteziánsky súčin stavov $L_1$ a $L_2$, ale $A_2$ sa pripája v každom stave $A_1$ - celkový NKA si potom nedeterministicky zvolí jeden moment tohto napojenia.)
+Opäť chceme ukázať, že $ L = L_{1}(?<=L_{2})L_{3} \in \R $ pre $ L_{1}, L_{2}, L_{3} \in \R $. Postupujeme podobne ako pri lookahead. (Karteziánsky súčin stavov $L_1$ a $L_2$, ale $A_2$ sa pripája v každom stave $A_1$ - celkový NKA si potom nedeterministicky zvolí jeden moment tohto napojenia.)
 \end{proof}
 
 \begin{veta}
@@ -137,16 +178,17 @@ $\supseteq:$ Majme $v \in L(\alpha)$, teda vieme nájsť zhody podslov $v$ pre v
 \end{proof}
 
 \begin{veta} \label{reg_uz_la}
-Regexy sú uzavreté na lookahead.
+Trieda jazykov nad regexami je uzavretá na lookahead.
 \end{veta}
 \begin{proof}
-Regexy pokrývajú triedu regulárnych jazykov a tá je na lookahead uzavretá \ref{lookahead+R}. Keďže pracujeme s množinou operácií, treba overiť, či nejaká ich kombinácia nie je náhodou silnejšia. Ak regex umiestnime do lookaheadu, či pred alebo za neho, vždy to bude regulárny jazyk a celý regex bude tiež definovať regulárny jazyk. Teda nás zaujíma vloženie lookaheadu dovnútra vykonávanej operácie. V tomto prípade prichádza do úvahy $*,+$ a $?$.
+Regexy pokrývajú triedu regulárnych jazykov a tá je na lookahead uzavretá \ref{lookahead+R}. Keďže pracujeme s množinou operácií, treba overiť, či nejaká ich kombinácia nie je náhodou silnejšia. Ak regex umiestnime do lookaheadu, či pred alebo za neho, vždy to bude regulárny jazyk a celý regex bude tiež definovať regulárny jazyk. Teda nás zaujíma vloženie lookaheadu dovnútra vykonávanej operácie. V tomto prípade prichádza do úvahy $*,+$ a $?$, ktoré menia počet lookaheadov a vynútia ich simuláciu na rôznych častiach slova.
 
 $?$ veľa nespraví -- lookahead tam buď bude 1x alebo nebude vôbec. $+$ je prípad $*$ s jedným lookaheadom istým. No a podľa lemy \ref{lookahead s *} vieme, že ani táto kombinácia nestačí na zložitejší jazyk.
 \end{proof}
 
-Nejaké vlastnosti lookaheadu.
-Tu ukážem, že dávať do lookaheadu prefixový jazyk nemá zmysel. Vytvorme čisto jazyk všetkých rôznych prefixov, aké obsahuje. Do lookaheadu stačí vložiť regex pre tento jazyk a celkový akceptovaný jazyk zostane rovnaký(zhodovať sa s...? \todo). Samozrejme, to isté platí aj pre lookbehind a sufixové jazyky.
+\textbf{Vlastnosti lookaheadu.}
+
+Tu ukážem, že dávať do lookaheadu prefixový jazyk nemá zmysel. Vytvorme čisto jazyk všetkých rôznych prefixov, aké obsahuje. Do lookaheadu stačí vložiť regex pre tento jazyk a celkový matchovaný rovnaký. Samozrejme, to isté platí aj pre lookbehind a sufixové jazyky.
 
 \begin{veta}\label{bezprefixove}
 Nech $L$ je ľubovoľný jazyk a $L_p = L \cup \lbrace uv ~|~ u \in L \rbrace$. Nech $\alpha$ je ľubovoľný regulárny výraz taký, že obsahuje $(?=L_p)$. Potom ak prepíšeme tento lookahead na $(?=L)$ (nazvime to $\alpha '$), bude platiť $L(\alpha ') = L(\alpha )$. Analogicky to platí aj pre lookbehind.
@@ -164,24 +206,9 @@ Nech $\alpha$ je regulárny výraz, ktorý obsahuje nejaký taký lookahead $(?=
 Uvedomme si, že lookaround nie je fixovaný na dĺžku vstupu - musí sa zhodovať s nejakým podslovom začínajúcim sa (končiacim sa) na konkrétnom mieste. Tým pádom akonáhle si môže regulárny výraz vnútri tejto operácie vybrať $\varepsilon$, bude hlásiť zhodu vždy.
 \end{proof}
 
-\section{Spätné referencie}\label{chap:backref}
+\textbf{Spätné referencie}
 
-Rozšírme regexy o spätné referencie, túto množinu operácií nazvem e-regex. V tejto časti ma bude zaujímať, čo sa stane, ak k tomuto modelu pridáme ešte lookahead a lookbehind. Najprv však uvediem základné informácie o triede e-regexov.
-
-Spätná referencia (angl. \textit{backreference}) je v e-regexoch označená ako $ \backslash m $. O\-čís\-luj\-me okrúhle zátvorky zľava doprava podľa poradia ľavej zátvorky a zoberme podslovo, ktoré akceptoval výraz vnútri $m$-tých zátvoriek. $ \backslash m $ bude predstavovať presne tento reťazec (pri inom slove teda môže byť iným reťazcom). Budem predpokladať, že spätná referencia s číslom $m$ sa bude nachádzať až za pravou zátvorkou s číslom $m$.
-
-Triedu jazykov e-regexov budem nazývať Eregex, presná definícia sa nachádza v článku \cite{ExtendedRegexPower}. (Autori ju pôvodne nazvali extended regex resp. EREG, avšak pre lepšiu prehľadnosť v tejto práci som názov upravila.)
-
-Uvediem najprv niektoré fakty o tejto triede.
-Trieda Eregex je podmnožinou $\L_{CS}$, ale existujú jazyky z $\L_{CF}$ aj $\L_{CS}$, ktoré do nej nepatria. Je uzavretá na homomorfizmus a nie je uzavretá na komplement, inverzný homomorfizmus, konečnú substitúciu, shuffle s regulárnym jazykom \cite{ExtendedRegexPower} a prienik \cite{ExtendedRegexIntersec}.
-
-\begin{df}
-Množinu e-regex obohatenú o pozitívny lookahead a pozitívny lookbehind budem nazývať le-regex.
-\end{df}
-
-\begin{df}
-Triede jazykov tvorenej le-regexami budem hovoriť LEregex.
-\end{df}
+Skúsme teraz zložitejší model. Pridáme k e-regexom pozitívny lookaround a nazveme to \textbf{le-regex}. Triede jazykov nad le-regexami budem hovoriť \textbf{LEregex}.
 
 \begin{veta}
 $ Eregex \subsetneq LEregex $
@@ -190,7 +217,8 @@ $ Eregex \subsetneq LEregex $
 $ \subseteq $ vyplýva z definície.
 
 Jazyk $L = \lbrace a^iba^{i+1}ba^k ~|~ k=i(i+1)k' ~ pre ~ nejaké ~ k'>0, i>0 \rbrace$ nepatrí do triedy Eregex \cite[Lemma 2]{ExtendedRegexIntersec}, ale patrí do LEregex:
-$$ \alpha = (a*)b(\backslash 1a)b(?=(\backslash 1)* \mathdollar )(\backslash 2)* \mathdollar $$
+$$ \alpha = (a*)b(\backslash 1a)b(?=(\backslash 1)* \mathdollar )(\backslash 2)* \mathdollar 
+\footnote{Nie je nutné dávať $\mathdollar$ na koniec le-regexu, nakoľko pracujeme v teoretickom prostredí a nehľadáme slovo v texte. Na vstup dostávame vždy len samotné slovo a teda vieme povedať, že na jeho konci bude isto aj koniec riadku ($\mathdollar$). Znak sme uviedli, pre ľahšie pochopenie, budeme uvádzať aj vo všetkých ďalších prípadoch.} $$
 \end{proof}
 
 \begin{veta}
@@ -250,7 +278,24 @@ Ak je počiatočný stav akceptačným, pridáme na koniec $\alpha$ znak pre ale
 
 \section{Negatívny lookaround}\label{chap:negla}
 
-Triedu LEregex obohatenú o negatívny lookahead a negatívny lookbehind budeme nazývať L!Eregex.
+\begin{df}[Negatívny lookahead]
+$$ L_{1}(?!L_{2})L_{3} = \lbrace uv ~|~ u \in L_{1} \land v \in L_{3} \land neexistuje~také~x,y,~že~v=xy~a~x \in L_2 \rbrace $$ Operáciu $(?!\dots)$ nazývame negatívny lookahead.
+\end{df}
+
+\begin{df}[Negatívny lookbehind]
+$$ L_{1}(?<!L_{2})L_{3} = \lbrace uv ~|~ u \in L_{1} \land v \in L_{3} \land neexituje~také~x,y,~že~u=xy~a~y \in L_2 \rbrace $$ Operáciu $(?<!\dots)$ nazývame negatívny lookbehind.
+\end{df}
+
+\begin{df}
+Triedu nad leregexami obohatenými o negatívny lookaround budeme nazývať L!Eregex.
+\end{df}
+
+\begin{veta}
+L!Eregex je uzavretá na prienik, zjednotenie, zreťazenie a iteráciu.
+\end{veta}
+\begin{proof}
+Vyplýva z vlastností le-regexov.
+\end{proof}
 
 \begin{veta}
 L!Eregex je uzavretá na komplement.
