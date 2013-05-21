@@ -26,9 +26,9 @@ Trieda $\R$ je uzavretá na operácie $\circledast$ a $*?$.
 
 Lookaround je spoločné pomenovanie pre lookahead a lookbehind, nové operácie nad regexami. Oba majú pozitívnu a negatívnu verziu. Je jednoduchšie skúmať novú fun\-kcio\-na\-li\-tu postupne a preto sme sa rozhodli najprv sa venovať pozitívnemu lookaroundu a neskôr pridať aj ten negatívny. Tu si ich zadefinujeme a pozrieme sa na ich základné vlastnosti v rámci Chomského hierarchie a potom aj triedy Eregex.
 
-\begin{veta} \label{lookahead+R}
+\begin{lema}
 Trieda $\R$ je uzavretá na lookahead.
-\end{veta}
+\end{lema}
 \begin{proof}
 Nech $ L_{1}, L_{2}, L_{3} \in \R $, chceme ukázať, že  $ L = L_{1}(?=L_{2})L_{3} \in \R $.
 
@@ -49,32 +49,16 @@ $ \supseteq: $ Máme $ w \in L $ a chceme preň nájsť výpočet na $A$. Z defi
 $ \subseteq: $ Nech $w \in L(A)$, potom existuje akceptačný výpočet na $A$. Z toho vieme $w$ rozdeliť na $x,y$ a $z$ tak, že $x$ je slovo spracovávené od začiatku po prvý príchod do stavu $\left[q_{02},q_{03}\right]$, $y$ odtiaľto po posledný stav reprezentovaný karteziánskym súčinom stavov a zvyšok bude $z$. Nevynechali sme žiadne znaky a nezmenili poradie, teda $w=xyz$. Do $\left[q_{02},q_{03}\right]$ sa $A$ môže prvýkrát dostať len vtedy, ak bol v akceptačnom stave $A_1$. Prechod do $\left[q_{02},q_{03}\right]$ je na $\varepsilon$, takže $x \in L_1$. Práve tento stav je počiatočný pre $A_2$ aj $A_3$. Ak $z=\varepsilon$, tak akceptačný stav $A$ je z $F_2\times F_3$ a $y \in L_2, y \in L_3$ a aj $yz \in L_3$. Z toho podľa definície vyplýva, že $xyz=w \in L$. Ak $z\neq \varepsilon$, potom je akceptačný stav $A$ z $F_3$. Podľa $\delta$ funkcie sa z karteziánskeho súčinu stavov do normálneho stavu dá prejsť len tak, že $A_2$ akceptuje, teda $y \in L_2$. $A_3$ akceptuje na konci, čo znamená $yz \in L_3$. Znova podľa definície operácie lookahead $xyz=w \in L$.
 \end{proof}
 
-\begin{veta}
+\begin{lema}
 Trieda $\R$ je uzavretá na lookbehind.
-\end{veta}
+\end{lema}
 \begin{proof}
 Opäť chceme ukázať, že $ L = L_{1}(?<=L_{2})L_{3} \in \R $ pre $ L_{1}, L_{2}, L_{3} \in \R $. Postupujeme podobne ako pri lookahead. (Karteziánsky súčin stavov $L_1$ a $L_2$, ale $A_2$ sa pripája v každom stave $A_1$ - celkový NKA si potom nedeterministicky zvolí jeden moment tohto napojenia.)
 \end{proof}
 
-\begin{veta}
-$ \L_{CF} $ nie je uzavretá na operácie lookahead a lookbehind.
+\begin{veta}\label{lookahead+R}
+Regulárne jazyky sú uzavreté na lookaround.
 \end{veta}
-\begin{proof}
-Nech $ L_{1}, L_{2}, L_{3}, L_4 \in \L_{CF} $. $ L_1 = \lbrace a^nb^n ~|~ n\geq 1 \rbrace , L_2 = \lbrace a*b^nc^n ~|~ n\geq 1\rbrace , L_3 = \lbrace a^nb^nc* ~|~ n \geq 1\rbrace, L_4 = \lbrace ab^nc^n ~|~ n \geq 1 \rbrace$. Potom $ d(?=L_1)L_2 = \lbrace da^nb^nc^n ~|~ n\geq 1 \rbrace $ a $ L_3(?<=L_4)d = \lbrace a^nb^nc^nd ~|~ n\geq 1 \rbrace$, čo nie sú bezkontextové jazyky.
-\end{proof}
-
-\begin{veta} \label{CS-lookahead}
-$ \L_{CS} $ je uzavretá na operáciu lookahead a lookbehind.
-\end{veta} 
-\begin{proof}
-Uzavretosť na lookahead:
-
-Pre $ L_{1}, L_{2}, L_{3} \in \L_{CS} $ a slovo z $ L = L_{1}(?=L_{2})L_{3} $ zostrojíme LBA $A$ z LBA $A_1, A_2, A_3$ pre dané kontextové jazyky. Najprv sa pozrime na štruktúru vstupu -- prvé je slovo z $L_1$ a za ním nasleduje slovo z $L_3$, pričom jeho prefix patrí do $L_2$. Preto, aby $A$ mohol simulovať dané lineárne ohraničené automaty, je potrebné označiť hranice jednotlivých slov.
-
- Na začiatku výpočtu $A$ prejde pásku a nedeterministicky označí 2 miesta -- koniec slov pre $A_1$ a $A_2$. Následne sa vráti na začiatok a simuluje $A_1$. Ak akceptuje, $A$ pokračuje a presunie sa za označený koniec vstupu pre $A_1$. Inak sa zasekne. V tomto bode sa začína vstup pre $A_2$ aj $A_3$, teda slovo až do konca prepíše na 2 stopy. Najprv na hornej simuluje $A_2$. Pokiaľ $A_2$ neskončí v akceptačnom stave, $A$ sa zasekne. Inak sa vráti na označené miesto a simuluje $A_3$ na spodnej stope až do konca vstupu. Akceptačný stav $A_3$ znamená akceptáciu celého vstupného slova.
-
-Uzavretosť na lookbehind sa dokáže analogicky.
-\end{proof}
 
 Teraz ukážem, ako lookahead a lookbehind nezosilnia model regexov.
 
@@ -111,6 +95,26 @@ Trieda jazykov nad regexami je uzavretá na lookahead.
 Regexy pokrývajú triedu regulárnych jazykov a tá je na lookahead uzavretá \ref{lookahead+R}. Keďže pracujeme s množinou operácií, treba overiť, či nejaká ich kombinácia nie je náhodou silnejšia. Ak regex umiestnime do lookaheadu, či pred alebo za neho, vždy to bude regulárny jazyk a celý regex bude tiež definovať regulárny jazyk. Teda nás zaujíma vloženie lookaheadu dovnútra vykonávanej operácie. V tomto prípade prichádza do úvahy $*,+$ a $?$, ktoré menia počet lookaheadov a vynútia ich simuláciu na rôznych častiach slova.
 
 $?$ veľa nespraví -- lookahead tam buď bude 1x alebo nebude vôbec. $+$ je prípad $*$ s jedným lookaheadom istým. No a podľa lemy \ref{lookahead s *} vieme, že ani táto kombinácia nestačí na zložitejší jazyk.
+\end{proof}
+
+\begin{veta}
+$ \L_{CF} $ nie je uzavretá na operácie lookahead a lookbehind.
+\end{veta}
+\begin{proof}
+Nech $ L_{1}, L_{2}, L_{3}, L_4 \in \L_{CF} $. $ L_1 = \lbrace a^nb^n ~|~ n\geq 1 \rbrace , L_2 = \lbrace a*b^nc^n ~|~ n\geq 1\rbrace , L_3 = \lbrace a^nb^nc* ~|~ n \geq 1\rbrace, L_4 = \lbrace ab^nc^n ~|~ n \geq 1 \rbrace$. Potom $ d(?=L_1)L_2 = \lbrace da^nb^nc^n ~|~ n\geq 1 \rbrace $ a $ L_3(?<=L_4)d = \lbrace a^nb^nc^nd ~|~ n\geq 1 \rbrace$, čo nie sú bezkontextové jazyky.
+\end{proof}
+
+\begin{veta} \label{CS-lookahead}
+$ \L_{CS} $ je uzavretá na operáciu lookahead a lookbehind.
+\end{veta} 
+\begin{proof}
+Uzavretosť na lookahead:
+
+Pre $ L_{1}, L_{2}, L_{3} \in \L_{CS} $ a slovo z $ L = L_{1}(?=L_{2})L_{3} $ zostrojíme LBA $A$ z LBA $A_1, A_2, A_3$ pre dané kontextové jazyky. Najprv sa pozrime na štruktúru vstupu -- prvé je slovo z $L_1$ a za ním nasleduje slovo z $L_3$, pričom jeho prefix patrí do $L_2$. Preto, aby $A$ mohol simulovať dané lineárne ohraničené automaty, je potrebné označiť hranice jednotlivých slov.
+
+ Na začiatku výpočtu $A$ prejde pásku a nedeterministicky označí 2 miesta -- koniec slov pre $A_1$ a $A_2$. Následne sa vráti na začiatok a simuluje $A_1$. Ak akceptuje, $A$ pokračuje a presunie sa za označený koniec vstupu pre $A_1$. Inak sa zasekne. V tomto bode sa začína vstup pre $A_2$ aj $A_3$, teda slovo až do konca prepíše na 2 stopy. Najprv na hornej simuluje $A_2$. Pokiaľ $A_2$ neskončí v akceptačnom stave, $A$ sa zasekne. Inak sa vráti na označené miesto a simuluje $A_3$ na spodnej stope až do konca vstupu. Akceptačný stav $A_3$ znamená akceptáciu celého vstupného slova.
+
+Uzavretosť na lookbehind sa dokáže analogicky.
 \end{proof}
 
 \textbf{Vlastnosti lookaheadu.}
@@ -222,3 +226,34 @@ L!Eregex je uzavretá na komplement.
 \begin{proof}
 Nech $L_1 \in L!Eregex$, potom $L_1^c  = \left( ?! L_1 \mathdollar \right) .* \mathdollar $.
 \end{proof}
+
+Teraz vyslovíme vetu, ktorá je veľmi blízko pumpovacej leme, ale ňou nie je, nakoľko sme nevedeli dokázať pumpovanie pre jeden prípad. A to keď sa lookahead, obsahujúci na konci znak $\mathdollar$, objaví vnútri iterácie. Nenašli sme argument ako zaručiť, že pri pumpovaní vzniká slovo z daného jazyka. Problém tkvie v tom, že pri každej pridanej iterácii sa pridá aj ďalší lookahead a my musíme zaručiť, že matchuje slovo za ním až do konca.
+
+\begin{veta}
+Nech $\alpha$ taký je le-regex nad unárnou abecedou $\Sigma = \lbrace a \rbrace$, že neobsahuje lookahead s $\mathdollar$ vnútri iterácie.  Existuje konštanta $N$ taká, že ak $w \in L(\alpha)$ a $\vert w \vert > N$, potom existuje dekompozícia $w=xy$ s nasledujúcimi vlastnosťami:
+\begin{enumerate}
+\item $\vert y \vert \geq 1$
+\item $\exists k \in \N,~k\neq 0;~\forall j = 1,2,\dots: xy^{kj} \in L(\alpha)$
+\end{enumerate}
+\end{veta}
+\begin{proof}
+Pokiaľ $\alpha \in Eregex$, tak pre $\alpha$ platí pumpovacia lema \cite[Lemma 1]{ExtendedRegexPower}, t.j. $w = a_0ba_1b\dots a_m$ pre nejaké $m$ a $a_0b^ja_1b^j\dots a_m \in L(\alpha)~\forall j$. My pracujeme nad unárnym jazykom, teda na poradí nezáleží: $x=a_0a_1\dots a_m,~y=b^m, k=1$ a $xy^j \in L(\alpha)~\forall j$.
+
+Zaoberajme sa le-regexami, ktoré obsahujú aspoň jeden lookaround. Ale ešte predtým si povedzme, aké je to dostatočne dlhé slovo. Chceme, aby sme s určitosťou vedeli, či nejaká $*/+$ iteruje aspoň 2x. Zoberieme dĺžku le-regexu $\vert \alpha \vert$. Skreslovať ju môžu 3 ope\-rá\-cie -- spätné referencie, $\lbrace n \rbrace$ a $\lbrace n,m \rbrace$. Nech teda $d$ je súčet dĺžok le-regexov vnútri $l$--tých zátvoriek pre všetky $\backslash l$, ktoré v $\alpha$ sú a sú pripočítané toľkokrát, koľkokrát sa tam jednotlivé $\l$ nachádzajú. Ďalej k $d$ pripočítame za každé $\lbrace n \rbrace$ $n$--krát dĺžku le-regexu, ktorý má kopírovať, a takisto za každú operáciu $\lbrace n,m \rbrace$ pripočítame takýto le-regex $m$--krát. Pre $N = \vert \alpha \vert + d$ vieme povedať, že ak $\vert w \vert > N$, potom jediná operácia, ktorá ho vie predĺžiť do takejto dĺžky môže byť iba Kleeneho $*$, prípadne $+$. $+$ je však v podstate prípad $*$, preto budeme pracovať s touto operáciou.
+
+Máme dostatočne dlhé slovo, rozoberieme si teraz pípady, ktoré môžu nastať. 
+\begin{enumerate}
+\item Žiadny lookaround nezasahuje do $*$, ktorá iteruje. V tom prípade iteruje normálne, bez obmedzení, nejaké $a^s, ~ s<\vert \alpha \vert \leq N < \vert w \vert$. Potom $y=a^s, k=1$. 
+\item Lookaround zasahujúci do iterujúcej $*$ nie je ohraničený, t.j. ak je to lookahead, neobsahuje na konci $\mathdollar$, a ak je to lookbehind, neobsahuje na začiatku $\textasciicircum$. Potom ho podľa vety \ref{bezprefixove} ho vieme prepísať tak, že bude matchovať len najkratšie slovo z jeho jazyka. Daný konečný prefix/sufix síce ovplyvňuje dĺžku matchovaných slov, ale iba tú minimálnu. Teda $*$ iteruje bez obmedzení, čo je predošlý prípad. 
+\item Našli sme iterujúcu $*$ a zasahuje do nej lookaround matchujúci až po koniec resp. začiatok slova. Buď je to lookbehind (nachádzajúci sa za $*$), za ktorým už v $\alpha$ nie je žiadne iterovanie alebo je to lookahead (nachádzajúci sa pred $*$), prípadne oba alebo ich môže byť viac. Každopádne, keďže je slovo dostatočne dlhé, aj samotný lookaround musí niečo pumpovať. Vyriešme to pre prípad jedného lookaroundu a potom uvidíme, že tie ostatné z toho vyplývajú.
+
+Máme $w=a^e$. V lookarounde sa pumpuje nejaké $a^f$, v $*$ mimo neho $a^g$ (ak je na výber viac možností, stačí vybrať jednu, napr. tú najkratšiu). Potom lookaround matchuje $a^{e+h*f}$ a $*$ mimo neho $a^{e+i*g}$, pre ľubovolné $h,i \in \N_0$. Nech $b = nsn(f,g)$, prienik týchto slov je $a^{e+b*j} \in L(\alpha), ~ \forall j \in \N_0$. Tvrdíme $b<e$. A naozaj, keďže $a^e \in L(\alpha)$ a zároveň lookahead aj $*$ určite niečo pumpovali, ich najmenšia možná zhoda je práve $b$.
+
+Pracujeme s le-regexami, takže sa niekde musia objaviť aj spätné referencie\footnote{Keby sa v $\alpha$ nenachádzali, podľa vety \ref{lookahead+R} máme regulárny jazyk, pre ktorý pupmovacia lema existuje.}. Uvedomme si, že lookaroundy sa môžu vyskytovať niekde medzi nimi, takže keď napríklad $*$ pumpuje $a^m$, celkovo sa v slove pumpuje $a^{n*m}$, kde $n$ je počet referencií ukazujúcich na túto $*$. Tým, že sa lookaroundy budú nachádzať medzi nimi, môže nastať, že pre jeden sa ďalej v slove pumpuje $a^{n_1*m}$ a pre druhý $a^{n_2*m}$, kde $n_1 \neq n_2$. Ak $*$ vie pumpovať $a^m$, tak vie aj $a^{n!*m}$, čo by vyriešilo všetky možné násobky, ktoré ovplyvňujú rôzne lookaroundy. Podľa toho $k = n!$, pre $n$ ako najvyšší počet spätných referencií na nejakú iteráciu, ktorú využívame.
+
+Celkovo máme $x=a^{e-b},~y=a^b$ a $k = n!$, ak je určené, inak $k=1$. Z toho $xy^{kj} = a^{e-b}a^{bkj} = a^{e-b+bj'} \in L(\alpha) ~ \forall j \in \N, ~ j' = kj$. 
+
+V prípade viacerých lookaroundov riešime postupne -- vždy vyrátané $b$ bude v ďalšom kole novým $g$. Podobne riešime vnorené lookaroundy -- postupujeme zvnútra von (musí ich byť konečne veľa a ten najvnútornejší z nich isto bude obsahovať už len Eregex).
+\end{enumerate}
+\end{proof}
+
