@@ -207,26 +207,6 @@ Prejdime k samotnému výpočtu. Na to, aby po sebe nasledovali len prijateľné
 Ak je počiatočný stav akceptačným, pridáme na koniec $\alpha$ znak pre alebo | a regex $(\#q_0.*\#)$.
 \end{proof}
 
-\section{Negatívny lookaround}\label{chap:negla}
-
-\begin{df}
-Triedu nad leregexami obohatenými o negatívny lookaround budeme nazývať L!Eregex.
-\end{df}
-
-\begin{veta}
-L!Eregex je uzavretá na prienik, zjednotenie, zreťazenie a iteráciu.
-\end{veta}
-\begin{proof}
-Vyplýva z vlastností le-regexov.
-\end{proof}
-
-\begin{veta}
-L!Eregex je uzavretá na komplement.
-\end{veta}
-\begin{proof}
-Nech $L_1 \in L!Eregex$, potom $L_1^c  = \left( ?! L_1 \mathdollar \right) .* \mathdollar $.
-\end{proof}
-
 Teraz vyslovíme vetu, ktorá je veľmi blízko pumpovacej leme, ale ňou nie je, nakoľko sme nevedeli dokázať pumpovanie pre jeden prípad. A to keď sa lookahead, obsahujúci na konci znak $\mathdollar$, objaví vnútri iterácie. Nenašli sme argument ako zaručiť, že pri pumpovaní vzniká slovo z daného jazyka. Problém tkvie v tom, že pri každej pridanej iterácii sa pridá aj ďalší lookahead a my musíme zaručiť, že matchuje slovo za ním až do konca.
 
 \begin{veta}
@@ -257,3 +237,35 @@ V prípade viacerých lookaroundov riešime postupne -- vždy vyrátané $b$ bud
 \end{enumerate}
 \end{proof}
 
+\textbf{Poznámka 1.}
+Spomínaný prípad, pre ktorý je problematické túto vetu dokázať má problém aj s definovaním dostatočne veľkého slova. Pozrime sa napríklad na le-regex $\beta = ((?=(a^m)*\mathdollar )a^{m+1})*a{1,m-1}$, aké slová obsahuje?
+\begin{itemize}
+\item $m+1+(m-1)$
+\item $2m+2+(m-2)$ \\
+	  \vdots
+\item $(m-1)(m+1)+1$
+\end{itemize}
+avšak $m(m+1) \notin L(\beta )$, lebo nám chýba zvyšok $0$. Teda vidíme, že le-regex využíva iteráciu $(m-1)$--krát a napriek tomu je konečný.
+
+\textbf{Poznámka 2.}
+Zoberme si triedu jazykov nad takýmito le-regexami. Veta nám hovorí čosi o zložitosti jej jazykov. Napriklad $L = {a^m ~|~ m je prvočíslo}$ do nej nepatrí, lebo sa nedá vôbec pumpovať -- medzi prvočíslami nenájdeme žiadne násobky. Z toho už vyplýva, že je vlastnou podmnožinou $\L_{CS}$ a nie je uzavretá na komplement.
+
+\section{Negatívny lookaround}\label{chap:negla}
+
+\begin{df}
+Triedu nad leregexami obohatenými o negatívny lookaround budeme nazývať L!Eregex.
+\end{df}
+
+\begin{veta}
+L!Eregex je uzavretá na prienik, zjednotenie, zreťazenie a iteráciu.
+\end{veta}
+\begin{proof}
+Vyplýva z vlastností le-regexov.
+\end{proof}
+
+\begin{veta}
+L!Eregex je uzavretá na komplement.
+\end{veta}
+\begin{proof}
+Nech $L_1 \in L!Eregex$, potom $L_1^c  = \left( ?! L_1 \mathdollar \right) .* \mathdollar $.
+\end{proof}
