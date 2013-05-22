@@ -1,4 +1,4 @@
-\documentclass[a4paper,12pt,openany,oneside]{book} % kodovanie diakritiky je utf-8
+\documentclass[a4paper,12pt,openany,oneside]{scrbook} % kodovanie diakritiky je utf-8
 \usepackage[utf8]{inputenc}
 \usepackage[slovak]{babel}
 \usepackage{a4wide,color}
@@ -20,7 +20,9 @@
 \usepackage{amsthm}
 \usepackage{dsfont}
 \usepackage{mathrsfs}
-%\usepackage{bm} pisat boldom v math-mode
+\usepackage{bm} %pisat boldom v math-mode
+\usepackage{fancyhdr}
+\usepackage{indentfirst}
 
 \usepackage{enumitem}
 \setlist{parsep=0pt,listparindent=\parindent} % aby sa v enumerate robili dobre odseky
@@ -202,6 +204,8 @@
 
 \includepdf{zadanie.pdf}
 
+\pagestyle{plain}
+
 {~}\vspace{12cm}
 
 \noindent
@@ -249,6 +253,8 @@
 \tableofcontents
 
 \mainmatter
+
+\pagestyle{fancy}
 
 \input uvod.tex
 \input pojmy.tex

@@ -1,4 +1,4 @@
-\chapter{Moje výsledky}
+\chapter{Naše výsledky}
 \label{chap:vysledky}
 
 \section{Minimalistická iterácia}
@@ -15,16 +15,16 @@ $\supseteq:$
 Majme $w \in L_1^*L_2$ a rozdeľme na podslová $u,v$ tak, že $u \in L_1^*, v \in L_2$ a $w=uv$. Takéto rozdelenie musí byť aspoň jedno. Ak je ich viac, vezmime to, kde je $u$ najdlhšie. Potom $uv \in L_1 \circledast L_2$. Ak zvolíme $u$ najkratšie, tak zasa $uv \in L_1 *? L_2$.
 \end{proof}
 
-Z toho vyplýva aj uzavretosť na $+?,??$.
-
 \begin{dosledok}
 Trieda $\R$ je uzavretá na operácie $\circledast$ a $*?$.
 \end{dosledok}
 
+Kleeneho $*$ uvedená v definícii regexov je príliš nedeterministická na ľahké prevedenie do praxe, preto reálny model používa v prípade operácie $*$ algoritmus pre greedy iteráciu. Vidíme však, že to nevadí, lebo pokrývame stále tú istú triedu jazykov. Takisto po pridaní minimalistickej iterácie. Z teoretického hľadiska je existencia dvoch operácií s rovnakou funkcionalitou  zbytočná. Ak zhoda existuje, regex matchuje s použitím ľubovoľnej z nich. Ale riešenie (rozdelenie slova) vyzerá inak, čo má v praxi zmysel pri jeho ďalšom použití. Preto je existencia oboch operácií opodstatnená.
+
 \section{Lookaround}
 \label{chap:lookahead}
 
-Lookaround je spoločné pomenovanie pre lookahead a lookbehind, nové operácie nad regexami. Oba majú pozitívnu a negatívnu verziu. Je jednoduchšie skúmať novú fun\-kcio\-na\-li\-tu postupne a preto sme sa rozhodli najprv sa venovať pozitívnemu lookaroundu a neskôr pridať aj ten negatívny. Tu si ich zadefinujeme a pozrieme sa na ich základné vlastnosti v rámci Chomského hierarchie a potom aj triedy Eregex.
+Operácie máme zadefinovné, poďme sa pozrieť, čo urobia s jazykmi z tried Chomského hierarchie.
 
 \begin{lema}
 Trieda $\R$ je uzavretá na lookahead.
@@ -32,7 +32,11 @@ Trieda $\R$ je uzavretá na lookahead.
 \begin{proof}
 Nech $ L_{1}, L_{2}, L_{3} \in \R $, chceme ukázať, že  $ L = L_{1}(?=L_{2})L_{3} \in \R $.
 
-Keďže $ L_{1},L_{2},L_{3} $ sú regulárne, existujú $ A_{i} = (K_{i},\Sigma_{i},\delta_{i},q_{0i},F_{i}) $ DKA také, že $ L(A_{i})=L_{i}, i \in \lbrace 1,2,3\rbrace $. Zostrojím NKA $ A = (K,\Sigma,\delta,q_{0},F) $ pre $L$, kde
+Keďže $ L_{1},L_{2},L_{3} $ sú regulárne, existujú DKA $ A_{i} = (K_{i},\Sigma_{i},\delta_{i},q_{0i},F_{i}) $ také, že $ L(A_{i})=L_{i}, i \in \lbrace 1,2,3\rbrace $. 
+
+Zostrojím NKA $ A $ pre $L$. Myšlienka spočíva v tom, že najprv necháme simulovať $A_1$ a keď akceptuje, simulujeme naraz $A_2$ a $A_3$. Konštrukcia je podoná ako prienik dvoch regulárnych jazykov (karteziánsky súčin stavov) s tým rozdielom, že $A_2$ môže skončiť skôr ako $A_3$.
+
+\textbf{Konštrukcia.}  $ A = (K,\Sigma,\delta,q_{0},F) $, kde
 $ K = K_{1} \cup K_{2} \times K_{3} \cup K_{3} ~ ( $predp. $ K_{1} \cap K_{3}= \emptyset), ~
 \Sigma=\Sigma_{1}\cup\Sigma_{2}\cup\Sigma_{3}, ~ q_{0}=q_{01}, ~ F = F_{3} \cup F_{2} \times F_{3}, ~ \delta $~funkciu definujeme nasledovne:
 \begin{eqnarray*}
@@ -49,53 +53,16 @@ $ \supseteq: $ Máme $ w \in L $ a chceme preň nájsť výpočet na $A$. Z defi
 $ \subseteq: $ Nech $w \in L(A)$, potom existuje akceptačný výpočet na $A$. Z toho vieme $w$ rozdeliť na $x,y$ a $z$ tak, že $x$ je slovo spracovávené od začiatku po prvý príchod do stavu $\left[q_{02},q_{03}\right]$, $y$ odtiaľto po posledný stav reprezentovaný karteziánskym súčinom stavov a zvyšok bude $z$. Nevynechali sme žiadne znaky a nezmenili poradie, teda $w=xyz$. Do $\left[q_{02},q_{03}\right]$ sa $A$ môže prvýkrát dostať len vtedy, ak bol v akceptačnom stave $A_1$. Prechod do $\left[q_{02},q_{03}\right]$ je na $\varepsilon$, takže $x \in L_1$. Práve tento stav je počiatočný pre $A_2$ aj $A_3$. Ak $z=\varepsilon$, tak akceptačný stav $A$ je z $F_2\times F_3$ a $y \in L_2, y \in L_3$ a aj $yz \in L_3$. Z toho podľa definície vyplýva, že $xyz=w \in L$. Ak $z\neq \varepsilon$, potom je akceptačný stav $A$ z $F_3$. Podľa $\delta$ funkcie sa z karteziánskeho súčinu stavov do normálneho stavu dá prejsť len tak, že $A_2$ akceptuje, teda $y \in L_2$. $A_3$ akceptuje na konci, čo znamená $yz \in L_3$. Znova podľa definície operácie lookahead $xyz=w \in L$.
 \end{proof}
 
-\begin{lema}
+\begin{lema}\label{lb+R}
 Trieda $\R$ je uzavretá na lookbehind.
 \end{lema}
 \begin{proof}
-Opäť chceme ukázať, že $ L = L_{1}(?<=L_{2})L_{3} \in \R $ pre $ L_{1}, L_{2}, L_{3} \in \R $. Postupujeme podobne ako pri lookahead. (Karteziánsky súčin stavov $L_1$ a $L_2$, ale $A_2$ sa pripája v každom stave $A_1$ - celkový NKA si potom nedeterministicky zvolí jeden moment tohto napojenia.)
+Opäť chceme ukázať, že $ L = L_{1}(?<=L_{2})L_{3} \in \R $ pre $ L_{1}, L_{2}, L_{3} \in \R $. Postupujeme podobne ako pri lookahead. Urobíme karteziánsky súčin stavov $A_1$ a $A_2$ tak, že $A_2$ môže začať výpočet v ľubovoľnom stave $A_1$ - celkový NKA si potom nedeterministicky zvolí jeden moment tohto napojenia. $A_1$ a $A_2$ musia naraz akceptovať, potom sa začne simulácia $A_3$.
 \end{proof}
 
 \begin{veta}\label{lookahead+R}
 Regulárne jazyky sú uzavreté na lookaround.
 \end{veta}
-
-Teraz ukážem, ako lookahead a lookbehind nezosilnia model regexov.
-
-\begin{lema}\label{lookahead s *}
-Nech $L_1,L_2,L_3,L_4 \in \R$, $\alpha = \left( L_1 \left( ?=L_2\right) L_3 \right) * L_4$. Potom $L(\alpha) \in \R$.
-\end{lema} 
-\begin{proof}
-Keďže $L_1,L_2,L_3,L_4 \in \R$, tak pre ne existujú DKA $A_1,A_2,A_3,A_4$, kde $A_i = \left( K_i, \Sigma_i, \delta_i, q_{0i}, F_i \right)$ pre $\forall i$. Z nich zostrojíme NKA $A$ pre $L$. Výpočet bez lookaheadov by vyzeral tak, že by sme simulovali $A_1$, potom po jeho akceptácii $A_3$ a odtiaľ by sa išlo v rámci iterácie naspäť na $A_1$. Zároveň z $A_1$ by sa dalo na $\varepsilon$ prejsť na $A_4$, čo by znamenalo koniec iterácie (ošetruje aj nulovú iteráciu). Pozrime sa na to, ako a kam vsunúť lookahead. Problém je, že pri každej ďalšej iterácii pribúda nový, teda ďalší $A_2$. Vieme ich však simulovať všetky naraz, keď vezmeme do úvahy, že vždy pracujeme nad konečnou abecedou a $K_2$ je konečná. Z toho vyplýva, že aj $\P(K_2)$ je konečná.
-
-Konštrukcia: $A = (K,\Sigma ,\delta ,q_0,F) : K = (K_1\cup K_3\cup K_4)\times \P(K_2)$, kde $K_1 \cap K_3 \cap K_4 = \emptyset$ (množiny v stavoch možno reprezentovať napr. 0-1 reťazcom dĺžky $\left\vert{K_2}\right\vert$, kde 1 na $i$--tom mieste symbolizuje, že nejaká inštancia $A_2$ je v $i$--tom stave), $\Sigma = \Sigma_1 \cup \Sigma_2 \cup \Sigma_3 \cup \Sigma_4, ~q_0 = (q_{01},\emptyset ), ~ F = F_4\times \emptyset,~\delta$--funkcia:
- 
-\begin{itemize}
-  \item $\forall q \in K_i~i=1,3,4,\forall U \in \P(K_2),\forall a \in \Sigma : \delta ((q_i,U),a) \ni (\delta _i (q_i,a),V),$
-  
-  kde $\forall q \in U~\delta_2(q,a) \in V'$ a  $V=V'\setminus F_2$
-  \item $\forall q_A \in F_1, \forall U \in \P(K_2) : \delta ((q_A,U),\varepsilon ) \ni (q_{03},U)$
-  \item $\forall q_A \in F_3, \forall U \in \P(K_2) : \delta ((q_A,U),\varepsilon ) \ni (q_{01},U)$
-  \item $\forall U \in \P(K_2) : \delta ((q_{01},U),\varepsilon ) \ni (q_{04},U)$
-\end{itemize}
-
-Automat $A$ akceptuje až keď akceptuje $A_4$. Je zrejmé, že ak v simulácii $A_i$ príde písmenko, ktoré do $\Sigma_i$ nepatrí, automat sa zasekne.
-
-$L(A) = L(\alpha).$
-
-$\subseteq:$ Nech $w \in L(A)$, potom preň existuje akceptačný výpočet na $A$. Podľa stavov vieme určiť počet iterácií, časti z $L_1,L_3,L_4$ a takisto vznikajúce a akceptujúce výpočty na $A_2$ -- každý takýto výpočet totiž začína s výpočtom na $A_3$ a keďže $A_2$ je de\-ter\-mi\-nis\-tic\-ký, existuje práve jeden výpočet, ktorý musí byť akceptačný. Teda vieme povedať, že $w = x_1y_1x_2y_2 \dots x_ny_nz$, kde $n$ je počet iterácií, $\forall i = 1, 2, \dots, n : ~ x_i \in L_1, y_i \in L_3 $ a $z \in L_4$. Zároveň vieme, že v mieste, kde začína $y_i$ takisto začína podreťazec slova $w$, ktorý patrí do $L_2$. Z toho vidíme ako vyzerá zhoda regexu $\alpha$.
-
-$\supseteq:$ Majme $v \in L(\alpha)$, teda vieme nájsť zhody podslov $v$ pre všetky $L_i$ (rovnaká dekompozícia slova ako v predošlej inklúzii). Keďže poradie jazykov je rovnaké ako $\varepsilon$--ové napojenie stavov v $A$ (akceptačný--počiatočný, akceptačný--akceptačný pri $L_4$), vieme správne poprepájať akceptačné výpočty jednotlivých $A_i$ do celkového výpočtu automatu $A$.
-\end{proof}
-
-\begin{veta} \label{reg_uz_la}
-Trieda jazykov nad regexami je uzavretá na lookahead.
-\end{veta}
-\begin{proof}
-Regexy pokrývajú triedu regulárnych jazykov a tá je na lookahead uzavretá \ref{lookahead+R}. Keďže pracujeme s množinou operácií, treba overiť, či nejaká ich kombinácia nie je náhodou silnejšia. Ak regex umiestnime do lookaheadu, či pred alebo za neho, vždy to bude regulárny jazyk a celý regex bude tiež definovať regulárny jazyk. Teda nás zaujíma vloženie lookaheadu dovnútra vykonávanej operácie. V tomto prípade prichádza do úvahy $*,+$ a $?$, ktoré menia počet lookaheadov a vynútia ich simuláciu na rôznych častiach slova.
-
-$?$ veľa nespraví -- lookahead tam buď bude 1x alebo nebude vôbec. $+$ je prípad $*$ s jedným lookaheadom istým. No a podľa lemy \ref{lookahead s *} vieme, že ani táto kombinácia nestačí na zložitejší jazyk.
-\end{proof}
 
 \begin{veta}
 $ \L_{CF} $ nie je uzavretá na operácie lookahead a lookbehind.
@@ -110,14 +77,74 @@ $ \L_{CS} $ je uzavretá na operáciu lookahead a lookbehind.
 \begin{proof}
 Uzavretosť na lookahead:
 
-Pre $ L_{1}, L_{2}, L_{3} \in \L_{CS} $ a slovo z $ L = L_{1}(?=L_{2})L_{3} $ zostrojíme LBA $A$ z LBA $A_1, A_2, A_3$ pre dané kontextové jazyky. Najprv sa pozrime na štruktúru vstupu -- prvé je slovo z $L_1$ a za ním nasleduje slovo z $L_3$, pričom jeho prefix patrí do $L_2$. Preto, aby $A$ mohol simulovať dané lineárne ohraničené automaty, je potrebné označiť hranice jednotlivých slov.
+Nech $ L_{1}, L_{2}, L_{3} \in \L_{CS} $. Pre $ L = L_{1}(?=L_{2})L_{3} $ zostrojíme LBA $A$ z LBA $A_1, A_2, A_3$ pre dané kontextové jazyky. Najprv sa pozrime na štruktúru vstupu -- prvé je slovo z $L_1$ a za ním nasleduje slovo z $L_3$, pričom jeho prefix patrí do $L_2$. Preto, aby $A$ mohol simulovať dané lineárne ohraničené automaty, je potrebné označiť hranice jednotlivých slov.
 
  Na začiatku výpočtu $A$ prejde pásku a nedeterministicky označí 2 miesta -- koniec slov pre $A_1$ a $A_2$. Následne sa vráti na začiatok a simuluje $A_1$. Ak akceptuje, $A$ pokračuje a presunie sa za označený koniec vstupu pre $A_1$. Inak sa zasekne. V tomto bode sa začína vstup pre $A_2$ aj $A_3$, teda slovo až do konca prepíše na 2 stopy. Najprv na hornej simuluje $A_2$. Pokiaľ $A_2$ neskončí v akceptačnom stave, $A$ sa zasekne. Inak sa vráti na označené miesto a simuluje $A_3$ na spodnej stope až do konca vstupu. Akceptačný stav $A_3$ znamená akceptáciu celého vstupného slova.
 
 Uzavretosť na lookbehind sa dokáže analogicky.
 \end{proof}
 
-\textbf{Vlastnosti lookaheadu.}
+Keď už sme lepšie zoznámení s lookaroundom, mali by sme posúdiť ako zapadá medzi regexy. Nebude to také jednoduché, keďže celý model regexov je množina operácií a jednopísmenkových jazykov (konečná abeceda), z ktorých postupne vyskladávame zložitejšie jazyky. V Chomského hierarchii sme pracovali iba s akousi finálnou formou jazyka, o ktorom sme vedeli zopár vlastností. Teraz zoberieme množinu operácií a pridáme k nim ďalšie dve. Otázkou je, čo spôsobí ich kombinovanie. Najzaujímavejšie vyzerajú tie, ktoré vedia ovplyvniť samotné vlastnosti lookaroundu, nakoľko sme ukázali, že regulárne jazyky sú naň uzavreté.
+
+\begin{lema}\label{lookahead s *}
+Nech $L_1,L_2,L_3,L_4 \in \R$, $\alpha = \left( L_1 \left( ?=L_2\right) L_3 \right) * L_4$. Potom $L(\alpha) \in \R$.
+\end{lema} 
+\begin{proof}
+Keďže $L_1,L_2,L_3,L_4 \in \R$, tak pre ne existujú DKA $A_1,A_2,A_3,A_4$, kde $A_i = \left( K_i, \Sigma_i, \delta_i, q_{0i}, F_i \right)$ pre $\forall i$. Z nich zostrojíme NKA $A$ pre $L$. Výpočet bez lookaheadov by vyzeral tak, že by sme simulovali $A_1$, potom po jeho akceptácii $A_3$ a odtiaľ by sa išlo v rámci iterácie naspäť na $A_1$. Zároveň z $A_1$ by sa dalo na $\varepsilon$ prejsť na $A_4$, čo by znamenalo koniec iterácie (ošetruje aj nulovú iteráciu). Pozrime sa na to, ako a kam vsunúť lookahead. Problém je, že pri každej ďalšej iterácii pribúda nový, teda ďalší $A_2$. Vieme ich však simulovať všetky naraz, keď vezmeme do úvahy, že vždy pracujeme nad konečnou abecedou a $K_2$ je konečná. Z toho vyplýva, že aj $\P(K_2)$ je konečná, a teda vieme zostrojiť automat, ktorý si bude simulovať prechody medzi množinami stavov $A_2$.
+
+\textbf{Konštrukcia.} $A = (K,\Sigma ,\delta ,q_0,F) : K = (K_1\cup K_3\cup K_4)\times \P(K_2)$, kde $K_1 \cap K_3 \cap K_4 = \emptyset$ (množiny v stavoch možno reprezentovať napr. 0-1 reťazcom dĺžky $\left\vert{K_2}\right\vert$, kde 1 na $i$--tom mieste symbolizuje, že nejaká inštancia $A_2$ je v $i$--tom stave), $\Sigma = \Sigma_1 \cup \Sigma_2 \cup \Sigma_3 \cup \Sigma_4, ~q_0 = (q_{01},\emptyset ), ~ F = F_4\times \emptyset,~\delta$--funkcia:
+ 
+\begin{itemize}
+  \item $\forall q \in K_i~i=1,3,4 ~, ~\forall U \in \P(K_2),\forall a \in \Sigma : \delta ((q_i,U),a) \ni (\delta _i (q_i,a),V),$
+  
+  kde $\forall q \in U:~\delta_2(q,a) \in V'$ a  $V=V'\setminus F_2$
+  \item $\forall q_A \in F_1, \forall U \in \P(K_2) : \delta ((q_A,U),\varepsilon ) \ni (q_{03},U \cup \lbrace q_{02} \rbrace)$
+  \item $\forall q_A \in F_3, \forall U \in \P(K_2) : \delta ((q_A,U),\varepsilon ) \ni (q_{01},U)$
+  \item $\forall U \in \P(K_2) : \delta ((q_{01},U),\varepsilon ) \ni (q_{04},U)$
+\end{itemize}
+
+Automat $A$ akceptuje až keď akceptuje $A_4$. Je zrejmé, že ak v simulácii $A_i$ príde písmenko, ktoré do $\Sigma_i$ nepatrí, automat sa zasekne.
+
+$L(A) = L(\alpha).$
+
+$\subseteq:$ Nech $w \in L(A)$, potom preň existuje akceptačný výpočet na $A$. Podľa stavov vieme určiť počet iterácií, podslová z $L_1,L_3,L_4$ a takisto vznikajúce a akceptujúce výpočty na $A_2$ -- každý takýto výpočet totiž začína s výpočtom na $A_3$ a keďže $A_2$ je de\-ter\-mi\-nis\-tic\-ký, existuje práve jeden výpočet, ktorý musí byť akceptačný. Teda vieme povedať, že $w = x_1y_1x_2y_2 \dots x_ny_nz$, kde $n$ je počet iterácií, $\forall i = 1, 2, \dots, n : ~ x_i \in L_1, y_i \in L_3 $ a $z \in L_4$. Zároveň vieme, že v mieste, kde začína $y_i$ takisto začína podreťazec slova $w$, ktorý patrí do $L_2$. Z toho vidíme ako vyzerá matchovanie regexu $\alpha$.
+
+$\supseteq:$ Majme $v \in L(\alpha)$, teda vieme nájsť zhody podslov $v$ pre všetky $L_i$ (rovnaká dekompozícia slova ako v predošlej inklúzii). Keďže poradie jazykov je rovnaké ako $\varepsilon$--ové prepojenie $A_i$ v $A$ (akceptačný--počiatočný, počiatočný--počiatočný pri $L_4$), vieme správne poprepájať akceptačné výpočty jednotlivých $A_i$ do celkového výpočtu automatu $A$.
+\end{proof}
+
+\begin{lema}\label{lookbehind s *}
+Nech $L_1,L_2,L_3,L_4 \in \R$, $\alpha = L_4 \left( L_1 \left( ?<=L_2\right) L_3 \right) *$. Potom $L(\alpha) \in \R$.
+\end{lema} 
+\begin{proof}
+Opäť dôkaz pre lookbehind vyzerá podobne ako pre lookahead, $A$ simuluje naj\-prv $A_4$, potom $A_1,A_3,A_1,A_3, \dots$ až po koniec slova. Ale musíme zmeniť simulovanie $A_2$. Stále potrebujeme množinu jeho stavov, keďže každou iteráciou má jeden pribudnúť, ale pridanie počiatočného stavu nie je viazané na konkrétny krok -- ten môže teraz pribudnúť hocikedy (nedeterministicky). To, čo je fixné je akceptačný stav. Ten zase musí prísť zarovno s akceptáciou $A_1$. 
+
+Celý výpočet upravíme tak, že $A_4$ sa bude simulovať ako prvý (keďže sa pozmenil celý jazyk $L$), kedykoľvek môže pribudnúť počiatočný stav $A_2$ a vždy keď akceptuje $A_1$, aspoň jeden $A_2$ musí akceptovať. Aspoň jeden preto, že to nemusí byť práve jeden. V akceptačnom stave sa môžu naraz nachádzať hoci aj 2 inštancie $A_2$, ale v tom prípade nechceme z množiny stavov vymazávať jeho akceptačný stav. Preto tento krok necháme na nedeterminizmus. V prípade, že by sme sa nedeterministicky rozhodli pre viacero výpočtov lookbehindov ako je iterovaní a automat akceptuje, pretože sa všetkým $A_2$ podarilo v správnom kroku skončiť (t.j. viaceré skončili naraz), nevadí nám to. Samotný lookbehind totiž môže matchovať vedieť viaceré podslová končiace v jednom bode, čo sa vie prejaviť práve takto. 
+
+$\delta$--funkcia by vyzerala takto:
+
+\begin{itemize}
+  \item $\forall U \in \P(K_2) : \delta ((q_{04},U),\varepsilon ) \ni (q_{01},U)$
+  \item $\forall q \in K_i~i=1,3,4 ~, ~\forall U \in \P(K_2),\forall a \in \Sigma : \delta ((q_i,U),a) \ni (\delta _i (q_i,a),V),$
+  
+  kde $\forall q \in U:~\delta_2(q,a) \in V$
+  \item $\forall q_A \in F_1 : \delta ((q_A,U),\varepsilon ) \ni (q_{03},U), (q_{03},U')$
+  
+  pre všetky také $U \in \P(K_2)$, že $ \exists q_A \in F_2$ a $ q_A \in U ~ ; ~ U'=U \setminus q_A$
+  \item $\forall q_A \in F_3, \forall U \in \P(K_2) : \delta ((q_A,U),\varepsilon ) \ni (q_{01},U)$
+\end{itemize}
+$F = F_3 \times \emptyset$. $L(A) = L(\alpha)$ dokážeme podobne ako v leme \ref{lookahead s *}.
+\end{proof}
+
+\begin{veta} \label{reg_uz_la}
+Trieda nad regexami s lookaheadom je $\R$.
+\end{veta}
+\begin{proof}
+Samotné regexy pokrývajú triedu regulárnych jazykov a tá je na lookaround uzavretá \ref{lookahead+R}. Keďže pracujeme s množinou operácií, treba overiť, či nejaká ich kombinácia nie je náhodou silnejšia. Ak regex umiestnime do lookaroundu, či pred alebo za neho, vždy to bude regulárny jazyk a celý regex bude tiež definovať regulárny jazyk. Teda nás zaujíma vloženie lookaroundu dovnútra inej operácie. V tomto prípade prichádza do úvahy $*,+$ a $?$, ktoré menia počet lookaroundov a vynútia ich simuláciu na rôznych častiach slova.
+
+$?$ veľa nespraví -- lookaround tam buď bude 1x alebo nebude vôbec. $+$ je prípad $*$ s jedným lookaroundom istým. No a podľa liem \ref{lookahead s *} a \ref{lookbehind s *} vieme, že ani táto kombinácia nestačí na zložitejší jazyk.
+\end{proof}
+
+\textbf{Vlastnosti lookaroundu.}
 
 Tu ukážem, že dávať do lookaheadu prefixový jazyk nemá zmysel. Vytvorme čisto jazyk všetkých rôznych prefixov, aké obsahuje. Do lookaheadu stačí vložiť regex pre tento jazyk a celkový matchovaný rovnaký. Samozrejme, to isté platí aj pre lookbehind a sufixové jazyky.
 
@@ -163,7 +190,7 @@ Nech $\alpha$ je le-regex. Potom $A$ je LBA pre $\alpha$, ktorý ignoruje lookar
 Všimnime si, že samotný look\-a\-round môže obsahovať le-regex, t.j. vnorený lookaround. Tých však môže byť iba konečne veľa, keďže každý le-regex musí mať konečný zápis. A teda si pre ne vieme naznačeným postupom postupne vybudovať LBA, ktorý ich dokáže simulovať.
 \end{proof}
 
-\begin{veta}
+\begin{veta} \label{prienik}
 LEregex je uzavretá na prienik.
 \end{veta}
 \begin{proof}
@@ -227,7 +254,7 @@ Máme dostatočne dlhé slovo, rozoberieme si teraz pípady, ktoré môžu nasta
 \item Lookaround zasahujúci do iterujúcej $*$ nie je ohraničený, t.j. ak je to lookahead, neobsahuje na konci $\mathdollar$, a ak je to lookbehind, neobsahuje na začiatku $\textasciicircum$. Potom ho podľa vety \ref{bezprefixove} ho vieme prepísať tak, že bude matchovať len najkratšie slovo z jeho jazyka. Daný konečný prefix/sufix síce ovplyvňuje dĺžku matchovaných slov, ale iba tú minimálnu. Teda $*$ iteruje bez obmedzení, čo je predošlý prípad. 
 \item Našli sme iterujúcu $*$ a zasahuje do nej lookaround matchujúci až po koniec resp. začiatok slova. Buď je to lookbehind (nachádzajúci sa za $*$), za ktorým už v $\alpha$ nie je žiadne iterovanie alebo je to lookahead (nachádzajúci sa pred $*$), prípadne oba alebo ich môže byť viac. Každopádne, keďže je slovo dostatočne dlhé, aj samotný lookaround musí niečo pumpovať. Vyriešme to pre prípad jedného lookaroundu a potom uvidíme, že tie ostatné z toho vyplývajú.
 
-Máme $w=a^e$. V lookarounde sa pumpuje nejaké $a^f$, v $*$ mimo neho $a^g$ (ak je na výber viac možností, stačí vybrať jednu, napr. tú najkratšiu). Potom lookaround matchuje $a^{e+h*f}$ a $*$ mimo neho $a^{e+i*g}$, pre ľubovolné $h,i \in \N_0$. Nech $b = nsn(f,g)$, prienik týchto slov je $a^{e+b*j} \in L(\alpha), ~ \forall j \in \N_0$. Tvrdíme $b<e$. A naozaj, keďže $a^e \in L(\alpha)$ a zároveň lookahead aj $*$ určite niečo pumpovali, ich najmenšia možná zhoda je práve $b$.
+Máme $w=a^e$. V lookarounde sa pumpuje nejaké $a^f$, v $*$ mimo neho $a^g$ (ak je na výber viac možností, stačí vybrať jednu, napr. tú najkratšiu). Potom lookaround matchuje $a^{e+h*f}$ a $*$ mimo neho $a^{e+i*g}$, pre ľubovoľné $h,i \in \N_0$. Nech $b = nsn(f,g)$, prienik týchto slov je $a^{e+b*j} \in L(\alpha), ~ \forall j \in \N_0$. Tvrdíme $b<e$. A naozaj, keďže $a^e \in L(\alpha)$ a zároveň lookahead aj $*$ určite niečo pumpovali, ich najmenšia možná zhoda je práve $b$.
 
 Pracujeme s le-regexami, takže sa niekde musia objaviť aj spätné referencie\footnote{Keby sa v $\alpha$ nenachádzali, podľa vety \ref{lookahead+R} máme regulárny jazyk, pre ktorý pupmovacia lema existuje.}. Uvedomme si, že lookaroundy sa môžu vyskytovať niekde medzi nimi, takže keď napríklad $*$ pumpuje $a^m$, celkovo sa v slove pumpuje $a^{n*m}$, kde $n$ je počet referencií ukazujúcich na túto $*$. Tým, že sa lookaroundy budú nachádzať medzi nimi, môže nastať, že pre jeden sa ďalej v slove pumpuje $a^{n_1*m}$ a pre druhý $a^{n_2*m}$, kde $n_1 \neq n_2$. Ak $*$ vie pumpovať $a^m$, tak vie aj $a^{n!*m}$, čo by vyriešilo všetky možné násobky, ktoré ovplyvňujú rôzne lookaroundy. Podľa toho $k = n!$, pre $n$ ako najvyšší počet spätných referencií na nejakú iteráciu, ktorú využívame.
 
@@ -253,19 +280,22 @@ Zoberme si triedu jazykov nad takýmito le-regexami. Veta nám hovorí čosi o z
 \section{Negatívny lookaround}\label{chap:negla}
 
 \begin{df}
-Triedu nad leregexami obohatenými o negatívny lookaround budeme nazývať L!Eregex.
+Triedu nad leregexami obohatenými o negatívny lookaround budeme nazývať LnEregex.
 \end{df}
 
 \begin{veta}
-L!Eregex je uzavretá na prienik, zjednotenie, zreťazenie a iteráciu.
+LnEregex je uzavretá na prienik, zjednotenie, iteráciu a zreťazenie.
 \end{veta}
 \begin{proof}
-Vyplýva z vlastností le-regexov.
+Prienik rovnako ako v \ref{prienik}, zjednotenie pomocou operácie $|$, iterácia pomocou $*$. Zreťazenie $L_1,L_2$ je $L_1L_2$, ak lne-regex na popis $L_1$ neobsahuje na konci znak $\mathdollar$. Inak nech tých znakov obsahuje $n$, potom pred prvý z nich lne-regex pre $L_2$ a pred všetky ostatné spätnú referenciu naň.
 \end{proof}
 
+Príklad na problematické zreťazenie. Nech $L_1=(?=L_{11}\mathdollar )L_{12}\mathdollar$ (predpokladáme, že $L_{11}$ ani $L_{12}$ neobsahujú $\mathdollar$), potom lne-regex pre $L_1L_2$ bude vyzerať naledovne:
+$$\displaystyle (?=L_{11} \mathop(_kL_2\mathop)_k \mathdollar )L_{12} \backslash k\mathdollar$$
+
 \begin{veta}
-L!Eregex je uzavretá na komplement.
+LnEregex je uzavretá na komplement.
 \end{veta}
 \begin{proof}
-Nech $L_1 \in L!Eregex$, potom $L_1^c  = \left( ?! L_1 \mathdollar \right) .* \mathdollar $.
+Nech $L_1 \in LnEregex$, potom $L_1^c  = \left( ?! L_1 \mathdollar \right) .* \mathdollar $.
 \end{proof}

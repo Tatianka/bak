@@ -1,11 +1,12 @@
-\chapter{Základné definície a výsledky}
+\chapter{Definície a známe výsledky}
 \label{chap:kapitola1}
 ...
 
 \section{Základná definícia regulárnych výrazov}
+\sectionmark{Zákl. definícia}
 \label{def}
 
-Keďže implementované regulárne výrazy sa už natoľko líšia od počiatočného teoretického modelu, zaužíval sa pre ne názov \textbf{regexy}. Budeme ho používať aj my a prípadnými predponami budeme rozlišovať, ktorú množinu operácií práve myslíme. 
+Keďže implementované regulárne výrazy sa už natoľko líšia od počiatočného teoretického modelu, zaužíval sa pre ne názov \textbf{regexy}. Budeme ho používať aj my a prípadnými predponami budeme rozlišovať, ktorú množinu operácií práve myslíme.
 
 Pojem \textbf{regex} bude slúžiť na pomenovanie regulárnych výrazov, ktoré pokrývajú triedu regulárnych jazykov. Z tohto dôvodu nebudem vytvárať zvlášť pomenovanie pre túto triedu, bolo by to zbytočné. Pre ozrejmenie uvediem základnú definíciu regexu z článku \cite{ExtendedRegexPower}. Niektoré konštrukcie sú oproti teoretickému modelu nové, ale dôkaz toho, že pokrýva stále rovnakú triedu jazykov, je triviálny.
 
@@ -43,7 +44,9 @@ sú regexy, kde $L((e_1)(e_2)) = L(e_1)L(e_2), L((e_1)|(e_2))=L(e_1) \cup L(e_2)
 \item[(2)] Znak pre koniec riadku $ \mathdollar $.
 \end{list}
 
-Rada by som spomenula aj iné konštrukcie, ktoré v definícii chýbajú. V konečnom dôsledku síce modelu silu nepridajú, ale budem s nimi rátať v ďalšom výskume.
+Vo formálnom texte bude prirodzené pomenovávať ľubovoľný model regexov pomocou písmen gréckej abecedy.
+
+Rada by som spomenula aj iné konštrukcie, ktoré v definícii chýbajú. V konečnom dôsledku síce modelu silu nepridajú, ale budem s nimi rátať v ďalšom výskume, nakoľko sa bavíme o moderných regulárnych výrazoch.
 
 \begin{list}{}{}
 \item $*?,+?,??$ definované ako $*,+,?$, ale snažia sa matchovať čo najmenej znakov ($*,+,?$ sú greedy)
@@ -85,7 +88,7 @@ Tieto operácie nás v práci budú zaujímať. Je to niečo nové a málo skúm
 
 Lookaround je spoločný názov pre dve operácie -- lookahead a lookbehind. Ako fungujú? 
 
-Zoberme si lookahead. Myšlienka spočíva v tom, že si chceme povedať, čo má za daným matchovaným podslovom nasledovať. Je to niečo, čo umožňuje pozrieť sa na slovo ďalej a 'nevyjedá' písmenká, čiže keď lookahead uspeje, pokračuje sa v ďalšom matchovaní od toho miesta, kde on začal pracovať. Presnejšie: slovo sa matchuje podľa regexu. Keď narazíme na lookahead, zapamätáme si toto miesto. Matchujeme podľa lookaheadu. Ak uspeje, potom sa vrátime na zapamätané miesto a pokračujeme v matchovaní regexom za lookaheadom.
+Zoberme si lookahead. Myšlienka spočíva v tom, že si chceme povedať, čo má za daným slovom nasledovať. Teda nazrieme dopredu a overíme, či to tam je. Táto operácia 'nevyjedá' písmenká, čiže keď lookahead dokončí a uspeje, pokračuje sa v ďalšom matchovaní akokeby tam nebol, teda presne od toho miesta, kde on začal pracovať. Presnejšie: slovo sa matchuje podľa regexu. Keď narazíme na lookahead, zapamätáme si toto miesto. Matchujeme podľa lookaheadu. Ak uspeje, potom sa v slove vrátime na zapamätané miesto a pokračujeme v matchovaní regexom za lookaheadom.
 
 Lookbehind pracuje analogicky, ale pozerá sa dozadu -- teda chceme vedieť, čo danému slovu predchádza. V praxi by sa toto riešilo backtrackingom, lebo nevieme vopred ako ďaleko dozadu sa budeme potrebovať pozrieť. A keďže autori programovacích jazykov nechceli príliš spomaľovať výpočty a asi nepovažovali lookbehind za taký dôležitý, určili si, že lookbehind môže obsahovať iba také regexy, z ktorých je jasne určiteľné aký dlhý reťazec bude potrebovať na výpočet (takže sa backtrackingu vyhli). My sme však v teoretickom prostredí a primárne nás bude zaujímať veľkosť triedy, ktorú budeme vedieť popísať aj pomocou týchto operácií, preto sme sa rozhodli na tieto obmedzenia zabudnúť. Je však jasné, že reálny model bude akousi podmnožinou toho nášho.
 
@@ -97,7 +100,7 @@ $$ L_{1}(?=L_{2})L_{3} = \lbrace uvw ~|~ u \in L_{1} \land v \in L_{2} \land vw 
 $$ L_{1}(?<=L_{2})L_{3} = \lbrace uvw ~|~ uv \in L_{1} \land v \in L_{2} \land w \in L_{3} \rbrace $$ Operáciu $(?<=\dots)$ nazývame pozitívny lookbehind alebo len lookbehind.
 \end{df}
 
-Negatívna verzia funguje rovnako, ale otáča akceptačnú požiadavku -- namiesto toho, aby sme písali, čo nasleduje, definujeme práve to, čo nechceme aby nasledovalo. Teda negatívny lookahead 'zbehne', ak nie je schopný matchovať jeho vstup.
+Negatívna verzia funguje rovnako, ale otáča akceptačnú požiadavku -- namiesto toho, aby sme písali, čo nasleduje, definujeme práve to, čo nechceme aby nasledovalo. Teda negatívny lookahead 'zbehne', ak nie je schopný matchovať vstup.
 
 \begin{df}[Negatívny lookahead]
 $$ L_{1}(?!L_{2})L_{3} = \lbrace uv ~|~ u \in L_{1} \land v \in L_{3} \land neexistuje~také~x,y,~že~v=xy~a~x \in L_2 \rbrace $$ Operáciu $(?!\dots)$ nazývame negatívny lookahead.
@@ -107,4 +110,4 @@ $$ L_{1}(?!L_{2})L_{3} = \lbrace uv ~|~ u \in L_{1} \land v \in L_{3} \land neex
 $$ L_{1}(?<!L_{2})L_{3} = \lbrace uv ~|~ u \in L_{1} \land v \in L_{3} \land neexituje~také~x,y,~že~u=xy~a~y \in L_2 \rbrace $$ Operáciu $(?<!\dots)$ nazývame negatívny lookbehind.
 \end{df}
 
-Nachádza sa tu ešte jeden rozdiel od reálneho modelu, na ktorý by sme chceli upozorniť. Regulárne výrazy sa začali využívať na vyhľadávanie v texte. V tomto kontexte má lookaround iný význam ako v teoretickom prostredí. Je pravda, že nevyjedá písmenká a preto je obľúbený aj v takých prípadoch, kedy si chceme označiť slovo $w$, ale vieme, že hľadáme slovo $v$, pričom $w$ je podslovo $v$. Teda v takom prípade môže lookahead ďaleko presahovať slovo, na ktoré sme vyhlásili zhodu. Z toho vyplýva, že my by sme na vstup nechceli dostať $w$, ale $v$. V teoretickom prostredí nás však zaujíma slovo, ktoré do jazyka patrí a na jeho okolie sa nepozeráme. Preto sa zdá, že budeme na vstupe očakávať $w$ a lookahead a lookbehind nebudú môcť presahovať dĺžku tohto slova. Táto úprava však neuškodí, nakoľko vieme z daného $w$ spraviť $v$ jednoduchým pridaním $(.*)$ na správne miesta.
+Nachádza sa tu ešte jeden rozdiel od reálneho modelu, na ktorý by sme chceli upozorniť. Regulárne výrazy sa začali využívať na vyhľadávanie v texte. V tomto kontexte má lookaround iný význam ako v teoretickom prostredí. Využíva sa to, že nevyjedá písmenká a preto sa dá použiť v takých prípadoch, kedy si chceme označiť slovo $w$, ale vieme, že hľadáme slovo $v$, pričom $w$ je podslovo $v$. Teda v takom prípade môže lookahead ďaleko presahovať slovo, na ktoré sme vyhlásili zhodu. Z toho vyplýva, že my by sme na vstup nechceli dostať $w$, ale $v$. V teoretickom prostredí nás však zaujíma slovo, ktoré do jazyka patrí a na jeho okolie sa nepozeráme, v podstate ho ani nemáme k dispozícii. Preto sa zdá, že budeme na vstupe očakávať $w$ a lookahead či lookbehind nebudú môcť presahovať za hranice slova. Táto úprava však neuškodí, nakoľko vieme z daného $w$ spraviť $v$ jednoduchým pridaním $(.*)$ na správne miesta.
