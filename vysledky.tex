@@ -274,17 +274,17 @@ V prípade viacerých lookaroundov riešime postupne -- vždy vyrátané $b$ bud
 \end{proof}
 
 \paragraph{Poznámka 1.}
-Spomínaný prípad, pre ktorý je problematické túto vetu dokázať má problém aj s definovaním dostatočne veľkého slova. Pozrime sa napríklad na le-regex $\beta = ((?=(a^m)*\mathdollar )a^{m+1})*a{1,m-1}$, aké slová obsahuje?
+Spomínaný prípad, pre ktorý je problematické túto vetu dokázať má problém aj s definovaním dostatočne veľkého slova. Pozrime sa napríklad na le-regex $\beta = ((?=(a^m)*\mathdollar )a^{m+1})*a \lbrace 1,m-1 \rbrace \mathdollar$, aké slová obsahuje?
 \begin{itemize}
-\item $m+1+(m-1)$
-\item $2m+2+(m-2)$ \\
-	  \vdots
-\item $(m-1)(m+1)+1$
+\item $a^{m+1+(m-1)}$
+\item $a^{2m+2+(m-2)}$ \\
+	  ~~~~~~~\vdots
+\item $a^{(m-1)(m+1)+1}$
 \end{itemize}
-avšak $m(m+1) \notin L(\beta )$, lebo nám chýba zvyšok $0$. Teda vidíme, že le-regex využíva iteráciu $(m-1)$--krát a napriek tomu je konečný.
+avšak $a^{m(m+1)} \notin L(\beta )$, lebo nám chýba zvyšok $0$. Teda vidíme, že le-regex využíva iteráciu $(m-1)$--krát a napriek tomu je konečný.
 
 \paragraph{Poznámka 2.}
-Zoberme si triedu jazykov nad takýmito le-regexami. Veta nám hovorí čosi o zložitosti jej jazykov. Napriklad $L = {a^m ~|~ m je prvočíslo}$ do nej nepatrí, lebo sa nedá vôbec pumpovať -- medzi prvočíslami nenájdeme žiadne násobky. Z toho už vyplýva, že je vlastnou podmnožinou $\L_{CS}$ a nie je uzavretá na komplement.
+Zoberme si triedu jazykov nad takýmito le-regexami. Veta nám hovorí čosi o zložitosti jej jazykov. Napriklad $L = \lbrace a^m ~|~ m~je~prvočíslo\rbrace$ do nej nepatrí, lebo sa nedá vôbec pumpovať -- medzi prvočíslami nenájdeme žiadne násobky. Z toho už vyplýva, že je vlastnou podmnožinou $\L_{CS}$ a nie je uzavretá na komplement ($L^c = (aaa*)\backslash 1(\backslash1)* \in Eregex$).
 
 \section{Negatívny lookaround}\label{chap:negla}
 
