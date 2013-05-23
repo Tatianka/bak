@@ -24,6 +24,8 @@ Kleeneho $*$ uvedená v definícii regexov je príliš nedeterministická na ľa
 \section{Lookaround}
 \label{chap:lookahead}
 
+\subsection{Chomského hierarchia}
+
 Operácie máme zadefinovné, poďme sa pozrieť, čo urobia s jazykmi z tried Chomského hierarchie.
 
 \begin{lema}
@@ -83,6 +85,8 @@ Nech $ L_{1}, L_{2}, L_{3} \in \L_{CS} $. Pre $ L = L_{1}(?=L_{2})L_{3} $ zostro
 
 Uzavretosť na lookbehind sa dokáže analogicky.
 \end{proof}
+
+\subsection{Regexy}
 
 Keď už sme lepšie zoznámení s lookaroundom, mali by sme posúdiť ako zapadá medzi regexy. Nebude to také jednoduché, keďže celý model regexov je množina operácií a jednopísmenkových jazykov (konečná abeceda), z ktorých postupne vyskladávame zložitejšie jazyky. V Chomského hierarchii sme pracovali iba s akousi finálnou formou jazyka, o ktorom sme vedeli zopár vlastností. Teraz zoberieme množinu operácií a pridáme k nim ďalšie dve. Otázkou je, čo spôsobí ich kombinovanie. Najzaujímavejšie vyzerajú tie, ktoré vedia ovplyvniť samotné vlastnosti lookaroundu, nakoľko sme ukázali, že regulárne jazyky sú naň uzavreté.
 
@@ -144,29 +148,30 @@ Samotné regexy pokrývajú triedu regulárnych jazykov a tá je na lookaround u
 $?$ veľa nespraví -- lookaround tam buď bude 1x alebo nebude vôbec. $+$ je prípad $*$ s jedným lookaroundom istým. No a podľa liem \ref{lookahead s *} a \ref{lookbehind s *} vieme, že ani táto kombinácia nestačí na zložitejší jazyk.
 \end{proof}
 
-\textbf{Vlastnosti lookaroundu.}
+\subsection{Vlastnosti lookaroundu.}
 
-Tu ukážem, že dávať do lookaheadu prefixový jazyk nemá zmysel. Vytvorme čisto jazyk všetkých rôznych prefixov, aké obsahuje. Do lookaheadu stačí vložiť regex pre tento jazyk a celkový matchovaný rovnaký. Samozrejme, to isté platí aj pre lookbehind a sufixové jazyky.
+Tu ukážem, že dávať do lookaheadu prefixový jazyk nemá zmysel. Vytvorme čisto jazyk všetkých rôznych prefixov, aké obsahuje. Do lookaheadu stačí vložiť regex pre tento jazyk a celkový matchovaný jazyk to nezmení. Samozrejme, to isté platí aj pre lookbehind a sufixové jazyky.
 
 \begin{veta}\label{bezprefixove}
 Nech $L$ je ľubovoľný jazyk a $L_p = L \cup \lbrace uv ~|~ u \in L \rbrace$. Nech $\alpha$ je ľubovoľný regulárny výraz taký, že obsahuje $(?=L_p)$. Potom ak prepíšeme tento lookahead na $(?=L)$ (nazvime to $\alpha '$), bude platiť $L(\alpha ') = L(\alpha )$. Analogicky to platí aj pre lookbehind.
 \end{veta}
 \begin{proof}
-$\subseteq :$ triviálne.
+$\subseteq :$ triviálne,  $L \subseteq L_p$.
 
-$\supseteq :$ Majme $w \in L(\alpha)$ a nech $x$ je také podslovo w, ktoré sa zhodovalo práve s daným lookaheadom. Potom $x \in L^p$, teda $x=uv$, kde $u \in L$. Ak $v=\varepsilon$, $x \in L$ a máme čo sme chceli. Takže $v\neq \varepsilon$. Ale celá zhoda lookaheadu sa môže zúžiť len na $u$, keďže $u \in L_p$, a bude to platná zhoda s $w$. Čo znamená, že $w \in L(\alpha ')$.
+$\supseteq :$ Majme $w \in L(\alpha)$ a nech $x$ je také podslovo $w$, ktoré sa zhodovalo práve s daným lookaheadom. Potom $x \in L_p$, teda $x=uv$, kde $u \in L$. Ak $v=\varepsilon$, $x \in L$ a máme čo sme chceli. Takže $v\neq \varepsilon$. Ale celá zhoda lookaheadu sa môže zúžiť len na $u$, keďže $u \in L_p$, a bude to platná zhoda s $w$. Čo znamená, že $w \in L(\alpha ')$.
 \end{proof}
 
-\begin{veta}
+\begin{dosledok}
 Nech $\alpha$ je regulárny výraz, ktorý obsahuje nejaký taký lookahead $(?=L)$ (lookbehind $(?<=L)$), že $\varepsilon \in L$. Nech je $\alpha '$ regulárny výraz bez tohto lookaheadu (lookbehindu). Potom $L(\alpha ') = L(\alpha)$.
-\end{veta}
+\end{dosledok}
 \begin{proof}
 Uvedomme si, že lookaround nie je fixovaný na dĺžku vstupu - musí sa zhodovať s nejakým podslovom začínajúcim sa (končiacim sa) na konkrétnom mieste. Tým pádom akonáhle si môže regulárny výraz vnútri tejto operácie vybrať $\varepsilon$, bude hlásiť zhodu vždy.
 \end{proof}
 
-\textbf{Spätné referencie}
+\subsection{Spätné referencie}
+\label{la-backref}
 
-Skúsme teraz zložitejší model. Pridáme k e-regexom pozitívny lookaround a nazveme to \textbf{le-regex}. Triede jazykov nad le-regexami budem hovoriť \textbf{LEregex}.
+Skúsme teraz zložitejší model. Pridáme k e-regexom pozitívny lookaround a túto množinu nazveme \textbf{le-regex}. Triede jazykov nad le-regexami budeme hovoriť \textbf{LEregex}.
 
 \begin{veta}
 $ Eregex \subsetneq LEregex $
@@ -185,15 +190,15 @@ $ LEregex \subseteq \L_{CS} $
 \begin{proof}
 Vieme, že $ Eregex \in \L_{CS} $ \cite[Theorem 1]{ExtendedRegexPower}, teda ľubovoľný e-regex vieme simulovať pomocou LBA. Ukážem, že ak pridáme operáciu lookahead/lookbehind, vieme to simulovať tiež.
 
-Nech $\alpha$ je le-regex. Potom $A$ je LBA pre $\alpha$, ktorý ignoruje lookaround (t.j. vyrábame LBA pre e-regex). Teraz vytvorím LBA $B$ pre e-regex vnútri lookaroundu. Z nich vytvoríme LBA $C$ pre úplný le-regex $\alpha$ tak, že bude simulovať $A$ a keď príde na rad lookaround zaznačí si, v akom stave je $A$ a na ktorom políčku skončil a simuluje do toho miesta $B$. Pokiaľ $B$ akceptoval, vráti sa naspäť k výpočtu na $A$. $C$ akceptuje práve vtedy, keď $A$.
+Nech $\alpha$ je le-regex. Potom $A$ je LBA pre $\alpha$, ktorý ignoruje lookaround (t.j. vyrábame LBA pre e-regex). Teraz vytvorím LBA $B$ pre e-regex vnútri lookaroundu. Z nich vytvoríme LBA $C$ pre úplný le-regex $\alpha$ tak, že bude simulovať $A$ a keď príde na rad lookaround zaznačí si, v akom stave je $A$ a na ktorom políčku skončil, skopíruje slovo na ďalšiu stopu a na nej simuluje od/do toho miesta $B$ (lokahead/lookbehind). Pokiaľ $B$ akceptoval, vráti sa naspäť k výpočtu na $A$. $C$ akceptuje práve vtedy, keď $A$.
 
-Všimnime si, že samotný look\-a\-round môže obsahovať le-regex, t.j. vnorený lookaround. Tých však môže byť iba konečne veľa, keďže každý le-regex musí mať konečný zápis. A teda si pre ne vieme naznačeným postupom postupne vybudovať LBA, ktorý ich dokáže simulovať.
+Všimnime si, že samotný look\-a\-round môže obsahovať le-regex, t.j. vnorený lookaround. Tých však môže byť iba konečne veľa, keďže každý le-regex musí mať konečný zápis. Čo znamená, že aj stôp bude konečne veľa a naznačeným postupom si vieme postupne vybudovať LBA, ktorý bude simulovať $\alpha$.
 \end{proof}
 
 \begin{veta} \label{prienik}
 LEregex je uzavretá na prienik.
 \end{veta}
-\begin{proof}
+\begin{proof} 
 Nech $L_1,L_2 \in LEregex$, potom $L_1 \cap L_2 = \left( ?= L_1 \mathdollar \right) L_2 \mathdollar $.
 \end{proof}
 
@@ -201,9 +206,9 @@ Nech $L_1,L_2 \in LEregex$, potom $L_1 \cap L_2 = \left( ?= L_1 \mathdollar \rig
 Jazyk všetkých platných výpočtov Turingovho stroja patrí do LEregex.
 \end{veta}
 \begin{proof}
-Máme Turingov stroj $A = (K,\Sigma ,q_0,\delta ,F)$. Zostrojíme leregex $\alpha$, ktorý bude matchovať všetky jeho platné výpočty. Vieme, že pracuje nad konečnou abecedou, má konečne veľa stavov a konečne definovanú $\delta$--funkciu. Keďže to všetko treba zahrnúť do leregexu, vďaka konečnosti máme potrebné predpoklady na jeho vytvorenie. Stav bude ukazovať pozíciu hlavy a $\#$ bude oddeľovať jednotlivé konfigurácie (bude sa nachádzať aj na začiatku a na konci celého slova = výpočtu).
+Máme Turingov stroj $A = (K,\Sigma ,q_0,\delta ,F)$. Zostrojíme le-regex $\alpha$, ktorý bude matchovať všetky jeho platné výpočty. Vieme, že každý TS pracuje nad konečnou abecedou, má konečne veľa stavov a konečne definovanú $\delta$--funkciu. Keďže to všetko treba zahrnúť do le-regexu, vďaka konečnosti máme potrebné predpoklady na jeho vytvorenie. Stav bude ukazovať pozíciu hlavy a $\#$ bude oddeľovať jednotlivé kon\-fi\-gu\-rá\-cie (bude sa nachádzať aj na začiatku a na konci celého slova/výpočtu).
 
-Prejdime k samotnému výpočtu. Na to, aby po sebe nasledovali len prijateľné konfigurácie využijeme lookahead a spätné referencie. To zabezpečí, aby sa v každom kroku výpočtu menilo len malé okolie stavu (spätné referencie zvyšok okopírujú) a aby sa menilo podľa $\delta$--funkcie. Keď máme zaručenú správnu postupnosť konfigurácií, vieme použiť $*$ a matchovať tak ľubovoľne dlhý výpočet. Netreba zabudnúť, že prvá konfigurácia je počiatočná a posledná akceptačná. Toto sú špeciálne prípady, preto ich ošetríme zvlášť, a takisto prípad, kedy je počiatočný stav zároveň aj akceptačným.
+Prejdime k samotnému výpočtu. Na to, aby po sebe nasledovali len prijateľné kon\-fi\-gu\-rá\-cie využijeme lookahead a spätné referencie. To zabezpečí, aby sa v každom kroku výpočtu menilo len malé okolie stavu (spätné referencie zvyšok okopírujú) a aby sa menilo práve podľa $\delta$--funkcie. Keď máme zaručenú správnu postupnosť konfigurácií, vieme použiť $*$ a matchovať tak ľubovoľne dlhý výpočet. Netreba zabudnúť, že prvá konfigurácia je počiatočná a posledná akceptačná. Toto sú špeciálne prípady, preto ich ošetríme zvlášť, a takisto prípad, kedy je počiatočný stav zároveň aj akceptačným.
 
 \textbf{Konštrukcia.} $\alpha = \beta(\gamma)*\eta$, kde:
 \begin{itemize}
@@ -229,42 +234,46 @@ Prejdime k samotnému výpočtu. Na to, aby po sebe nasledovali len prijateľné
 \end{list}
 \end{list}
 \item $\displaystyle \beta = (\#q_0x\mathop(_k.*\mathop)_k\#)(?=\theta\#) $ je definovaná rovnako ako $\gamma_2$, ale iba pre $q_0$.
-\item $\eta = ((.*) x q_A y (.*)\#)$ platí pre $\forall q_A \in F$
+\item $\eta = ((.*) q_A (.*)\#)$ platí pre $\forall q_A \in F$
 \end{itemize}
-Ak je počiatočný stav akceptačným, pridáme na koniec $\alpha$ znak pre alebo | a regex $(\#q_0.*\#)$.
+Ak je počiatočný stav akceptačným, pridáme na koniec $\alpha$ regex '$| (\#q_0.*\#)$' .
 \end{proof}
 
-Teraz vyslovíme vetu, ktorá je veľmi blízko pumpovacej leme, ale ňou nie je, nakoľko sme nevedeli dokázať pumpovanie pre jeden prípad. A to keď sa lookahead, obsahujúci na konci znak $\mathdollar$, objaví vnútri iterácie. Nenašli sme argument ako zaručiť, že pri pumpovaní vzniká slovo z daného jazyka. Problém tkvie v tom, že pri každej pridanej iterácii sa pridá aj ďalší lookahead a my musíme zaručiť, že matchuje slovo za ním až do konca.
+\paragraph{Poznámka.} Práve sme si ukázali aká silná je kombinácia lookaroundu a spätných referencií. Jazyk platných výpočtov TS je celkom zložitý vďaka závislostiam z $\delta$--funkcie a nedá sa pumpovať. Vidíme to, keď si predstavíme DTS, ktorý akceptuje nekonečný jazyk. Tým, že existujú akceptačné výpočty na týchto slovách, získavame nekonečný jazyk platných výpočtov. Nevieme však nadĺžiť ani slovo -- pokazilo by to výpočet, ani výpočet -- vďaka determinizmu vieme, že ak sa TS zacyklí, tak sa z toho už nedostane.
+
+Tento poznatok nielenže zvýrazňuje rozdiely medzi triedami Eregex a LEregex, ale zároveň nám komplikuje situáciu, pretože dôkaz, že nejaký jazyk nepatrí do triedy LEregex je bez pumpovacej lemy veľmi zložitý. Preto sme sa skúsili pozrieť na unárne jazyky, či by aspoň na nich pumpovanie fungovalo.
+
+Vyslovíme vetu, ktorá je veľmi blízko pumpovacej leme, ale ňou nie je, nakoľko sme nevedeli dokázať pumpovanie pre jeden prípad. A to keď sa lookahead, obsahujúci na konci znak $\mathdollar$ (lookbehind so znakom $\textasciicircum$ na začiatku je analogický prípad), objaví vnútri iterácie. Nenašli sme argument ako zaručiť, že pri pumpovaní vzniká slovo z daného jazyka. Problém tkvie v tom, že pri každej pridanej iterácii sa pridá aj ďalší lookahead a my musíme zaručiť, že matchuje slovo za ním až do konca.
 
 \begin{veta}
-Nech $\alpha$ taký je le-regex nad unárnou abecedou $\Sigma = \lbrace a \rbrace$, že neobsahuje lookahead s $\mathdollar$ vnútri iterácie.  Existuje konštanta $N$ taká, že ak $w \in L(\alpha)$ a $\vert w \vert > N$, potom existuje dekompozícia $w=xy$ s nasledujúcimi vlastnosťami:
+Nech $\alpha$ taký je le-regex nad unárnou abecedou $\Sigma = \lbrace a \rbrace$, že neobsahuje lookahead s $\mathdollar$ a lookbehind s $\textasciicircum$ vnútri iterácie.  Existuje konštanta $N$ taká, že ak $w \in L(\alpha)$ a $\vert w \vert > N$, potom existuje dekompozícia $w=xy$ s nasledujúcimi vlastnosťami:
 \begin{enumerate}
 \item $\vert y \vert \geq 1$
-\item $\exists k \in \N,~k\neq 0;~\forall j = 1,2,\dots: xy^{kj} \in L(\alpha)$
+\item $\exists k \in \N,~k\neq 0;~\forall j = 1,2,\ldots: xy^{kj} \in L(\alpha)$
 \end{enumerate}
 \end{veta}
 \begin{proof}
 Pokiaľ $\alpha \in Eregex$, tak pre $\alpha$ platí pumpovacia lema \cite[Lemma 1]{ExtendedRegexPower}, t.j. $w = a_0ba_1b\dots a_m$ pre nejaké $m$ a $a_0b^ja_1b^j\dots a_m \in L(\alpha)~\forall j$. My pracujeme nad unárnym jazykom, teda na poradí nezáleží: $x=a_0a_1\dots a_m,~y=b^m, k=1$ a $xy^j \in L(\alpha)~\forall j$.
 
-Zaoberajme sa le-regexami, ktoré obsahujú aspoň jeden lookaround. Ale ešte predtým si povedzme, aké je to dostatočne dlhé slovo. Chceme, aby sme s určitosťou vedeli, či nejaká $*/+$ iteruje aspoň 2x. Zoberieme dĺžku le-regexu $\vert \alpha \vert$. Skreslovať ju môžu 3 ope\-rá\-cie -- spätné referencie, $\lbrace n \rbrace$ a $\lbrace n,m \rbrace$. Nech teda $d$ je súčet dĺžok le-regexov vnútri $l$--tých zátvoriek pre všetky $\backslash l$, ktoré v $\alpha$ sú a sú pripočítané toľkokrát, koľkokrát sa tam jednotlivé $\l$ nachádzajú. Ďalej k $d$ pripočítame za každé $\lbrace n \rbrace$ $n$--krát dĺžku le-regexu, ktorý má kopírovať, a takisto za každú operáciu $\lbrace n,m \rbrace$ pripočítame takýto le-regex $m$--krát. Pre $N = \vert \alpha \vert + d$ vieme povedať, že ak $\vert w \vert > N$, potom jediná operácia, ktorá ho vie predĺžiť do takejto dĺžky môže byť iba Kleeneho $*$, prípadne $+$. $+$ je však v podstate prípad $*$, preto budeme pracovať s touto operáciou.
+Zaoberajme sa le-regexami, ktoré obsahujú aspoň jeden lookaround. Ale ešte predtým si povedzme, aké je to dostatočne dlhé slovo. Chceme, aby sme s určitosťou vedeli, či nejaká $*/+$ iteruje aspoň 2x. Zoberieme dĺžku le-regexu $\vert \alpha \vert$. Skreslovať ju môžu 3 ope\-rá\-cie -- spätné referencie, $\lbrace n \rbrace$ a $\lbrace n,m \rbrace$. Nech teda $d$ je súčet dĺžok le-regexov vnútri $l$--tých zátvoriek pre všetky $\backslash l$, ktoré v $\alpha$ sú a sú pripočítané toľkokrát, koľkokrát sa tam jednotlivé $\backslash l$ nachádzajú. Ďalej k $d$ pripočítame za každé $\lbrace n \rbrace$ $n$--krát dĺžku le-regexu, ktorý má kopírovať, a takisto za každú operáciu $\lbrace n,m \rbrace$ pripočítame takýto le-regex $m$--krát. Pre $N = \vert \alpha \vert + d$ vieme povedať, že ak $\vert w \vert > N$, potom jediná operácia, ktorá ho vie predĺžiť do takejto dĺžky môže byť iba Kleeneho $*$, prípadne $+$. $+$ je však v podstate prípad $*$, preto budeme pracovať s touto operáciou.
 
 Máme dostatočne dlhé slovo, rozoberieme si teraz pípady, ktoré môžu nastať. 
 \begin{enumerate}
-\item Žiadny lookaround nezasahuje do $*$, ktorá iteruje. V tom prípade iteruje normálne, bez obmedzení, nejaké $a^s, ~ s<\vert \alpha \vert \leq N < \vert w \vert$. Potom $y=a^s, k=1$. 
-\item Lookaround zasahujúci do iterujúcej $*$ nie je ohraničený, t.j. ak je to lookahead, neobsahuje na konci $\mathdollar$, a ak je to lookbehind, neobsahuje na začiatku $\textasciicircum$. Potom ho podľa vety \ref{bezprefixove} ho vieme prepísať tak, že bude matchovať len najkratšie slovo z jeho jazyka. Daný konečný prefix/sufix síce ovplyvňuje dĺžku matchovaných slov, ale iba tú minimálnu. Teda $*$ iteruje bez obmedzení, čo je predošlý prípad. 
+\item Žiadny lookaround nezasahuje do $*$, ktorá iteruje. V tom prípade iteruje normálne, bez obmedzení, nejaké $a^s, ~ s<\vert \alpha \vert \leq N < \vert w \vert$. Potom ak $w=a^t$, tak $x=a^{t-s},y=a^s, k=1$ a $xy^j \in L(\alpha) ~ \forall j$. 
+\item Lookaround zasahujúci do iterujúcej $*$ nie je ohraničený, t.j. ak je to lookahead, neobsahuje na konci $\mathdollar$, a ak je to lookbehind, neobsahuje na začiatku $\textasciicircum$. Potom ho podľa vety \ref{bezprefixove} vieme prepísať tak, že bude matchovať len najkratšie slovo z jeho jazyka. Ak získame konečný jazyk prefixov/sufixov, tak síce ovplyvňuje dĺžku matchovaných slov, ale iba tú minimálnu. Teda $*$ iteruje bez obmedzení, čo je predošlý prípad. Pokiaľ je jazyk stále nekonečný, prípad je podobný tomu nasledujúcemu.
 \item Našli sme iterujúcu $*$ a zasahuje do nej lookaround matchujúci až po koniec resp. začiatok slova. Buď je to lookbehind (nachádzajúci sa za $*$), za ktorým už v $\alpha$ nie je žiadne iterovanie alebo je to lookahead (nachádzajúci sa pred $*$), prípadne oba alebo ich môže byť viac. Každopádne, keďže je slovo dostatočne dlhé, aj samotný lookaround musí niečo pumpovať. Vyriešme to pre prípad jedného lookaroundu a potom uvidíme, že tie ostatné z toho vyplývajú.
 
-Máme $w=a^e$. V lookarounde sa pumpuje nejaké $a^f$, v $*$ mimo neho $a^g$ (ak je na výber viac možností, stačí vybrať jednu, napr. tú najkratšiu). Potom lookaround matchuje $a^{e+h*f}$ a $*$ mimo neho $a^{e+i*g}$, pre ľubovoľné $h,i \in \N_0$. Nech $b = nsn(f,g)$, prienik týchto slov je $a^{e+b*j} \in L(\alpha), ~ \forall j \in \N_0$. Tvrdíme $b<e$. A naozaj, keďže $a^e \in L(\alpha)$ a zároveň lookahead aj $*$ určite niečo pumpovali, ich najmenšia možná zhoda je práve $b$.
+Máme $w=a^e$. V lookarounde sa pumpuje nejaké $a^f$, v $*$ mimo neho $a^g$ (ak je na výber viac možností, stačí vybrať jednu, napr. tú najkratšiu). Potom lookaround matchuje $a^{e+h*f}$ a $*$ mimo neho $a^{e+i*g}$, pre ľubovoľné $h,i \in \N_0$. Nech $b = nsn(f,g)$, prienik týchto slov je $a^{e+b*j} \in L(\alpha), ~ \forall j \in \N_0$. Tvrdíme $b<e$. A naozaj, keďže $a^e \in L(\alpha)$ a zároveň lookaround aj $*$ určite niečo pumpovali, ich najmenšia možná zhoda je práve $b$.
 
-Pracujeme s le-regexami, takže sa niekde musia objaviť aj spätné referencie\footnote{Keby sa v $\alpha$ nenachádzali, podľa vety \ref{lookahead+R} máme regulárny jazyk, pre ktorý pupmovacia lema existuje.}. Uvedomme si, že lookaroundy sa môžu vyskytovať niekde medzi nimi, takže keď napríklad $*$ pumpuje $a^m$, celkovo sa v slove pumpuje $a^{n*m}$, kde $n$ je počet referencií ukazujúcich na túto $*$. Tým, že sa lookaroundy budú nachádzať medzi nimi, môže nastať, že pre jeden sa ďalej v slove pumpuje $a^{n_1*m}$ a pre druhý $a^{n_2*m}$, kde $n_1 \neq n_2$. Ak $*$ vie pumpovať $a^m$, tak vie aj $a^{n!*m}$, čo by vyriešilo všetky možné násobky, ktoré ovplyvňujú rôzne lookaroundy. Podľa toho $k = n!$, pre $n$ ako najvyšší počet spätných referencií na nejakú iteráciu, ktorú využívame.
+Pracujeme s le-regexami, takže sa niekde musia objaviť aj spätné referencie\footnote{Keby sa v $\alpha$ nenachádzali, podľa vety \ref{lookahead+R} máme regulárny jazyk, pre ktorý pumpovacia lema existuje.}. Uvedomme si, že lookaroundy sa môžu vyskytovať niekde medzi nimi, takže keď napríklad $*$ pumpuje $a^m$, celkovo sa v slove pumpuje $a^{n*m}$, kde $n$ je počet referencií ukazujúcich na túto $*$. Tým, že sa lookaroundy budú nachádzať medzi nimi, môže nastať, že pre jeden sa ďalej v slove pumpuje $a^{n_1*m}$ a pre druhý $a^{n_2*m}$, kde $n_1 \neq n_2$. Ak $*$ vie pumpovať $a^m$, tak vie aj $a^{n!*m}$, čo by vyriešilo všetky možné násobky, ktoré ovplyvňujú rôzne lookaroundy. Podľa toho $k = n!$, pre $n$ ako najvyšší počet spätných referencií na nejakú iteráciu, ktorú využívame.
 
-Celkovo máme $x=a^{e-b},~y=a^b$ a $k = n!$, ak je určené, inak $k=1$. Z toho $xy^{kj} = a^{e-b}a^{bkj} = a^{e-b+bj'} \in L(\alpha) ~ \forall j \in \N, ~ j' = kj$. 
+Celkovo máme $x=a^{e-b},~y=a^b$ a $k = n!$ ak je určené, inak $k=1$. Z toho $xy^{kj} = a^{e-b}a^{bkj} = a^{e+bj'} \in L(\alpha) ~ \forall j \in \N, ~ j' = kj-1$. 
 
 V prípade viacerých lookaroundov riešime postupne -- vždy vyrátané $b$ bude v ďalšom kole novým $g$. Podobne riešime vnorené lookaroundy -- postupujeme zvnútra von (musí ich byť konečne veľa a ten najvnútornejší z nich isto bude obsahovať už len Eregex).
 \end{enumerate}
 \end{proof}
 
-\textbf{Poznámka 1.}
+\paragraph{Poznámka 1.}
 Spomínaný prípad, pre ktorý je problematické túto vetu dokázať má problém aj s definovaním dostatočne veľkého slova. Pozrime sa napríklad na le-regex $\beta = ((?=(a^m)*\mathdollar )a^{m+1})*a{1,m-1}$, aké slová obsahuje?
 \begin{itemize}
 \item $m+1+(m-1)$
@@ -274,28 +283,25 @@ Spomínaný prípad, pre ktorý je problematické túto vetu dokázať má probl
 \end{itemize}
 avšak $m(m+1) \notin L(\beta )$, lebo nám chýba zvyšok $0$. Teda vidíme, že le-regex využíva iteráciu $(m-1)$--krát a napriek tomu je konečný.
 
-\textbf{Poznámka 2.}
+\paragraph{Poznámka 2.}
 Zoberme si triedu jazykov nad takýmito le-regexami. Veta nám hovorí čosi o zložitosti jej jazykov. Napriklad $L = {a^m ~|~ m je prvočíslo}$ do nej nepatrí, lebo sa nedá vôbec pumpovať -- medzi prvočíslami nenájdeme žiadne násobky. Z toho už vyplýva, že je vlastnou podmnožinou $\L_{CS}$ a nie je uzavretá na komplement.
 
 \section{Negatívny lookaround}\label{chap:negla}
 
 \begin{df}
-Triedu nad leregexami obohatenými o negatívny lookaround budeme nazývať LnEregex.
+Triedu nad leregexami obohatenými o negatívny lookaround budeme nazývať nLEregex.
 \end{df}
 
 \begin{veta}
-LnEregex je uzavretá na prienik, zjednotenie, iteráciu a zreťazenie.
+Trieda nLEregex je uzavretá na prienik.
 \end{veta}
 \begin{proof}
-Prienik rovnako ako v \ref{prienik}, zjednotenie pomocou operácie $|$, iterácia pomocou $*$. Zreťazenie $L_1,L_2$ je $L_1L_2$, ak lne-regex na popis $L_1$ neobsahuje na konci znak $\mathdollar$. Inak nech tých znakov obsahuje $n$, potom pred prvý z nich lne-regex pre $L_2$ a pred všetky ostatné spätnú referenciu naň.
+Podobne ako veta \ref{prienik}.
 \end{proof}
 
-Príklad na problematické zreťazenie. Nech $L_1=(?=L_{11}\mathdollar )L_{12}\mathdollar$ (predpokladáme, že $L_{11}$ ani $L_{12}$ neobsahujú $\mathdollar$), potom lne-regex pre $L_1L_2$ bude vyzerať naledovne:
-$$\displaystyle (?=L_{11} \mathop(_kL_2\mathop)_k \mathdollar )L_{12} \backslash k\mathdollar$$
-
 \begin{veta}
-LnEregex je uzavretá na komplement.
+Trieda nLEregex je uzavretá na komplement.
 \end{veta}
 \begin{proof}
-Nech $L_1 \in LnEregex$, potom $L_1^c  = \left( ?! L_1 \mathdollar \right) .* \mathdollar $.
+Nech $L_1 \in nLEregex$, potom $L_1^c  = \left( ?! L_1 \mathdollar \right) .* \mathdollar $.
 \end{proof}
