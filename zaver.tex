@@ -2,3 +2,11 @@
 \chapter*{Záver}\label{chap:conc}
 \phantomsection
 \addcontentsline{toc}{chapter}{Záver}
+
+Ukázali sme, že regulárne výrazy s mnohými novými konštrukciami stále pokrývajú triedu regulárnych jazykov. Patria medzi ne aj $??,+?,*?$ a lookaround. Z čoho vyplýva, že regexy využívajúce operácie z pomerne veľkej množiny vieme vykonávať algoritmom s lineárnou časovou zložitosťou.
+
+Zistili sme, že regulárne a kontextové jazyky sú a bezkontextové nie sú uzavreté na lookaround a jeho zaradenie medzi regexy nezmení triedu jazykov nad nimi.
+
+Zaujímavejšie to začalo byť pri modeli so spätnými referenciami, ktorý sám dokáže popísať kontextový jazyk. Lookahead a lookbehind ho posunuli ešte ďalej. Sprostredkovali uzavretosť na prienik a pomohli popísať jazyky, ktoré nie je možné pumpovať a teda začínajú byť sami o sebe zložité. O unárnych jazykoch sa nám však pumpovaciu lemu takmer podarilo ukázať, lenže situáciu skomplikovala kombinácia lookaroundu a Kleeneho $*$. Pre tento prípad sme pumpovanie nájsť nedokázali a problém zostal otvorený.
+
+Negatívna verzia lookaheadu a lookbehindu pridala uzavretosť na komplement.
