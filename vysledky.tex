@@ -148,7 +148,7 @@ Samotné regexy pokrývajú triedu regulárnych jazykov a tá je na lookaround u
 $?$ veľa nespraví -- lookaround tam buď bude 1x alebo nebude vôbec. $+$ je prípad $*$ s jedným lookaroundom istým. No a podľa liem \ref{lookahead s *} a \ref{lookbehind s *} vieme, že ani táto kombinácia nestačí na zložitejší jazyk.
 \end{proof}
 
-\subsection{Vlastnosti lookaroundu.}
+\subsection{Vlastnosti lookaroundu}
 
 Tu ukážem, že dávať do lookaheadu prefixový jazyk nemá zmysel. Vytvorme čisto jazyk všetkých rôznych prefixov, aké obsahuje. Do lookaheadu stačí vložiť regex pre tento jazyk a celkový matchovaný jazyk to nezmení. Samozrejme, to isté platí aj pre lookbehind a sufixové jazyky.
 

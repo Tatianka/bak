@@ -3,9 +3,10 @@
 \addcontentsline{toc}{chapter}{Úvod}
 \chapter*{Úvod}\label{chap:intro}
 
-Bla bla úvodné info o regulárnych výrazoch:
-- vzniklo ako teória
-- niekto implementoval do textových editorov, neskôr Thomson do Unixu
-- odtiaľ sa rozšírili do programovacích jazykov
-- programovacie jazyky rozširujú svoju funkcionalitu, to platí aj pre časť regulárnych výrazov. Rozšírením o nové konštrukcie už nemusia patriť do triedy regulárnych jazykov. Mnohé konštrukcie sú len kozmetické úpravy a pomôcky, ktoré nezosilnia daný model. Zaujímavé sú tie, ktoré už pomôžu vytvoriť (akceptovať) jazyky z vyšších tried Chomského hierarchie.
-- Zaradením triedy jazykov aktuálneho modelu do Chomského hierarchie môže dopomôcť pri implementácii jednotlivých operácií. Trieda regulárnych jazykov vystačí s ľahko naprogramovateľnými konečnými automatmi, avšak vyššie triedy vyžadujú backtracking, ktorý samozrejme znamená väčšiu časovú zložitosť.
+Regulárne výrazy vznikli ako ďalší teoretický model popisujúci triedu regulárnych jazykov. Pre jednoduchý zápis sa ho medzi prvými ujal Ken Thomson a implementoval ho do textového editora. Použitím prevodu na NFA mu zaručil lineárnu časovú zložitosť. Po rokoch a ďalších efektívnych implementáciách však tieto algoritmy ušli pozornosti Hernyho Spencera pri reimplementovaní a zverejnení ôsmej verzie Unixu, kam pre regulárne výrazy napísal algoritmus s exponenciálnou časovou zložitosťou využívajúci backtraking. Tento oveľa pomalší algortimus sa neskôr stal základom pre programovacie jazyky ako Perl, PCRE, Python, atď. \cite{Cox07SlowPython}
+
+S rozvojom jazykov sa vyvíjali aj regulárne výrazy a získavali oproti teoretickému modelu nové konštrukcie. Mnohé z nich majú dlhší ekvivalent používajúci tradičnú syntax. Na druhej strane vytŕčajú napríklad spätné referencie, ktorými sme schopný popísať až kontextový jazyk.
+
+Nás budú zaujímať práve tieto nové konštrukcie, primárne lookahead a lookbehind. Spomínané spätné referencie už boli skúmané, teda uvedieme dosiahnuté výsledky a budeme s nimi pracovať. Bude nás zaujímať, akú triedu jazykov model s pridanou novou konštrukciou popisuje v rámci Chomského hierarchie a aké uzáverové vlastnosti sa podarilo dosiahnuť.
+
+Skúmaním nových konštrukcií z teoretického hľadiska umožníme programátorom lepší náhľad na to, čo skutočne dokážu a aký zložitý algoritmus bude treba použiť na ich implementáciu. Trieda regulárnych jazykov vystačí s ľahko naprogramovateľnými konečnými automatmi, avšak vyššie triedy vyžadujú backtracking, ktorý samozrejme znamená väčšiu časovú zložitosť.
