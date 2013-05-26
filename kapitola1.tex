@@ -1,9 +1,13 @@
 \chapter{Definície a známe výsledky}
 \label{chap:kapitola1}
 
-Regulárne výrazy sú forma zápisu na opis nejakej množiny reťazcov -- jazyka. Keď určité slovo patrí do popísaného jazyka, hovoríme, že regulárny výraz \textbf{matchuje}\footnote{Bohužiaľ, slovenský ekvivalent tohto slova nie je taký výstižný, preto zostaneme pri anglickej verzii.} dané slovo, resp. zhoduje sa s ním.
+Regulárny výraz (angl. \textit{regular expression}) je postupnosť znakov a metaznakov, ktorý definuje množinu reťazcov -- jazyk. Znaky zastupujú samé seba -- jednopísmenkový jazyk. Metaznaky majú symbolický význam -- popisujú, čo sa so znakmi/jazykmi pred alebo za nimi v postupnosti deje. Býva to konkrétny algoritmus, preto ich nazývame aj operácie. Začínajúc jednopísmenkovými jazykmi, pridávaním znakov, metaznakov a už vystavaných jazykov vieme poskladať zložitejšie jazyky.
 
-Keďže implementované regulárne výrazy sa už natoľko líšia od počiatočného teoretického modelu, zaužíval sa pre ne názov \textbf{regexy}. Budeme ho používať aj my a prípadnými predponami budeme rozlišovať, ktorú množinu operácií práve myslíme.
+Či slovo patrí do takto popísaného jazyka zistíme tak, že si súčasne prezeráme re\-gu\-lár\-ny výraz a slovo zľava doprava, pričom ak narazíme na operáciu, vykonáme ju. Chceme, aby sa slovo a regulárny výraz zhodovali v znakoch. Ak v oboch prídeme na koniec, slovo do jazyka patrí. Môže sa stať, že pri prezeraní budeme mať na výber, ako danú operáciu použiť, teda bude viacero 'rôznych prezeraní'. Nám postačí, ak takéto 'prezeranie', kde skončí slovo zároveň s regulárnym výrazom, existuje. Formálne ho\-vo\-rí\-me, že ak určité slovo patrí do popísaného jazyka, regulárny výraz \textbf{matchuje}\footnote{Bohužiaľ, slovenský ekvivalent tohto slova nie je taký výstižný, preto zostaneme pri anglickej verzii.} dané slovo, resp. zhoduje sa s ním alebo slovo pasuje.
+
+Tieto postupnosti slúžia na vyhľadávanie slov\footnote{Lepšie by sa hodilo sekvencií, pretože myslíme ľubovoľný reťazec znakov definovaný nejakým regulárnym výrazom. Slovo v texte však väčšinou evokuje reťazec písmen s konkrétnym významom, slovo z jazykovedného hľadiska, čo momentálne nie je to, čo chceme.} v rôznych textoch pre ich ďalšie spracovanie ako napríklad prepísanie, vyznačenie pozície alebo informovaní o ich počte.
+
+Keďže implementované regulárne výrazy sa už natoľko líšia od počiatočného teoretického modelu -- nielen syntaxou ale aj triedou jazykov, ktorú popisujú -- zaužíval sa pre ne názov \textbf{regexy}. Budeme ho používať aj my a prípadnými predponami budeme rozlišovať, ktorú množinu operácií práve myslíme.
 
 \section{Základná definícia regulárnych výrazov}
 \sectionmark{Zákl. definícia}
@@ -115,12 +119,13 @@ $$ L_{1}(?<!L_{2})L_{3} = \lbrace uv ~|~ u \in L_{1} \land v \in L_{3} \land nee
 Množinu e-regexov rozšírená o lookahead a lookbehind budeme nazývať \textbf{le-regexy}, triedu nad le-regexami \textbf{LEregex}.
 \end{df}
 
-\sectionmark{Prax}
 \section{Regulárne výrazy v praxi}
 \sectionmark{Prax}
 \label{prax}
 
 Už na začiatku sme spomínali, že táto práca je inšpirovaná novými konštrukciami, ktoré v praxi pribudli do modelu regulárnych výrazov. Pracovať s praktickým modelom však nie je také jednoduché. Pôvodná teoretická myšlienka narazí na prekážky implementácie a programátor sa musí rozhodnúť medzi tým, či ju splní do bodky alebo si ju niekde zjednoduší a zaručí tým rýchlejší algoritmus. V tejto podkapitole spomenieme obmedzenia, ktoré sú naimplementované a užívatelia regulárnych výrazov sa s nimi musia vysporiadať.
+
+Za zmienku stojí fakt, že síce prvé implementácie používajú prevod na NFA a tak fungujú v lineárnom čase vzhľadom na veľkosť vstupu, ale tieto algoritmy ušli pozornosti Hernyho Spencera pri reimplementovaní a zverejnení ôsmej verzie Unixu, kam pre regulárne výrazy napísal algoritmus s exponenciálnou časovou zložitosťou využívajúci backtraking. Práve on sa dostal do programovacích jazykov ako Perl, PCRE, Python, PHP, Ruby atď. Z neznámych dôvodov je tam dodnes a trápi užívateľov na kritických vstupoch (napr. match $a^n?a^n$ pre $n \geq 29$ trvá asi 20 sekúnd), pričom, hoci už existujú spätné referencie a skutočne vyžadujú backtracking, by stačilo skontrolovať použitú syntax a podľa toho zvoliť algoritmus. Na druhej strane rýchly algoritmus sa nestratil úplne -- Unix a jeho aplikácie ho znova využívajú.
 
 \subsection*{Regexy pokrývajúce triedu regulárnych jazykov}
 \label{praxregex}
