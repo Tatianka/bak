@@ -36,7 +36,7 @@ Nech $ L_{1}, L_{2}, L_{3} \in \R $, chceme ukázať, že  $ L = L_{1}(?=L_{2})L
 
 Keďže $ L_{1},L_{2},L_{3} $ sú regulárne, existujú DKA $ A_{i} = (K_{i},\Sigma_{i},\delta_{i},q_{0i},F_{i}) $ také, že $ L(A_{i})=L_{i}, i \in \lbrace 1,2,3\rbrace $. 
 
-Zostrojím NKA $ A $ pre $L$. Myšlienka spočíva v tom, že najprv necháme simulovať $A_1$ a keď akceptuje, simulujeme naraz $A_2$ a $A_3$. Konštrukcia je podoná ako prienik dvoch regulárnych jazykov (karteziánsky súčin stavov) s tým rozdielom, že $A_2$ môže skončiť skôr ako $A_3$.
+Zostrojíme NKA $ A $ pre $L$. Myšlienka spočíva v tom, že najprv necháme simulovať $A_1$ a keď akceptuje, simulujeme naraz $A_2$ a $A_3$. Konštrukcia je podoná ako prienik dvoch regulárnych jazykov (karteziánsky súčin stavov) s tým rozdielom, že $A_2$ môže skončiť skôr ako $A_3$.
 
 \textbf{Konštrukcia.}  $ A = (K,\Sigma,\delta,q_{0},F) $, kde
 $ K = K_{1} \cup K_{2} \times K_{3} \cup K_{3} ~ ( $predp. $ K_{1} \cap K_{3}= \emptyset), ~
@@ -50,9 +50,9 @@ $ K = K_{1} \cup K_{2} \times K_{3} \cup K_{3} ~ ( $predp. $ K_{1} \cap K_{3}= \
 
 $ L(A) = L. $
 
-$ \supseteq: $ Máme $ w \in L $ a chceme preň nájsť výpočet na $A$. Z definície $L$ vyplýva $w=xyz$, kde $x \in L_1, y \in L_2$ a $yz \in L_3$, teda existujú akceptačné výpočty pre $x,y,yz$ na DKA $A_1,A_2,A_3$. Z toho vyskladáme výpočet pre $w$ na $A$ nasledovne. Výpočet pre $x$ bude rovnaký ako na $A_1$. Z akceptačné stavu $A_1$ vieme na $\varepsilon$ prejsť do stavu $\left[q_{02},q_{03}\right]$, kde začne výpočet pre $y$. Ten vyskladáme z $A_2$ a $A_3$ tak, že si ich výpočty napíšeme pod seba a stavy nad sebou budú tvoriť karteziánsky súčin stavov v $A$ (keďže $A_2$ aj $A_3$ sú deterministické, tieto výpočty na $y$ budú rovnako dlhé). $y \in L_2$, teda $A_2$ skončí v akceptačnom stave. Podľa $\delta$ funkcie v $A$ vieme pokračovať len vo výpočte na $A_3$, teda doplníme zvyšnú postupnosť stavov pre výpočet $z$. Keďže $yz \in L_3$ a $F_3\subseteq F$ (resp. $F_2\times F_3\subseteq F$ pre $z=\varepsilon$), automat A akceptuje. 
+$ \supseteq: $ Máme $ w \in L $ a chceme preň nájsť výpočet na $A$. Z definície $L$ vyplýva $w=xyz$, kde $x \in L_1, y \in L_2$ a $yz \in L_3$, teda existujú akceptačné výpočty pre $x,y,yz$ na DKA $A_1,A_2,A_3$. Z toho vyskladáme výpočet pre $w$ na $A$ nasledovne. Výpočet pre $x$ bude rovnaký ako na $A_1$. Z akceptačné stavu $A_1$ vieme na $\varepsilon$ prejsť do stavu $\left[q_{02},q_{03}\right]$, kde začne výpočet pre $y$. Ten vyskladáme z $A_2$ a $A_3$ tak, že si ich výpočty napíšeme pod seba a stavy nad sebou budú tvoriť karteziánsky súčin stavov v $A$ (keďže $A_2$ aj $A_3$ sú deterministické, tieto výpočty na $y$ budú rovnako dlhé). $y \in L_2$, teda $A_2$ skončí v akceptačnom stave. Podľa $\delta$--funkcie v $A$ vieme pokračovať len vo výpočte na $A_3$, teda doplníme zvyšnú postupnosť stavov pre výpočet $z$. Keďže $yz \in L_3$ a $F_3\subseteq F$ (resp. $F_2\times F_3\subseteq F$ pre $z=\varepsilon$), automat A akceptuje. 
 
-$ \subseteq: $ Nech $w \in L(A)$, potom existuje akceptačný výpočet na $A$. Z toho vieme $w$ rozdeliť na $x,y$ a $z$ tak, že $x$ je slovo spracovávené od začiatku po prvý príchod do stavu $\left[q_{02},q_{03}\right]$, $y$ odtiaľto po posledný stav reprezentovaný karteziánskym súčinom stavov a zvyšok bude $z$. Nevynechali sme žiadne znaky a nezmenili poradie, teda $w=xyz$. Do $\left[q_{02},q_{03}\right]$ sa $A$ môže prvýkrát dostať len vtedy, ak bol v akceptačnom stave $A_1$. Prechod do $\left[q_{02},q_{03}\right]$ je na $\varepsilon$, takže $x \in L_1$. Práve tento stav je počiatočný pre $A_2$ aj $A_3$. Ak $z=\varepsilon$, tak akceptačný stav $A$ je z $F_2\times F_3$ a $y \in L_2, y \in L_3$ a aj $yz \in L_3$. Z toho podľa definície vyplýva, že $xyz=w \in L$. Ak $z\neq \varepsilon$, potom je akceptačný stav $A$ z $F_3$. Podľa $\delta$ funkcie sa z karteziánskeho súčinu stavov do normálneho stavu dá prejsť len tak, že $A_2$ akceptuje, teda $y \in L_2$. $A_3$ akceptuje na konci, čo znamená $yz \in L_3$. Znova podľa definície operácie lookahead $xyz=w \in L$.
+$ \subseteq: $ Nech $w \in L(A)$, potom existuje akceptačný výpočet na $A$. Z toho vieme $w$ rozdeliť na $x,y$ a $z$ tak, že $x$ je slovo spracovávené od začiatku po prvý príchod do stavu $\left[q_{02},q_{03}\right]$, $y$ odtiaľto po posledný stav reprezentovaný karteziánskym súčinom stavov a zvyšok bude $z$. Nevynechali sme žiadne znaky a nezmenili poradie, teda $w=xyz$. Do $\left[q_{02},q_{03}\right]$ sa $A$ môže prvýkrát dostať len vtedy, ak bol v akceptačnom stave $A_1$. Prechod do $\left[q_{02},q_{03}\right]$ je na $\varepsilon$, takže $x \in L_1$. Práve tento stav je počiatočný pre $A_2$ aj $A_3$. Ak $z=\varepsilon$, tak akceptačný stav $A$ je z $F_2\times F_3$ a $y \in L_2, y \in L_3$ a aj $yz \in L_3$. Z toho podľa definície vyplýva, že $xyz=w \in L$. Ak $z\neq \varepsilon$, potom je akceptačný stav $A$ z $F_3$. Podľa $\delta$--funkcie sa z karteziánskeho súčinu stavov do normálneho stavu dá prejsť len tak, že $A_2$ akceptuje, teda $y \in L_2$. $A_3$ akceptuje na konci, čo znamená $yz \in L_3$. Znova podľa definície operácie lookahead $xyz=w \in L$.
 \end{proof}
 
 \begin{lema}\label{lb+R}
@@ -150,7 +150,7 @@ $?$ veľa nespraví -- lookaround tam buď bude 1x alebo nebude vôbec. $+$ je p
 
 \subsection{Vlastnosti lookaroundu}
 
-Tu ukážem, že dávať do lookaheadu prefixový jazyk nemá zmysel. Vytvorme čisto jazyk všetkých rôznych prefixov, aké obsahuje. Do lookaheadu stačí vložiť regex pre tento jazyk a celkový matchovaný jazyk to nezmení. Samozrejme, to isté platí aj pre lookbehind a sufixové jazyky.
+Tu ukážeme, že dávať do lookaheadu prefixový jazyk nemá zmysel. Vytvorme čisto jazyk všetkých rôznych prefixov, aké obsahuje. Do lookaheadu stačí vložiť regex pre tento jazyk a celkový matchovaný jazyk to nezmení. Samozrejme, to isté platí aj pre lookbehind a sufixové jazyky.
 
 \begin{veta}\label{bezprefixove}
 Nech $L$ je ľubovoľný jazyk a $L_p = L \cup \lbrace uv ~|~ u \in L \rbrace$. Nech $\alpha$ je ľubovoľný regulárny výraz taký, že obsahuje $(?=L_p)$. Potom ak prepíšeme tento lookahead na $(?=L)$ (nazvime to $\alpha '$), bude platiť $L(\alpha ') = L(\alpha )$. Analogicky to platí aj pre lookbehind.
@@ -171,7 +171,7 @@ Uvedomme si, že lookaround nie je fixovaný na dĺžku vstupu - musí sa zhodov
 \subsection{Spätné referencie}
 \label{la-backref}
 
-Skúsme teraz zložitejší model. Pridáme k e-regexom pozitívny lookaround a túto množinu nazveme \textbf{le-regex}. Triede jazykov nad le-regexami budeme hovoriť \textbf{LEregex}.
+Skúsme teraz zložitejší model. Pridáme k e-regexom pozitívny lookaround. Túto množinu nazvýva \textbf{le-regex}, triede jazykov nad le-regexami hovoríme \textbf{LEregex}.
 
 \begin{veta}
 $ Eregex \subsetneq LEregex $
@@ -188,9 +188,9 @@ $$ \alpha = (a*)b(\backslash 1a)b(?=(\backslash 1)* \mathdollar )(\backslash 2)*
 $ LEregex \subseteq \L_{CS} $
 \end{veta}
 \begin{proof}
-Vieme, že $ Eregex \in \L_{CS} $ \cite[Theorem 1]{ExtendedRegexPower}, teda ľubovoľný e-regex vieme simulovať pomocou LBA. Ukážem, že ak pridáme operáciu lookahead/lookbehind, vieme to simulovať tiež.
+Vieme, že $ Eregex \in \L_{CS} $ \cite[Theorem 1]{ExtendedRegexPower}, teda ľubovoľný e-regex vieme simulovať pomocou LBA. Ukážeme, že ak pridáme operáciu lookahead/lookbehind, vieme to simulovať tiež.
 
-Nech $\alpha$ je le-regex. Potom $A$ je LBA pre $\alpha$, ktorý ignoruje lookaround (t.j. vyrábame LBA pre e-regex). Teraz vytvorím LBA $B$ pre e-regex vnútri lookaroundu. Z nich vytvoríme LBA $C$ pre úplný le-regex $\alpha$ tak, že bude simulovať $A$ a keď príde na rad lookaround zaznačí si, v akom stave je $A$ a na ktorom políčku skončil, skopíruje slovo na ďalšiu stopu a na nej simuluje od/do toho miesta $B$ (lokahead/lookbehind). Pokiaľ $B$ akceptoval, vráti sa naspäť k výpočtu na $A$. $C$ akceptuje práve vtedy, keď $A$.
+Nech $\alpha$ je le-regex. Potom $A$ je LBA pre $\alpha$, ktorý ignoruje lookaround (t.j. vyrábame LBA pre e-regex). Teraz vytvoríme LBA $B$ pre e-regex vnútri lookaroundu. Z nich vytvoríme LBA $C$ pre úplný le-regex $\alpha$ tak, že bude simulovať $A$ a keď príde na rad lookaround zaznačí si, v akom stave je $A$ a na ktorom políčku skončil, skopíruje slovo na ďalšiu stopu a na nej simuluje od/do toho miesta $B$ (lokahead/lookbehind). Pokiaľ $B$ akceptoval, vráti sa naspäť k výpočtu na $A$. $C$ akceptuje práve vtedy, keď $A$.
 
 Všimnime si, že samotný look\-a\-round môže obsahovať le-regex, t.j. vnorený lookaround. Tých však môže byť iba konečne veľa, keďže každý le-regex musí mať konečný zápis. Čo znamená, že aj stôp bude konečne veľa a naznačeným postupom si vieme postupne vybudovať LBA, ktorý bude simulovať $\alpha$.
 \end{proof}

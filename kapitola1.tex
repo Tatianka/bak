@@ -47,7 +47,7 @@ sú regexy, kde $L((e_1)(e_2)) = L(e_1)L(e_2), L((e_1)|(e_2))=L(e_1) \cup L(e_2)
 
 Vo formálnom texte bude prirodzené pomenovávať ľubovoľný model regexov pomocou písmen gréckej abecedy.
 
-Rada by som spomenula aj iné konštrukcie, ktoré v definícii chýbajú. V konečnom dôsledku síce modelu silu nepridajú, ale budem s nimi rátať v ďalšom výskume, nakoľko sa bavíme o moderných regulárnych výrazoch.
+Radi by sme spomenuli aj iné konštrukcie, ktoré v definícii chýbajú. V konečnom dôsledku síce modelu silu nepridajú, ale budeme s nimi počítať v ďalšom výskume, nakoľko sa bavíme o moderných regulárnych výrazoch.
 
 \begin{itemize}
 \item $*?,+?,??$ definované ako $*,+,?$, ale snažia sa matchovať čo najmenej znakov ($*,+,?$ sú greedy)
@@ -57,7 +57,7 @@ Rada by som spomenula aj iné konštrukcie, ktoré v definícii chýbajú. V kon
 \item $(?\#\dots )$ komentár, pri matchovaní sa obsah ignoruje
 \end{itemize}
 
-Pre ľahší dôkaz uvediem formálnu definíciu pre prvú operáciu a operáciu, ktorej algoritmus sa používa na simulovanie Kleeneho $*$.
+Pre ľahší dôkaz uvedieme formálnu definíciu pre prvú operáciu a operáciu, ktorej algoritmus sa používa na simulovanie Kleeneho $*$.
 
 \begin{df}[Greedy iterácia]
 $$ L_{1} \circledast L_{2} = \lbrace uv ~|~ u \in L_1^* \land v \in L_2 \land u~je~najdlhšie~také \rbrace$$
@@ -67,18 +67,20 @@ $$ L_{1} \circledast L_{2} = \lbrace uv ~|~ u \in L_1^* \land v \in L_2 \land u~
 $$ L_{1} *? L_{2} = \lbrace uv ~|~ u \in L_1^* \land v \in L_2 \land u~je~najkratšie~také \rbrace $$
 \end{df}
 
-V sekcii \ref{iteracia} dokážem, že tieto iterácie pokrývajú rovnakú triedu jazykov ako Kleeneho $*$. Ostatné operácie sa ľahko prepíšu na už definované regexy, preto triedu jazykov nad regexami nerozšíria o žiaden nový jazyk. Poďme sa teda venovať tým zložitejsím a zaujímavejším operáciám.
+V sekcii \ref{iteracia} dokážeme, že tieto iterácie pokrývajú rovnakú triedu jazykov ako Kleeneho $*$. Ostatné operácie sa ľahko prepíšu na už definované regexy, preto triedu jazykov nad regexami nerozšíria o žiaden nový jazyk. Poďme sa teda venovať tým zložitejsím a zaujímavejším operáciám.
 
 \section{Spätné referencie}\label{chap:backref1}
 
-Spätná referencia (angl. \textit{backreference}) je označovaná ako $ \backslash m $, kde $m \in \N$ je kon\-štan\-ta. Predstavuje reťazec, ktorý matchoval regex vnútri $m$--tých okrúhlych zátvoriek. Okrúhle zátvorky číslujeme zľava doprava podľa poradia ľavej zátvorky. Samozrejme, $\backslash m$ môže ukazovať na zátvorky, ktoré obsahujú regex s inými spätnými referenciami. Vždy však budeme predpokladať, že spätná referencia s číslom $m$ sa bude nachádzať až za pravou zátvorkou s číslom $m$.
+Spätná referencia (angl. \textit{backreference}) je označovaná ako $ \backslash m $, kde $m \in \N$ je kon\-štan\-ta, predstavuje reťazec, ktorý bol matchovaný obsahom $m$--tých okrúhlych zátvoriek. Okrúhle zátvorky číslujeme zľava doprava podľa poradia ľavej zátvorky. Samozrejme, $\backslash m$ môže ukazovať na zátvorky, ktoré obsahujú regex s inými spätnými referenciami. Vždy však budeme predpokladať, že spätná referencia s číslom $m$ sa bude nachádzať až za pravou zátvorkou s číslom $m$.
 
-Regexy rozšírené o spätné referencie budeme nazývať \textbf{e-regex}. Triedu jazykov nad e-regexami budem nazývať \textbf{Eregex}\footnote{Autori ju pôvodne nazvali extended regex resp. EREG, avšak pre lepšiu prehľadnosť v tejto práci sme názov upravili.}, presná definícia sa nachádza v článku \cite{ExtendedRegexPower}.  Narába s regexami uvedenými iba v úvodnej definícii, ale myslíme, že je zrejmé, že nové operácie nepridajú modelu silu, preto môžeme pracovať s touto rozšírenou množinou.
+Poznamenajme, že ak sa $m$--té zátvorky nachádzajú vnútri Kleeneho $*$ a $\backslash m$ nie je vnútri tejto Kleeneho $*$, potom $\backslash m$ bude matchovať slovo z poslednej iterácie.
+
+Regexy rozšírené o spätné referencie (t.j. do abecedy regexov pribudne $\backslash m$, kde $m \in \N$) budeme nazývať \textbf{e-regex}. Triedu jazykov nad e-regexami budeme nazývať \textbf{Eregex}\footnote{Autori ju pôvodne nazvali extended regex resp. EREG, avšak pre lepšiu prehľadnosť v tejto práci sme názov upravili.}, presná definícia sa nachádza v článku \cite{ExtendedRegexPower}.  Narába s regexami uvedenými iba v úvodnej definícii, ale myslíme, že je zrejmé, že nové operácie nepridajú modelu silu, preto môžeme pracovať s touto rozšírenou množinou.
 
 Dospelo sa k nasledujúcim výsledkom:
 \begin{itemize}
 \item V rámci Chomského hierarchie je trieda Eregex vlastnou podmnožinou $\L_{CS}$. Existujú jazyky z $\L_{CF}$ aj $\L_{CS}$, ktoré do nej nepatria.
-\item  Čo sa týka uzáverových vlastností, trieda je uzavretá na homomorfizmus a nie je uzavretá na komplement, inverzný homomorfizmus, konečnú substitúciu, shuffle s regulárnym jazykom. Neuzavretosť na prienik sa podarilo dokázať až v článku \cite{ExtendedRegexIntersec}.
+\item Čo sa týka uzáverových vlastností, trieda je uzavretá na homomorfizmus a nie je uzavretá na komplement, inverzný homomorfizmus, konečnú substitúciu, shuffle s regulárnym jazykom. Neuzavretosť na prienik sa podarilo dokázať až v článku \cite{ExtendedRegexIntersec}.
 \item Nekonečné jazyky z Eregex sa dajú pumpovať, dokázali sa už 2 verzie pumpovacej lemy (\cite[Lemma 1]{ExtendedRegexPower}, \cite[Lemma 3]{ExtendedRegexIntersec}).
 \end{itemize}
 
@@ -87,9 +89,9 @@ Dospelo sa k nasledujúcim výsledkom:
 
 Lookaround je spoločný názov pre dve operácie -- lookahead a lookbehind. Tieto operácie nás v práci budú zaujímať. Je to niečo nové a málo skúmané. Teraz si uvedieme ich popis a definície. Ako fungujú? 
 
-Zoberme si lookahead. Už názov naznačuje, že to bude nazeranie dopredu. Myšlienka spočíva v tom, že si chceme povedať, čo má za nejakým hľadaným slovom nasledovať. Teda nájdeme slovo a potom nazrieme dopredu a overíme, či tam je to, čo chceme. Táto operácia 'nevyjedá' písmenká, čiže keď lookahead skončí a uspeje, pokračuje sa v ďalšom matchovaní akokeby tam nebol -- presne od toho miesta, kde on začal pracovať. Presnejšie: slovo sa matchuje podľa regexu. Keď narazíme na lookahead, zapamätáme si toto miesto. Matchujeme podľa lookaheadu. Ak uspeje, potom sa v slove vrátime na zapamätané miesto a pokračujeme v matchovaní regexom za lookaheadom.
+Zoberme si lookahead. Už názov naznačuje, že to bude nazeranie dopredu. Myšlienka spočíva v tom, že si chceme povedať, čo má za nejakým hľadaným slovom nasledovať. Teda nájdeme slovo a potom nazrieme dopredu a overíme, či tam je to, čo chceme. Táto operácia 'nevyjedá' písmenká, čiže keď lookahead skončí a uspeje, pokračuje sa v ďalšom matchovaní akokeby tam nebol -- presne od toho miesta, kde on začal pracovať. Presnejšie: slovo sa matchuje podľa regexu. Keď narazíme na lookahead, zapamätáme si toto miesto. Matchujeme podľa lookaheadu. Ak uspeje, potom sa v slove vrátime na zapamätané miesto a pokračujeme v matchovaní regexom za lookaheadom\cite{Python3Documentation}.
 
-Lookbehind pracuje analogicky, ale pozerá sa dozadu -- teda chceme vedieť, čo hľadanému slovu predchádza. V praxi by sa toto riešilo backtrackingom, lebo nevieme vopred ako ďaleko dozadu sa budeme potrebovať pozrieť. A keďže autori programovacích jazykov nechceli príliš spomaľovať výpočty a asi nepovažovali lookbehind za taký dôležitý, určili si, že môže obsahovať iba také regexy, z ktorých je jasne určiteľné aký dlhý reťazec bude potrebovať na výpočet (takže sa backtrackingu vyhli). My sme však v teoretickom prostredí a primárne nás bude zaujímať veľkosť triedy, ktorú budeme vedieť popísať aj pomocou týchto operácií, preto sme sa rozhodli na obmedzenia zabudnúť. Je však jasné, že reálny model bude akousi podmnožinou toho nášho.
+Lookbehind pracuje analogicky, ale pozerá sa dozadu -- teda chceme vedieť, čo hľadanému slovu predchádza. 
 
 \begin{df}[Pozitívny lookahead]
 $$ L_{1}(?=L_{2})L_{3} = \lbrace uvw ~|~ u \in L_{1} \land v \in L_{2} \land vw \in L_{3} \rbrace $$ Operáciu $(?=\dots)$ nazývame pozitívny lookahead alebo len lookahead.
@@ -109,4 +111,42 @@ $$ L_{1}(?!L_{2})L_{3} = \lbrace uv ~|~ u \in L_{1} \land v \in L_{3} \land neex
 $$ L_{1}(?<!L_{2})L_{3} = \lbrace uv ~|~ u \in L_{1} \land v \in L_{3} \land neexituje~také~x,y,~že~u=xy~a~y \in L_2 \rbrace $$ Operáciu $(?<!\dots)$ nazývame negatívny lookbehind.
 \end{df}
 
-Nachádza sa tu ešte jeden rozdiel od reálneho modelu, na ktorý by sme chceli upozorniť. Regulárne výrazy sa začali využívať na vyhľadávanie v texte. V tomto kontexte má lookaround iný význam ako v teoretickom prostredí. Využíva sa to, že nevyjedá písmenká a preto sa dá použiť v takých prípadoch, kedy si chceme označiť slovo $w$, ale vieme, že hľadáme slovo $v$, pričom $w$ je podslovo $v$. Teda v takom prípade môže lookahead ďaleko presahovať slovo, na ktoré sme vyhlásili zhodu. Z toho vyplýva, že my by sme na vstup nechceli dostať $w$, ale $v$. V teoretickom prostredí nás však zaujíma slovo, ktoré do jazyka patrí a na jeho okolie sa nepozeráme, v podstate ho ani nemáme k dispozícii. Preto sa zdá, že budeme na vstupe očakávať $w$ a lookahead či lookbehind nebudú môcť presahovať za hranice slova. Táto úprava však neuškodí, nakoľko vieme z daného $w$ spraviť $v$ jednoduchým pridaním $(.*)$ na správne miesta.
+\begin{df}
+Množinu e-regexov rozšírená o lookahead a lookbehind budeme nazývať \textbf{le-regexy}, triedu nad le-regexami \textbf{LEregex}.
+\end{df}
+
+\sectionmark{Prax}
+\section{Regulárne výrazy v praxi}
+\sectionmark{Prax}
+\label{prax}
+
+Už na začiatku sme spomínali, že táto práca je inšpirovaná novými konštrukciami, ktoré v praxi pribudli do modelu regulárnych výrazov. Pracovať s praktickým modelom však nie je také jednoduché. Pôvodná teoretická myšlienka narazí na prekážky implementácie a programátor sa musí rozhodnúť medzi tým, či ju splní do bodky alebo si ju niekde zjednoduší a zaručí tým rýchlejší algoritmus. V tejto podkapitole spomenieme obmedzenia, ktoré sú naimplementované a užívatelia regulárnych výrazov sa s nimi musia vysporiadať.
+
+\subsection*{Regexy pokrývajúce triedu regulárnych jazykov}
+\label{praxregex}
+
+V tejto oblasti problém nie je. Prevedenie na nedeterministický konečný automat je rýchle -- stačí jeden prechod celého regexu. Potom niektoré implementácie pokračujú prevodom na deterministický automat, prípadne urobia úpravy na niečo medzi. Nás\-led\-ná simulácia konečného automatu má lineárnu časovú zložitosť vzhľadom na dĺžku prehľadávaného textu\cite{ExtendedRegexPower}. Nanešťastie nie všetky prostredia s regulárnymi výrazmi využívajú tento algorimus. No aj keď pracujú s backtrackingom, neokliešťujú regulárne výrazy o žiadnu funkcionalitu. Jedinou zmenou je prevedenie Kleeneho $*$ (teda aj $+$ a $?$), kedy sa používa greedy verzia -- snaží sa matchovať čo najdlší reťazec, ale ako sme spomenuli v \ref{def}, nevadí to.
+
+\subsection*{Spätné referencie}
+\label{praxbackref}
+
+Majú v praxi povolené najviac trojciferné čísla\cite{Python3Documentation}, aby bolo ľahšie rozlíšiteľné, čo ešte referencia je a čo už nie, a celkovo z hľadiska časovej a pamäťovej zložitosti algoritmu. Na druhej strane teoretický model sa takýmito problémami nemusí zaoberať, preto povolíme všetky možné konštanty.
+
+\subsection*{Lookaround}
+\label{praxla}
+
+Ako prvé si všimnime významný rozdiel medzi definíciou a reálnym modelom. Re\-gu\-lár\-ne výrazy sa začali využívať na vyhľadávanie v texte a v tomto kontexte má lookaround iný význam ako v teoretickom prostredí. Využíva sa to, že nevyjedá písmenká a preto sa dá použiť v takých prípadoch, kedy si chceme označiť slovo $w$, ale vieme, že hľadáme slovo $v$, pričom $w$ je podslovo $v$. Teda v takom prípade môže look\-ahead ďaleko presahovať slovo, na ktoré sme vyhlásili zhodu. Z toho vyplýva, že my by sme na vstup nechceli dostať $w$, ale $v$. V teoretickom prostredí nás však zaujíma slovo, ktoré do jazyka patrí a na jeho okolie sa nepozeráme, v podstate ho ani nemáme k dispozícii. Preto sa zdá, že budeme na vstupe očakávať $w$ a lookahead či lookbehind nebudú môcť presahovať za hranice slova. Táto úprava však neuškodí, nakoľko vieme z daného $w$ spraviť $v$ jednoduchým pridaním $(.*)$ na správne miesta.
+
+Ďalšou črtou praktického prevedenia je, že programátori si definovali lookahead a lookbehind ako \textbf{atomické operácie}\cite{LApracticalnote}. To znamená, že matchovanie regexu vnútri lookaroundu prebieha normálne, ale akonáhle splní matchujúcu podmienku, celý výpočet aj medzivýsledky upadnú do zabudnutia a žiaden back\-tracking zvonku už nie je schopný meniť ich vnútorný výpočet. Na prvý pohľad sa zdá, že to nemôže až tak prekážať, no opak je pravdou. Predstavme si lookaround, ktorý obsahuje okrúhle zátvorky, na ktoré sa odvolávajú spätné referencie niekde vonku ďalej v regexe. Z čoho vyplýva, že iné matchovanie v lookarounde (s rovnakým výsledkom) by mohlo ovplyvniť matchovanie regexu ako celku.
+
+Napríklad le-regex $(?=([0-9]+))[+-*/]\backslash 1$ by mal matchovať reťazce typu číslo--operácia--číslo, ale my vieme, že nebude matchovať slovo $123+12$. Vyplýva to z toho, že $+$ je greedy a lookahead je atomický. S backtrackingom by toto nenastalo.
+
+\subsubsection{Lookbehind}
+\label{praxlb}
+
+Simulácia lookaheadu je jednoduchá -- vieme, kde začína, teda ho spustíme od tohto miesta a čakáme na výsledok. Taký lookbehind sa však pozerá dozadu, teda potrebujeme určiť, kde začať. V praxi by sa toto riešilo backtrackingom, lebo nevieme vopred ako ďaleko dozadu sa budeme potrebovať pozrieť. Najprv by sme vyskúšali jeden znak a pri neúspechu by sme testovaný reťazec predlžovali. Backtracking je však drahý na čas a keďže autori programovacích jazykov nechceli príliš spomaľovať výpočty a asi nepovažovali lookbehind za taký dôležitý, určili si, že môže obsahovať iba také regexy, z ktorých je jasne určiteľné aký dlhý reťazec bude lookbehind potrebovať na výpočet ešte predtým ako sa spustí (takže sa backtrackingu vyhli)\cite{LApracticalnote}. 
+
+\subsection*{Na záver}
+\label{praxzaver}
+
+Jedným dychom s týmito obmedzeniami dodávame, že my sa nachádzame v teo\-re\-tic\-kom prostredí, preto nás takéto obmedzenia zaujímať nebudú. Budeme pracovať s plným (čiže silnejším) modelom, z čoho je jasné, že ten reálny bude akousi jeho pod\-mno\-ži\-nou. Zároveň výsledky budú tvoriť hornú hranicu toho, čo v praxi dokážeme a keby niekto inovatívny implementoval operácie v ich plnej sile, tento model stále dobre poslúži.
