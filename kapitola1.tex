@@ -9,8 +9,7 @@ Tieto postupnosti slúžia na vyhľadávanie slov\footnote{Lepšie by sa hodilo 
 
 Keďže implementované regulárne výrazy sa už natoľko líšia od počiatočného teoretického modelu -- nielen syntaxou ale aj triedou jazykov, ktorú popisujú -- zaužíval sa pre ne názov \textbf{regexy}. Budeme ho používať aj my a prípadnými predponami budeme rozlišovať, ktorú množinu operácií práve myslíme.
 
-\section{Základná definícia regulárnych výrazov}
-\sectionmark{Zákl. definícia}
+\section[Zákl. definícia]{Základná definícia regulárnych výrazov}
 \label{def}
 
 Samotný pojem \textbf{regex} bude slúžiť na pomenovanie regulárnych výrazov, ktoré pokrývajú triedu regulárnych jazykov. Z tohto dôvodu nebudeme vytvárať zvlášť pomenovanie pre túto triedu, bolo by to zbytočné. Pre ozrejmenie uvedieme základnú definíciu regexu z článku \cite{ExtendedRegexPower}. Niektoré konštrukcie sú oproti teoretickému modelu nové, ale dôkaz toho, že pokrýva stále rovnakú triedu jazykov, je triviálny.
@@ -144,13 +143,12 @@ Množinu e-regexov rozšírená o pozitívny lookahead a pozitívny lookbehind b
 Množinu le-regexov rozšírená o negatívny lookahead a negatívny lookbehind budeme nazývať \underline{nle-regexy}, triedu nad nle-regexami \underline{nLEregex}.
 \end{df}
 
-\section{Regulárne výrazy v praxi}
-\sectionmark{Prax}
+\section[Prax]{Regulárne výrazy v praxi}
 \label{prax}
 
 Už na začiatku sme spomínali, že táto práca je inšpirovaná novými konštrukciami, ktoré v praxi pribudli do modelu regulárnych výrazov. Pracovať s praktickým modelom však nie je také jednoduché. Pôvodná teoretická myšlienka narazí na prekážky implementácie a programátor sa musí rozhodnúť medzi tým, či ju splní do bodky alebo si ju niekde zjednoduší a zaručí tým rýchlejší algoritmus. V tejto podkapitole spomenieme obmedzenia, ktoré sú naimplementované a užívatelia regulárnych výrazov sa s nimi musia vysporiadať.
 
-Za zmienku stojí fakt, že síce prvé implementácie používajú prevod na NFA a tak fungujú v lineárnom čase vzhľadom na veľkosť vstupu, ale tieto algoritmy ušli pozornosti Hernyho Spencera pri reimplementovaní a zverejnení ôsmej verzie Unixu, kam pre regulárne výrazy napísal algoritmus s exponenciálnou časovou zložitosťou využívajúci backtraking. Práve on sa dostal do programovacích jazykov ako Perl, PCRE, Python, PHP, Ruby atď. Z neznámych dôvodov je tam dodnes a trápi užívateľov na kritických vstupoch (napr. match $a^n?a^n$ pre $n \geq 29$ trvá asi 20 sekúnd, viď Obr. \ref{fig:graf}), pričom, hoci už existujú spätné referencie a skutočne vyžadujú backtracking, by stačilo skontrolovať použitú syntax a podľa toho zvoliť algoritmus. Na druhej strane rýchly algoritmus sa nestratil úplne -- Unix a jeho aplikácie ho znova využívajú.
+Za zmienku stojí fakt, že síce prvé implementácie používajú prevod na NKA a tak fungujú v lineárnom čase vzhľadom na veľkosť vstupu, ale tieto algoritmy ušli pozornosti Hernyho Spencera pri reimplementovaní a zverejnení ôsmej verzie Unixu, kam pre regulárne výrazy napísal algoritmus s exponenciálnou časovou zložitosťou využívajúci backtraking. Práve on sa dostal do programovacích jazykov ako Perl, PCRE, Python, PHP, Ruby atď. Z neznámych dôvodov je tam dodnes a trápi užívateľov na kritických vstupoch (napr. match $a^n?a^n$ pre $n \geq 29$ trvá viac ako 10 sekúnd, viď Obr. \ref{fig:graf}), pričom, hoci už existujú spätné referencie a skutočne vyžadujú backtracking, by stačilo skontrolovať použitú syntax a podľa toho zvoliť algoritmus. Na druhej strane rýchly algoritmus sa nestratil úplne -- Unix a jeho aplikácie ho znova využívajú.
 \begin{figure}[h]
   \centering
   \includegraphics[width=1\textwidth]{obrazky/graf}
@@ -161,15 +159,17 @@ Za zmienku stojí fakt, že síce prvé implementácie používajú prevod na NF
 \subsection*{Regexy pokrývajúce triedu regulárnych jazykov}
 \label{praxregex}
 
-\underline{Thompsonov prevod regexu na nedeterministický konečný automat}\cite{Cox07SlowPython}
+Trieda regulárnych jazykov je popísaná aj modelom konečných automatov. Tie sú ľahko implementovateľné, preto sa regexy simulujú pomocou nich. Ukážme si, ako funguje prevod medzi týmito dvoma modelmi.
+
+\subsubsection{Thompsonov prevod regexu na nedeterministický konečný automat \cite{Cox07SlowPython}}
 
 Máme regex $\alpha$ vystavaný z množiny operácií. My definujeme čiastočné NKA s voľnými šípkami pre jednotlivé operácie a tie sa potom podľa stavby $\alpha$ spoja do NKA pre $L(\alpha )$. Nakoniec voľné šípky z posledných operácií pripojíme na akceptačný stav s prechodom na $\varepsilon$. Ukážme si jednotlivé konštrukcie pre operácie, $e$ vždy bude označovať regex, ktorý nás zaujíma.
 \begin{itemize}
-\item matchovanie obyčajného znaku (t.j. nie metaznaku)
+\item $e=a,~a\in \Sigma$ -- matchovanie obyčajného znaku (t.j. nie metaznaku)
 \begin{center}
 	 \includegraphics[scale=1]{obrazky/T_pismenko}
 \end{center}
-\item zretazenie
+\item zreťazenie
 \begin{center}
     \includegraphics[scale=1]{obrazky/T_zretazenie}
 \end{center} 
@@ -192,7 +192,7 @@ Máme regex $\alpha$ vystavaný z množiny operácií. My definujeme čiastočn�
 \item zvyšok syntaxe je možné prepísať pomocou predošlých znakov a metaznakov
 \end{itemize}
 
-V tejto oblasti problém nie je. Opísané prevedenie na nedeterministický konečný automat je rýchle -- stačí jeden prechod celého regexu. Potom niektoré implementácie pokračujú prevodom na deterministický automat, prípadne urobia úpravy na niečo medzi. Nás\-led\-ná simulácia konečného automatu má lineárnu časovú zložitosť vzhľadom na dĺžku prehľadávaného textu\cite{ExtendedRegexPower}. Nanešťastie nie všetky prostredia s regulárnymi výrazmi využívajú tento algorimus. No aj keď pracujú s backtrackingom, neokliešťujú regulárne výrazy o žiadnu funkcionalitu. Jedinou zmenou je prevedenie Kleeneho $*$ (teda aj $+$ a $?$), kedy sa používa greedy verzia -- snaží sa matchovať čo najdlší reťazec, ale ako sme spomenuli v \ref{def}, nevadí to.
+Vidíme, že v praxi v tejto oblasti problém nie je. Opísané prevedenie na nedeterministický konečný automat je rýchle -- stačí jeden prechod celého regexu. Potom niektoré implementácie pokračujú prevodom na deterministický automat, prípadne urobia úpravy na niečo medzi. Nás\-led\-ná simulácia konečného automatu má lineárnu časovú zložitosť vzhľadom na dĺžku prehľadávaného textu\cite{ExtendedRegexPower}. Nanešťastie nie všetky prostredia s regulárnymi výrazmi využívajú tento algorimus. No aj keď pracujú s backtrackingom, neokliešťujú regulárne výrazy o žiadnu funkcionalitu. Jedinou zmenou je prevedenie Kleeneho $*$ (teda aj $+$ a $?$), kedy sa používa greedy verzia -- snaží sa matchovať čo najdlší reťazec, ale ako sme spomenuli v \ref{def}, nevadí to.
 
 \subsection*{Spätné referencie}
 \label{praxbackref}

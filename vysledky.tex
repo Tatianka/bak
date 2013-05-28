@@ -24,6 +24,23 @@ Kleeneho $*$ uvedená v definícii regexov je príliš nedeterministická na ľa
 \section{Lookaround}
 \label{chap:lookahead}
 
+Skúsme si najprv definovať model na reprezentáciu le-regexov. Bude nadväzovať na definíciu e-regexov, keďže je to ich rozšírenie.
+
+\begin{df}
+Nech $\alpha$ je le-regex. Nech $\alpha '$ je rovnaký ako $\alpha$, akurát bez operácií lookahead a lookbehind. Potom zhoda na $\alpha ' \in Eregex$ a teda je reprezentovaná stromom $T_{\alpha '}$ podľa definície triedy Eregex. Pre zhodu na $\alpha$ zostrojme konečný (orientovaný, usporiadaný) strom $S_\alpha$ z $T_{\alpha '}$ tak, že pridáme lookahead/lookbehind do vrcholu, kam zapadne pri postupnom rozkladaní regexu od koreňa a urobíme s ním nasledovné:
+\begin{itemize}
+  \item  $\alpha$ obsahuje lookahead, teda $S_\alpha$ má niekde vrchol $(u, (?=\beta_1 )\beta_2)$. Potom tento vrchol bude mať dvoch synov - vrchol $(u,\beta_2)$, ktorý pokračuje ako v $T_{\alpha '}$, a virtuálny vrchol $(u,\beta_1 (.*))$, ktorý sa ďalej rozloží podľa definície.
+  \item  $\alpha$ obsahuje lookbehind, teda $S_\alpha$ má niekde vrchol $(u, \beta_1(?<=\beta_2))$. Potom tento vrchol bude mať dvoch synov - vrchol $(u,\beta_1)$, ktorý pokračuje ako v $T_{\alpha '}$, a virtuálny vrchol $(u,(.*)\beta_2)$, ktorý sa ďalej rozloží podľa definície.
+  \item všetky ostatné vrcholy sú rovnaké ako v $T_{\alpha '}$
+\end{itemize}
+\end{df}
+\begin{df}
+Jazyk popísaný le-regexom $\alpha$ je definovaný nasledovne: 
+$$L(\alpha ) = \lbrace w \in \Sigma ^* ~|~ (w, \alpha)~je~koreňom~nejakého~výpočtového~stromu~S_\alpha \rbrace$$
+\end{df}
+
+Tento model nie je taký intuitívny ako verzia pre e-regexy. Rozmýšľať o regexe a zároveň o nejakom prieniku s lookaroundom vnútri nie je priamočiare ako napríklad jednoduché prechody stavov Turingovho stroja. Preto sa nebudeme snažiť pracovať s modelom v dôkazoch a zvolíme radšej podvedomú predstavu o množine operácií le-regexov.
+
 \subsection{Chomského hierarchia}
 
 Operácie máme zadefinovné, poďme sa pozrieť, čo urobia s jazykmi z tried Chomského hierarchie.
@@ -285,9 +302,6 @@ avšak $a^{m(m+1)} \notin L(\beta )$, lebo nám chýba zvyšok $0$. Teda vidíme
 
 \paragraph{Poznámka 2.}
 Zoberme si triedu jazykov nad takýmito le-regexami. Veta nám hovorí čosi o zložitosti jej jazykov. Napriklad $L = \lbrace a^m ~|~ m~je~prvočíslo\rbrace$ do nej nepatrí, lebo sa nedá vôbec pumpovať -- medzi prvočíslami nenájdeme žiadne násobky. Z toho už vyplýva, že je vlastnou podmnožinou $\L_{CS}$ a nie je uzavretá na komplement ($L^c = (aaa*)\backslash 1(\backslash1)* \in Eregex$).
-
-\paragraph{Poznámka 3.}
-V prípade, že by sa dokázala pumpovacia lema, vedeli by sme ukázať, že LEregex nie je uzavretá na vymazávajúci homomorfizmus. Príkladom je jazyk $L =\lbrace (a^m\#a^{m(m+1)k}\#)* ~|~ k,m \in \N;~ m ~ sa ~ priebežne~mení \rbrace$ popísaný regexom $\alpha = ((a*)\#(?=\backslash 2*\#)(\backslash 2a)*\#)*$. Vymazávací homomorfizmus $h$, kde $h(a) = a, ~ h(\#) = \lbrace  \varepsilon$ by zrušil mriežky, teda $h(L) = a^{\sum_{i=0}^n m_i(m_i+1)k_i}~|~ n,m_i,k_i \in \N ~ \forall i \rbrace$. Riešnením nemôže byť $h(\alpha)$, lebo bez mriežok je v lookaheade prefixový jazyk, teda matchuje najkratší prefix a nekontroluje deliteľnosť $m_i$. \todo
 
 \section{Negatívny lookaround}\label{chap:negla}
 

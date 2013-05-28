@@ -1,5 +1,6 @@
 %\cleardoublepage
 \chapter*{Záver}\label{chap:conc}
+\markboth{Záver}{}
 \phantomsection
 \addcontentsline{toc}{chapter}{Záver}
 
@@ -13,3 +14,4 @@ Negatívna verzia lookaheadu a lookbehindu pridala uzavretosť na komplement.
 
 Keďže v našom arzenáli chýbala pumpovacia lema, dokázať o nejakom jazyku, že do triedy nepatrí, sa stalo náročnou záležitosťou. Myslíme si však, že trieda nLEregex stále nepokrýva celé kontextové jazyky a problémom by mohol byť napríklad jazyk $a^nb^n$, nakoľko stále nemáme k dispozícii počítadlo alebo niečo jemu podobné. Otázkou je tiež vymazávajúci homomorfizmus, ktorý by mohol ovplyvniť lookaround. Keby sme napríklad vymazali mriežky z jazyka platných výpočtov TS, lookaround nevie ako ďaleko sa má pozerať -- mriežky ho v podstate navigovali. Táto vlastnosť podobne ovplyňuje aj zreťazenie a iteráciu. Je otázne, či vieme takúto navigáciu niečím nahradiť alebo strata významných znakov vedie k jazyku mimo triedy.
 
+Inšpiráciou pre pokračovanie nášho výskumu by mohli byť vyššie uvedené otvorené problémy. Spätné referencie a lookaround dokopy pôsobia zložito, preto by sa dalo zamyslieť nad vhodným modelom pre ľahšie uchopenie tohto arzenálu. Takisto by mohlo byť zaujímave nájsť operáciu, ktorá rozšíri triedu nLEregex ďalej, za hranicu kontextových jazykov alebo sa snažiť dosiahnuť úplné pokrytie tried Chomského hierarchie, teda kontextové respektíve bezkontextové jazyky.
