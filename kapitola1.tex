@@ -77,9 +77,28 @@ V sekcii \ref{iteracia} dokážeme, že tieto iterácie pokrývajú rovnakú tri
 
 Spätná referencia (angl. \textit{backreference}) je označovaná ako $ \backslash m $, kde $m \in \N$ je kon\-štan\-ta, predstavuje reťazec, ktorý bol matchovaný obsahom $m$--tých okrúhlych zátvoriek. Okrúhle zátvorky číslujeme zľava doprava podľa poradia ľavej zátvorky. Samozrejme, $\backslash m$ môže ukazovať na zátvorky, ktoré obsahujú regex s inými spätnými referenciami. Vždy však budeme predpokladať, že spätná referencia s číslom $m$ sa bude nachádzať až za pravou zátvorkou s číslom $m$.
 
-Poznamenajme, že ak sa $m$--té zátvorky nachádzajú vnútri Kleeneho $*$ a $\backslash m$ nie je vnútri tejto Kleeneho $*$, potom $\backslash m$ bude matchovať slovo z poslednej iterácie.
+Poznamenajme, že ak sa $m$--té zátvorky nachádzajú vnútri Kleeneho $*$ a $\backslash m$ nie je vnútri tejto Kleeneho $*$, potom $\backslash m$ bude matchovať slovo z poslednej iterácie. Zároveň ak táto Kleeneho $*$ matchuje s nula iteráciami (t.j. $m$--té zátvorky sa k matchovaniu ani nedostanú), $\backslash m$ matchuje prázdny reťazec. Platí pre všetky prípady, kedy $m$--té zátvorky nič nematchujú.
 
 Regexy rozšírené o spätné referencie (t.j. do abecedy regexov pribudne $\backslash m$, kde $m \in \N$) budeme nazývať \textbf{e-regex}. Triedu jazykov nad e-regexami budeme nazývať \textbf{Eregex}\footnote{Autori ju pôvodne nazvali extended regex resp. EREG, avšak pre lepšiu prehľadnosť v tejto práci sme názov upravili.}, presná definícia sa nachádza v článku \cite{ExtendedRegexPower}.  Narába s regexami uvedenými iba v úvodnej definícii, ale myslíme, že je zrejmé, že nové operácie nepridajú modelu silu, preto môžeme pracovať s touto rozšírenou množinou.
+
+\begin{df}
+\underline{Zhoda} (angl. match) e-regexu $\alpha$ je konečný (orientovaný, us\-po\-ria\-da\-ný) strom $T_\alpha$. Vrcholy $T_\alpha$ sú usporiadané podľa prvkov zo $\Sigma^* \times SUB(\alpha)$ a $T_\alpha$ je skonštruovaný podľa nasledujúcich pravidiel.
+\begin{list}{}{}
+\item[(i)] Koreň $T_\alpha$ je označený $(w,\alpha )$, $w \in \Sigma^*$.
+\item[(ii)] Predpokladajme, že vrchol $u$ stromu $T_\alpha$je označený ako $(w,\beta )$, kde $\beta = (\beta_1)(\beta_2) \in SUB(\alpha)$. Potom $u$ má dvoch synov, ktorý sú označený ako $(w_i,\beta_i), i=1,2$ (v poradí), kde $w_1,w_2 \in \Sigma^*$ a platí $w = w_1, w_2$.
+\item[(iii)] Predpokladajme, že vrchol $u$ stromu $T_\alpha$ je označený ako $(w,\beta )$, kde $\beta = (\beta_1)|(\beta_2) \in SUB(\alpha)$. Potom $u$ má jedného syna, ktorý je jeden z prvkov $(w_i,\beta_i), ~ i \in \lbrace 1,2 \rbrace$.
+\item[(iv)] Predpokladajme, že vrchol $u$ stromu $T_\alpha$ je označený ako $(w,\beta )$, kde $\beta = (\beta_1)* \in SUB(\alpha)$. Potom môžu nastať dva prípady: $w \neq \varepsilon$ alebo $w = \varepsilon$. Ak $w \neq \varepsilon$, $u$ má $k \geq 1$ synov označených ako
+$$ (w_1,\beta_1), \ldots, (w_k,\beta_1) $$
+kde $w_1 \cdots w_k = w, ~ w_i \neq \varepsilon, ~ i=1, \ldots ,k$. Ak $w = \varepsilon$, $u$ má jedného syna $u_1$ označeného $(\varepsilon , \beta )$ a $u_1$ je list $T_\alpha$.
+\item[(v)] Ak sa $(w,a), ~ a\in \Sigma$ vyskytuje ako označenie nejakého vrchola $u$, potom nutne $u$ je list a $w=a$.
+\item[(vi)] Ak sa $(w,\backslash m)$ vyskytuje ako označenie nejakého vrchola $u$, potom $u$ je list a $w \in \Sigma^*$ je určené nasledovne. Nech $\beta_m$ je podvýraz $\alpha$ uzavretý $m$--tým párom okrúhlych zátvoriek a nech $u_{\beta_m}$ je taký predchádzajúci vrchol $T_\alpha$ v štandardnom usporiadaní zľava-doprava, ktorý je označený prvkom, kde druhý komponent je $\beta_m $, ktorý predchádza $u$ v uspriadaní vrcholov zľava-doprava. (Poznamenajme, že všetky vrcholy, ktorých označenie obsahuje $\beta_m$ sú nutne nezávislé, keďže sú lineárne usporiadané z ľava doprava.) Potom zvolíme $w$ ako prvý komponent označenia $u_{\beta_m}$. Nakoniec, ak sa $\beta_m$ nevyskytuje v žiadnom označení vrchola $T_\alpha$, tak zadáme $w = \varepsilon$.
+\end{list}
+\end{df}
+
+\begin{df}
+\underline{Jazyk} rozpoznávaný e-regexom $\alpha$ je definovaný ako
+$$ L(\alpha) = \lbrace w \in \Sigma^* ~|~(w,\alpha ) ~označuje~koreň~nejakej~zhody~T_\alpha \rbrace $$.
+\end{df}
 
 Dospelo sa k nasledujúcim výsledkom:
 \begin{itemize}
@@ -98,25 +117,31 @@ Zoberme si lookahead. Už názov naznačuje, že to bude nazeranie dopredu. Myš
 Lookbehind pracuje analogicky, ale pozerá sa dozadu -- teda chceme vedieť, čo hľadanému slovu predchádza. 
 
 \begin{df}[Pozitívny lookahead]
-$$ L_{1}(?=L_{2})L_{3} = \lbrace uvw ~|~ u \in L_{1} \land v \in L_{2} \land vw \in L_{3} \rbrace $$ Operáciu $(?=\dots)$ nazývame pozitívny lookahead alebo len lookahead.
+$$ L_{1}(?=L_{2})L_{3} = \lbrace uvw ~|~ u \in L_{1} \land v \in L_{2} \land vw \in L_{3} \rbrace $$ Operáciu $(?=\dots)$ nazývame pozitívny lookahead alebo len \underline{lookahead}.
 \end{df}
 
 \begin{df}[Pozitívny lookbehind]
-$$ L_{1}(?<=L_{2})L_{3} = \lbrace uvw ~|~ uv \in L_{1} \land v \in L_{2} \land w \in L_{3} \rbrace $$ Operáciu $(?<=\dots)$ nazývame pozitívny lookbehind alebo len lookbehind.
+$$ L_{1}(?<=L_{2})L_{3} = \lbrace uvw ~|~ uv \in L_{1} \land v \in L_{2} \land w \in L_{3} \rbrace $$ Operáciu $(?<=\dots)$ nazývame pozitívny lookbehind alebo len \underline{lookbehind}.
 \end{df}
 
 Negatívna verzia funguje rovnako, ale otáča akceptačnú požiadavku -- namiesto toho, aby sme písali, čo nasleduje, definujeme práve to, čo nechceme aby nasledovalo. Teda negatívny lookaround 'zbehne', ak nie je schopný matchovať vstup.
 
 \begin{df}[Negatívny lookahead]
-$$ L_{1}(?!L_{2})L_{3} = \lbrace uv ~|~ u \in L_{1} \land v \in L_{3} \land neexistuje~také~x,y,~že~v=xy~a~x \in L_2 \rbrace $$ Operáciu $(?!\dots)$ nazývame negatívny lookahead.
+$$ L_{1}(?!L_{2})L_{3} = \lbrace uv ~|~ u \in L_{1} \land v \in L_{3} \land neexistuje~také~x,y,~že~v=xy~a~x \in L_2 \rbrace $$ Operáciu $(?!\dots)$ nazývame \underline{negatívny lookahead}.
 \end{df}
 
 \begin{df}[Negatívny lookbehind]
-$$ L_{1}(?<!L_{2})L_{3} = \lbrace uv ~|~ u \in L_{1} \land v \in L_{3} \land neexituje~také~x,y,~že~u=xy~a~y \in L_2 \rbrace $$ Operáciu $(?<!\dots)$ nazývame negatívny lookbehind.
+$$ L_{1}(?<!L_{2})L_{3} = \lbrace uv ~|~ u \in L_{1} \land v \in L_{3} \land neexituje~také~x,y,~že~u=xy~a~y \in L_2 \rbrace $$ Operáciu $(?<!\dots)$ nazývame \underline{negatívny lookbehind}.
+\end{df}
+
+Ešte si definujme názvoslovie, aby sme vedeli pomenovať triedy a operácie, o ktorých hovoríme.
+
+\begin{df}
+Množinu e-regexov rozšírená o pozitívny lookahead a pozitívny lookbehind budeme nazývať \underline{le-regexy}, triedu nad le-regexami \underline{LEregex}.
 \end{df}
 
 \begin{df}
-Množinu e-regexov rozšírená o lookahead a lookbehind budeme nazývať \textbf{le-regexy}, triedu nad le-regexami \textbf{LEregex}.
+Množinu le-regexov rozšírená o negatívny lookahead a negatívny lookbehind budeme nazývať \underline{nle-regexy}, triedu nad nle-regexami \underline{nLEregex}.
 \end{df}
 
 \section{Regulárne výrazy v praxi}
@@ -125,12 +150,49 @@ Množinu e-regexov rozšírená o lookahead a lookbehind budeme nazývať \textb
 
 Už na začiatku sme spomínali, že táto práca je inšpirovaná novými konštrukciami, ktoré v praxi pribudli do modelu regulárnych výrazov. Pracovať s praktickým modelom však nie je také jednoduché. Pôvodná teoretická myšlienka narazí na prekážky implementácie a programátor sa musí rozhodnúť medzi tým, či ju splní do bodky alebo si ju niekde zjednoduší a zaručí tým rýchlejší algoritmus. V tejto podkapitole spomenieme obmedzenia, ktoré sú naimplementované a užívatelia regulárnych výrazov sa s nimi musia vysporiadať.
 
-Za zmienku stojí fakt, že síce prvé implementácie používajú prevod na NFA a tak fungujú v lineárnom čase vzhľadom na veľkosť vstupu, ale tieto algoritmy ušli pozornosti Hernyho Spencera pri reimplementovaní a zverejnení ôsmej verzie Unixu, kam pre regulárne výrazy napísal algoritmus s exponenciálnou časovou zložitosťou využívajúci backtraking. Práve on sa dostal do programovacích jazykov ako Perl, PCRE, Python, PHP, Ruby atď. Z neznámych dôvodov je tam dodnes a trápi užívateľov na kritických vstupoch (napr. match $a^n?a^n$ pre $n \geq 29$ trvá asi 20 sekúnd), pričom, hoci už existujú spätné referencie a skutočne vyžadujú backtracking, by stačilo skontrolovať použitú syntax a podľa toho zvoliť algoritmus. Na druhej strane rýchly algoritmus sa nestratil úplne -- Unix a jeho aplikácie ho znova využívajú.
+Za zmienku stojí fakt, že síce prvé implementácie používajú prevod na NFA a tak fungujú v lineárnom čase vzhľadom na veľkosť vstupu, ale tieto algoritmy ušli pozornosti Hernyho Spencera pri reimplementovaní a zverejnení ôsmej verzie Unixu, kam pre regulárne výrazy napísal algoritmus s exponenciálnou časovou zložitosťou využívajúci backtraking. Práve on sa dostal do programovacích jazykov ako Perl, PCRE, Python, PHP, Ruby atď. Z neznámych dôvodov je tam dodnes a trápi užívateľov na kritických vstupoch (napr. match $a^n?a^n$ pre $n \geq 29$ trvá asi 20 sekúnd, viď Obr. \ref{fig:graf}), pričom, hoci už existujú spätné referencie a skutočne vyžadujú backtracking, by stačilo skontrolovať použitú syntax a podľa toho zvoliť algoritmus. Na druhej strane rýchly algoritmus sa nestratil úplne -- Unix a jeho aplikácie ho znova využívajú.
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=1\textwidth]{obrazky/graf}
+  \caption{Graf ukazuje čas potrebný na skontrolovanie, či $a^n?a^n$ matchuje $a^n$}
+  \label{fig:graf}
+\end{figure}
 
 \subsection*{Regexy pokrývajúce triedu regulárnych jazykov}
 \label{praxregex}
 
-V tejto oblasti problém nie je. Prevedenie na nedeterministický konečný automat je rýchle -- stačí jeden prechod celého regexu. Potom niektoré implementácie pokračujú prevodom na deterministický automat, prípadne urobia úpravy na niečo medzi. Nás\-led\-ná simulácia konečného automatu má lineárnu časovú zložitosť vzhľadom na dĺžku prehľadávaného textu\cite{ExtendedRegexPower}. Nanešťastie nie všetky prostredia s regulárnymi výrazmi využívajú tento algorimus. No aj keď pracujú s backtrackingom, neokliešťujú regulárne výrazy o žiadnu funkcionalitu. Jedinou zmenou je prevedenie Kleeneho $*$ (teda aj $+$ a $?$), kedy sa používa greedy verzia -- snaží sa matchovať čo najdlší reťazec, ale ako sme spomenuli v \ref{def}, nevadí to.
+\underline{Thompsonov prevod regexu na nedeterministický konečný automat}\cite{Cox07SlowPython}
+
+Máme regex $\alpha$ vystavaný z množiny operácií. My definujeme čiastočné NKA s voľnými šípkami pre jednotlivé operácie a tie sa potom podľa stavby $\alpha$ spoja do NKA pre $L(\alpha )$. Nakoniec voľné šípky z posledných operácií pripojíme na akceptačný stav s prechodom na $\varepsilon$. Ukážme si jednotlivé konštrukcie pre operácie, $e$ vždy bude označovať regex, ktorý nás zaujíma.
+\begin{itemize}
+\item matchovanie obyčajného znaku (t.j. nie metaznaku)
+\begin{center}
+	 \includegraphics[scale=1]{obrazky/T_pismenko}
+\end{center}
+\item zretazenie
+\begin{center}
+    \includegraphics[scale=1]{obrazky/T_zretazenie}
+\end{center} 
+\item alternácia
+\begin{center}
+    \includegraphics[scale = 1]{obrazky/T_alternacia}
+\end{center}
+\item iterácia
+\begin{center}
+    \includegraphics[width=0.40\textwidth]{obrazky/T_iteracia}
+\end{center}
+\item plus
+\begin{center}
+    \includegraphics[scale=1]{obrazky/T_plus}
+\end{center}
+\item otáznik
+\begin{center}
+    \includegraphics[scale=1]{obrazky/T_otaznik}
+\end{center}
+\item zvyšok syntaxe je možné prepísať pomocou predošlých znakov a metaznakov
+\end{itemize}
+
+V tejto oblasti problém nie je. Opísané prevedenie na nedeterministický konečný automat je rýchle -- stačí jeden prechod celého regexu. Potom niektoré implementácie pokračujú prevodom na deterministický automat, prípadne urobia úpravy na niečo medzi. Nás\-led\-ná simulácia konečného automatu má lineárnu časovú zložitosť vzhľadom na dĺžku prehľadávaného textu\cite{ExtendedRegexPower}. Nanešťastie nie všetky prostredia s regulárnymi výrazmi využívajú tento algorimus. No aj keď pracujú s backtrackingom, neokliešťujú regulárne výrazy o žiadnu funkcionalitu. Jedinou zmenou je prevedenie Kleeneho $*$ (teda aj $+$ a $?$), kedy sa používa greedy verzia -- snaží sa matchovať čo najdlší reťazec, ale ako sme spomenuli v \ref{def}, nevadí to.
 
 \subsection*{Spätné referencie}
 \label{praxbackref}

@@ -270,7 +270,7 @@ Pracujeme s le-regexami, takže sa niekde musia objaviť aj spätné referencie\
 Celkovo máme $x=a^{e-b},~y=a^b$ a $k = n!$ ak je určené, inak $k=1$. Z toho $xy^{kj} = a^{e-b}a^{bkj} = a^{e+bj'} \in L(\alpha) ~ \forall j \in \N, ~ j' = kj-1$. 
 
 V prípade viacerých lookaroundov riešime postupne -- vždy vyrátané $b$ bude v ďalšom kole novým $g$. Podobne riešime vnorené lookaroundy -- postupujeme zvnútra von (musí ich byť konečne veľa a ten najvnútornejší z nich isto bude obsahovať už len Eregex).
-\end{enumerate}
+\end{enumerate} 
 \end{proof}
 
 \paragraph{Poznámka 1.}
@@ -286,11 +286,12 @@ avšak $a^{m(m+1)} \notin L(\beta )$, lebo nám chýba zvyšok $0$. Teda vidíme
 \paragraph{Poznámka 2.}
 Zoberme si triedu jazykov nad takýmito le-regexami. Veta nám hovorí čosi o zložitosti jej jazykov. Napriklad $L = \lbrace a^m ~|~ m~je~prvočíslo\rbrace$ do nej nepatrí, lebo sa nedá vôbec pumpovať -- medzi prvočíslami nenájdeme žiadne násobky. Z toho už vyplýva, že je vlastnou podmnožinou $\L_{CS}$ a nie je uzavretá na komplement ($L^c = (aaa*)\backslash 1(\backslash1)* \in Eregex$).
 
+\paragraph{Poznámka 3.}
+V prípade, že by sa dokázala pumpovacia lema, vedeli by sme ukázať, že LEregex nie je uzavretá na vymazávajúci homomorfizmus. Príkladom je jazyk $L =\lbrace (a^m\#a^{m(m+1)k}\#)* ~|~ k,m \in \N;~ m ~ sa ~ priebežne~mení \rbrace$ popísaný regexom $\alpha = ((a*)\#(?=\backslash 2*\#)(\backslash 2a)*\#)*$. Vymazávací homomorfizmus $h$, kde $h(a) = a, ~ h(\#) = \lbrace  \varepsilon$ by zrušil mriežky, teda $h(L) = a^{\sum_{i=0}^n m_i(m_i+1)k_i}~|~ n,m_i,k_i \in \N ~ \forall i \rbrace$. Riešnením nemôže byť $h(\alpha)$, lebo bez mriežok je v lookaheade prefixový jazyk, teda matchuje najkratší prefix a nekontroluje deliteľnosť $m_i$. \todo
+
 \section{Negatívny lookaround}\label{chap:negla}
 
-\begin{df}
-Triedu nad leregexami obohatenými o negatívny lookaround budeme nazývať nLEregex.
-\end{df}
+Pripomeňme si, že le-regexy obohatené o negatívny lookaround sme nazvali nle-regexy a triedu nad nimi nLEregex.
 
 \begin{veta}
 Trieda nLEregex je uzavretá na prienik.
@@ -305,3 +306,7 @@ Trieda nLEregex je uzavretá na komplement.
 \begin{proof}
 Nech $L_1 \in nLEregex$, potom $L_1^c  = \left( ?! L_1 \mathdollar \right) .* \mathdollar $.
 \end{proof}
+
+\paragraph{Poznámka.} Negatívne verzie lookaroundu sa v podstate veľmi nelíšia od ich tých pozitívnych. Robia to isté, akurát zmenia výslednú odpoveď. Preto nečakáme nové zložité kolízie s operáciami.
+
+\todo{trošku charakterizuj triedu} \todo{pozri sa na záver...}
