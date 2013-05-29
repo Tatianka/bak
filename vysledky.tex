@@ -27,12 +27,13 @@ Kleeneho $*$ uvedená v definícii regexov je príliš nedeterministická na ľa
 Skúsme si najprv definovať model na reprezentáciu le-regexov. Bude nadväzovať na definíciu e-regexov, keďže je to ich rozšírenie.
 
 \begin{df}
-Nech $\alpha$ je le-regex. Nech $\alpha '$ je rovnaký ako $\alpha$, akurát bez operácií lookahead a lookbehind. Potom zhoda na $\alpha ' \in Eregex$ a teda je reprezentovaná stromom $T_{\alpha '}$ podľa definície triedy Eregex. Pre zhodu na $\alpha$ zostrojme konečný (orientovaný, usporiadaný) strom $S_\alpha$ z $T_{\alpha '}$ tak, že pridáme lookahead/lookbehind do vrcholu, kam zapadne pri postupnom rozkladaní regexu od koreňa a urobíme s ním nasledovné:
+Nech $\alpha$ je le-regex. Nech $\alpha '$ je rovnaký ako $\alpha$, akurát bez operácií lookahead a lookbehind. Potom zhoda na $\alpha ' \in Eregex$ je reprezentovaná stromom $T_{\alpha '}$ podľa definície triedy Eregex. Pre zhodu na $\alpha$ zostrojme konečný (orientovaný, usporiadaný) strom $S_\alpha$ z $T_{\alpha '}$ tak, že pridáme lookahead/lookbehind do vrcholu, kam zapadne podľa $\alpha$ pri postupnom rozkladaní regexu od koreňa a urobíme s ním nasledovné:
 \begin{itemize}
   \item  $\alpha$ obsahuje lookahead, teda $S_\alpha$ má niekde vrchol $(u, (?=\beta_1 )\beta_2)$. Potom tento vrchol bude mať dvoch synov - vrchol $(u,\beta_2)$, ktorý pokračuje ako v $T_{\alpha '}$, a virtuálny vrchol $(u,\beta_1 (.*))$, ktorý sa ďalej rozloží podľa definície.
   \item  $\alpha$ obsahuje lookbehind, teda $S_\alpha$ má niekde vrchol $(u, \beta_1(?<=\beta_2))$. Potom tento vrchol bude mať dvoch synov - vrchol $(u,\beta_1)$, ktorý pokračuje ako v $T_{\alpha '}$, a virtuálny vrchol $(u,(.*)\beta_2)$, ktorý sa ďalej rozloží podľa definície.
   \item všetky ostatné vrcholy sú rovnaké ako v $T_{\alpha '}$
 \end{itemize}
+Virtuálne vrcholy reprezentujú zhodu od istého bodu (do istého bodu) slova pre lookahead (lookbehind). Ak zhoda na nejaký lookaround v $\alpha$ nie je realizovateľná, potom neexistuje ani celková zhoda le-regexu.
 \end{df}
 \begin{df}
 Jazyk popísaný le-regexom $\alpha$ je definovaný nasledovne: 
@@ -307,6 +308,8 @@ Zoberme si triedu jazykov nad takýmito le-regexami. Veta nám hovorí čosi o z
 
 Pripomeňme si, že le-regexy obohatené o negatívny lookaround sme nazvali nle-regexy a triedu nad nimi nLEregex.
 
+Opäť pribudli nové operácie a môžeme sa pokúsiť ich pridať do modelu pre le-regexy. Keďže pracujeme s lookaroundom, znova to budú virtuálne vrcholy. V jeho negatívnej forme však vrchol $(w,(?!\beta_1)\beta_2)$ bude mať virtuálneho syna $(w, \beta_1(.*))$, pod ktorým \textbf{nesmie} existovať žiaden podstrom pre zhodu. Takýto model je ešte ťažkopádnejší, nakoľko je netriviálne predstaviť si, nieto ešte dokázať, že žiadne riešenie neexituje. A k tomu bez pomôcky akou je pumpovacia lema.
+
 \begin{veta}
 Trieda nLEregex je uzavretá na prienik.
 \end{veta}
@@ -320,6 +323,9 @@ Trieda nLEregex je uzavretá na komplement.
 \begin{proof}
 Nech $L_1 \in nLEregex$, potom $L_1^c  = \left( ?! L_1 \mathdollar \right) .* \mathdollar $.
 \end{proof}
+
+\paragraph{Poznámka 1.}
+Vďaka uzavretosti na komplement vidíme, že pre nle-regexy neexistuje žiadna pumpovacia lema. Pozerajúc na unárne jazyky, $L = \lbrace a^m ~|~ m~je~prvočíslo\rbrace \in nLEregex$ sa nedá pumpovať.
 
 \paragraph{Poznámka.} Negatívne verzie lookaroundu sa v podstate veľmi nelíšia od ich tých pozitívnych. Robia to isté, akurát zmenia výslednú odpoveď. Preto nečakáme nové zložité kolízie s operáciami.
 
