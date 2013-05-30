@@ -98,7 +98,7 @@ kde $w_1 \cdots w_k = w, ~ w_i \neq \varepsilon, ~ i=1, \ldots ,k$. Ak $w = \var
 
 \begin{df}
 \underline{Jazyk} rozpoznávaný e-regexom $\alpha$ je definovaný ako
-$$ L(\alpha) = \lbrace w \in \Sigma^* ~|~(w,\alpha ) ~označuje~koreň~nejakej~zhody~T_\alpha \rbrace $$.
+$$ L(\alpha) = \lbrace w \in \Sigma^* ~|~(w,\alpha ) ~\text{označuje~koreň~nejakej~zhody}~T_\alpha \rbrace $$.
 \end{df}
 
 Dospelo sa k nasledujúcim výsledkom:
@@ -153,10 +153,10 @@ Už na začiatku sme spomínali, že táto práca je inšpirovaná novými konš
 \begin{figure}[h]
   \centering
   \includegraphics[width=1\textwidth]{obrazky/graf}
-  \caption{Graf ukazuje čas potrebný na skontrolovanie, či $a^n?a^n$ matchuje $a^n$}
+  \caption{Graf ukazuje čas potrebný na skontrolovanie, či $a?^na^n$ matchuje $a^n$}
   \label{fig:graf}
 \end{figure}
-Za zmienku stojí fakt, že síce prvé implementácie používajú prevod na NKA a tak fungujú v lineárnom čase vzhľadom na veľkosť vstupu, ale v osemdesiatych rokoch tieto algoritmy ušli pozornosti Hernyho Spencera pri reimplementovaní a zverejnení ôsmej verzie Unixu, kam pre regulárne výrazy napísal algoritmus s exponenciálnou časovou zložitosťou využívajúci backtraking. Práve ten sa dostal do programovacích jazykov ako Perl, PCRE, Python, PHP, Ruby atď. Z neznámych dôvodov je tam dodnes a trápi užívateľov na kritických vstupoch (napr. match $a^n?a^n$ pre $n \geq 29$ trvá viac ako 10 sekúnd, viď Obr. \ref{fig:graf}), pričom, hoci už existujú spätné referencie a skutočne vyžadujú backtracking, by stačilo skontrolovať použitú syntax a podľa toho zvoliť algoritmus. Na druhej strane rýchly algoritmus sa nestratil úplne -- Unix a jeho aplikácie ho znova využívajú.
+Za zmienku stojí fakt, že síce prvé implementácie používajú prevod na NKA a tak fungujú v lineárnom čase vzhľadom na veľkosť vstupu, ale v osemdesiatych rokoch tieto algoritmy ušli pozornosti Hernyho Spencera pri reimplementovaní a zverejnení ôsmej verzie Unixu, kam pre regulárne výrazy napísal algoritmus s exponenciálnou časovou zložitosťou využívajúci backtraking. Práve ten sa dostal do programovacích jazykov ako Perl, PCRE, Python, PHP, Ruby atď. Z neznámych dôvodov je tam dodnes a trápi užívateľov na kritických vstupoch (napr. match $a?^na^n$ pre $n \geq 29$ trvá viac ako 10 sekúnd, viď Obr. \ref{fig:graf}), pričom, hoci už existujú spätné referencie a skutočne vyžadujú backtracking, by stačilo skontrolovať použitú syntax a podľa toho zvoliť algoritmus. Na druhej strane rýchly algoritmus sa nestratil úplne -- Unix a jeho aplikácie ho znova využívajú.
 
 \subsection*{Regexy pokrývajúce triedu regulárnych jazykov}
 \label{praxregex}

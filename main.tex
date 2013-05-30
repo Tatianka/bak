@@ -2,7 +2,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[slovak]{babel}
 \usepackage{a4wide,color}
-%\usepackage[top=2.5cm, bottom=2.5cm, left=2.75cm, right=2.75cm]{geometry}
+%\usepackage[includehead, includefoot,top=2.5cm, bottom=2.5cm, left=2.75cm, right=2.75cm]{geometry}
 \usepackage[includehead, includefoot, top=2.5cm, bottom=2.5cm, left=3.5cm, right=2cm]{geometry}
 \usepackage{lmodern}
 \usepackage[T1]{fontenc}
@@ -133,8 +133,18 @@
 \end{minipage}
 \end{center}
 \vfill
-{\bf\mfdate \\
-\indent\mfauthor}
+{\bf
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+~\mfdate
+\end{flushleft}
+\end{minipage}
+\begin{minipage}{0.59\textwidth}
+\begin{flushright} \large
+\indent\mfauthor
+\end{flushright}
+\end{minipage}
+}
 %{\bf Vedúci:} \mfadvisor
 \eject % EOP i
 
@@ -182,8 +192,18 @@
 \begin{center}
 \end{center}
 \vfill
-{\bf\mfplacedate\\
-\indent\mfauthor}
+{\bf
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+~\mfplacedate
+\end{flushleft}
+\end{minipage}
+\begin{minipage}{0.59\textwidth}
+\begin{flushright} \large
+\indent\mfauthor
+\end{flushright}
+\end{minipage}
+}
 %{\bf Vedúci:} \mfadvisor
 \eject % EOP iii
 
@@ -213,10 +233,10 @@
 \begin{minipage}{0.25\textwidth}~\end{minipage}
 \begin{center}
 \begin{minipage}{1\textwidth}
-\textit{Poďakovanie} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\textit{Ďakujem môjmu školiteľovi Michalovi Foriškovi, za vedenie práce, cenné rady a pripomienky, mojej rodine, priateľovi a blízkym priateľom za morálnu podporu. Bez~Vás by táto práca nevznikla.}
 \end{minipage}
 \end{center}
-\hfill\mfauthor
+\hfill\textit{\mfauthor}
 \vfill\eject % EOP v
 % ~\vfill\eject % EOP vi % zadna strana prehlasenia je prazdna
 
